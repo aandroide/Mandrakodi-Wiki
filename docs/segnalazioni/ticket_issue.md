@@ -97,9 +97,9 @@ title: Segnalazioni
       <label for="piattaforma">Dispositivo / Piattaforma (Obbligatorio):</label>
       <select id="piattaforma" class="form-control" required>
         <option value="">-- Seleziona Dispositivo --</option>
-        <option value="Android TV">Android TV</option>
+        <option value="Android Tv/Chiavette/Box">Android Tv/Chiavette/Box</option>
         <option value="Fire TV Stick / FireTV Cube">Fire TV Stick / Fire TV Cube</option>
-        <option value="Pc Windows / Linux / Mac">PC Windows / Linux / Mac</option>
+        <option value="Pc Windows / Linux / Mac">Pc Windows / Linux / Mac</option>
         <option value="Smartphone-Tablet Android / iPhone-iPad">Smartphone-Tablet Android / iPhone-iPad</option>
         <option value="Rpi-Pc LibreElec">Rpi-Pc LibreElec</option>
       </select>
@@ -108,7 +108,7 @@ title: Segnalazioni
     <div style="margin-bottom: 20px; background: #3a2e12; border: 1px solid #ffa000; padding: 12px; border-radius: 6px;">
       <label style="cursor: pointer; display: flex; align-items: flex-start; gap: 10px;">
         <input type="checkbox" id="check-conferma" required style="margin-top: 3px;">
-        <span><strong>Confermo:</strong> la segnalazione riguarda l'<strong>INTERA sezione o sottosezione</strong> e NON solo alcuni link che non vanno (problema sul flusso di cui l'addon non può risolvere)</span>
+        <span><strong>Confermo:</strong> la segnalazione riguarda <strong>TUTTA la sezione</strong> e NON solo alcuni link che non vanno (problema sul flusso di cui l'addon non può risolvere)</span>
       </label>
     </div>
     
