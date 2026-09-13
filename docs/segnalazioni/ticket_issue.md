@@ -149,12 +149,21 @@ title: Segnalazioni
           return;
         }
         data.forEach(function(item) {
+          var st = (item.stato || '').toUpperCase();
+          var bgStyle = "background: #d32f2f; color: #fff;"; // Rosso di default per OFFLINE
+    
+          if (st === "IN LAVORAZIONE") {
+            bgStyle = "background: #0288d1; color: #fff;"; // Blu per In Lavorazione
+          } else if (st === "IN ATTESA") {
+            bgStyle = "background: #ff9800; color: #000;"; // Arancione per In Attesa
+          }
+    
           tbody.innerHTML += '<tr>' +
             '<td>' + (item.data || '') + '</td>' +
             '<td><span style="background: #444; padding: 3px 8px; border-radius: 4px;">' + (item.sezione || '') + '</span></td>' +
             '<td><strong>' + (item.contenuto || '') + '</strong></td>' +
             '<td>' + (item.problema || '') + '</td>' +
-            '<td><span style="background: #ff9800; color: #000; padding: 3px 8px; border-radius: 4px; font-weight: bold;">' + (item.stato || '') + '</span></td>' +
+            '<td><span style="' + bgStyle + ' padding: 3px 8px; border-radius: 4px; font-weight: bold;">' + (item.stato || 'OFFLINE') + '</span></td>' +
           '</tr>';
         });
       })
