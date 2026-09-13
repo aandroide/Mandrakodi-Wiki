@@ -89,7 +89,7 @@ title: Segnalazioni
     <div class="form-group">
       <label for="problema">Tipo di Problema (Obbligatorio):</label>
       <select id="problema" class="form-control" required>
-        <option value="INTERA sezione non funzionante (NON singolo link)" selected>INTERA sezione onon funzionante (NON singolo link)</option>
+        <option value="INTERA sezione non funzionante (NON singolo link)" selected>INTERA sezione non funzionante (NON singolo link)</option>
       </select>
     </div>
     
