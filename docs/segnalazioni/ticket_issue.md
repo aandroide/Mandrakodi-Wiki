@@ -150,12 +150,12 @@ title: Segnalazioni
         }
         data.forEach(function(item) {
           var st = (item.stato || '').toUpperCase();
-          var bgStyle = "background: #d32f2f; color: #fff;"; // Rosso di default per OFFLINE
+          var bgStyle = "background: #ff9800; color: #000;"; // Arancione/Giallo di default per "In attesa"
     
-          if (st === "IN LAVORAZIONE") {
+          if (st === "OFFLINE") {
+            bgStyle = "background: #d32f2f; color: #fff;"; // Rosso per OFFLINE
+          } else if (st === "IN LAVORAZIONE") {
             bgStyle = "background: #0288d1; color: #fff;"; // Blu per In Lavorazione
-          } else if (st === "IN ATTESA") {
-            bgStyle = "background: #ff9800; color: #000;"; // Arancione per In Attesa
           }
     
           tbody.innerHTML += '<tr>' +
@@ -163,7 +163,7 @@ title: Segnalazioni
             '<td><span style="background: #444; padding: 3px 8px; border-radius: 4px;">' + (item.sezione || '') + '</span></td>' +
             '<td><strong>' + (item.contenuto || '') + '</strong></td>' +
             '<td>' + (item.problema || '') + '</td>' +
-            '<td><span style="' + bgStyle + ' padding: 3px 8px; border-radius: 4px; font-weight: bold;">' + (item.stato || 'OFFLINE') + '</span></td>' +
+            '<td><span style="' + bgStyle + ' padding: 3px 8px; border-radius: 4px; font-weight: bold;">' + (item.stato || 'In attesa') + '</span></td>' +
           '</tr>';
         });
       })
