@@ -1,14 +1,29 @@
 ---
 [:material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
 
+!!! tip "Segnalazionie"
+    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato attivo<br>
+Ad ogni apertura viene caricato nel box "Segnalazioni Attive" le segnalazioi aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
+Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte, riprogrammando l'addon per la corretta estrazione
+
 !!! warning "Importante"
     Qualora Kodi fosse **pre installato** (es. da Store app del dispositivo) senza essere certi se installato con installer preso da proprio sito web, disinstallare e procedere seguendo istruzioni di seguito a seconda del Sistema Operativo 
 
-!!! tip "Attenzione"
-    Per un pieno funzionamento di Kodi con tutte le sue dipendenze corrette, **scaricare Kodi dal proprio sito** per i vari Sistemi Operativi seguendo i passaggi sotto riportati
+!!! important "Fase 1 - creare file configurazione per Wireguard"
+    Creare file ".conf" **senza scadenza** da utilizzare in Wireguard su Chiavette/Tv/Box/Firestick
 
-!!! important "Come richiedere assistenza"
-    <span id="info"></span>**Informazioni obbligatorie** per una *corretta richiesta* di assistenza / segnalazione
+??? info "Web Config Generator + Web Convertitore per Wireguard"
+       **Generare file ".conf" senza scadenza** (con Browser da Pc/Smartphone/Tablet - *non usare app Dowmloader*)
+
+    * <a href="https://warp-generator.vercel.app" target="_blank">Config Generator</a>
+    * Premere il pulsante "**Generate**" per generare la configurazione
+    * Premere il pulsante "**Copy**" per copiare negli appunti la configurazione
+    * <a href="/Mandrakodi-Wiki/guide/converter.html" target="_blank">Convertitore per Wireguard</a>
+    * Nel box di testo "Input" **incollare** la configurazione
+    * Premere il pulsante "**Converti**" per generare configurazione nel box di testo "Ouput"
+    * Premere il pulsante "**Scarica file**" per salvare file "wireguard.conf"
+    * N.B.: verificare che il file "wireguard" salvato abbia l'estensione "**.conf**" (se diversa, **rinominare** correggendo)
+
 
 ---
 
