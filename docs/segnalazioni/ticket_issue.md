@@ -1,12 +1,16 @@
 ---
+layout: page
+title: Segnalazioni
+---
+
 [:material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
 
-​---
+<hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
 
 !!! tip "Segnalazioni"
     Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>
-Ad ogni apertura viene caricato nel box "Segnalazioni Attive" le segnalazioi aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
-Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
+    Ad ogni apertura viene caricato nel box "Segnalazioni Attive" le segnalazioi aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
+    Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
 
 !!! warning "ATTENZIONE"
     Le segnalazioni vanno fatte *solamente* quando è **TUTTA LA SEZIONE non funzionante** e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
@@ -14,15 +18,8 @@ Non esiste una tempistica certa in mertio alla risoluzione della segnalazione st
 !!! important "Compilare form "Invia Nuova Segnalazione""
     - Attendere il caricamento completo della pagina con le "Segnalazioni Attive"
     - Compilare il form in tutte le sue parti (diversamente non verrà inviato)
-    - Se uno o più menù a discesa non caricano/risultano vuoti riselezionare
-
----
-
----
-layout: page
-title: Segnalazioni
-
----
+    - Se uno o più menù a discesa non caricano/risultano vuoti ricaricare la pagina
+    N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate
 
 <style>
   .ticket-container { max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; color: #fff; }
@@ -37,9 +34,7 @@ title: Segnalazioni
   .status-msg { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; text-align: center; }
 </style>
 
-
 <div class="ticket-container">
-
 
   <h2>📋 Segnalazioni Attive</h2>
   <div style="overflow-x: auto;">
@@ -61,14 +56,11 @@ title: Segnalazioni
     </table>
   </div>
 
-
   <hr style="border: 0; border-top: 1px solid #444; margin: 30px 0;">
-
 
   <h2>📌 Invia Nuova Segnalazione</h2>
 
   <form id="form-segnalazione" class="ticket-form">
-
 
     <!-- Livello 1: Categoria Madre -->
     <div class="form-group">
@@ -142,7 +134,7 @@ title: Segnalazioni
 <script>
 (function() {
   var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTQJzxvLspR-1GdYh1wOXSLrF8h4TIeswEAIUJGtM9z1I4pIUZD3N_ANO2oewKmaI/exec";
-  var rawData = null; // Impostato a null per verificare l'effettivo caricamento
+  var rawData = null;
 
   function init() {
     loadReports();
@@ -198,7 +190,6 @@ title: Segnalazioni
       .then(function(res) { return res.json(); })
       .then(function(data) { 
         rawData = data || {}; 
-        // Se l'utente ha già selezionato una categoria prima del termine del caricamento, aggiorna le sottocategorie
         var catSelect = document.getElementById("categoria-principale");
         if (catSelect && catSelect.value) {
           onCatChange();
