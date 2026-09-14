@@ -3,7 +3,7 @@ layout: page
 title: Segnalazioni
 ---
 
-[:material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
+[:material-face-agent: Torna ad Assistenza](../ask_help.md){ .md-button .md-button--primary } [:material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
 
 <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
 
@@ -16,10 +16,10 @@ title: Segnalazioni
     Le segnalazioni vanno fatte *solamente* quando è **TUTTA LA SEZIONE non funzionante** e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
 
 !!! important "Compilare form "Invia Nuova Segnalazione""
-    - Attendere il caricamento completo della pagina con le "Segnalazioni Attive"
+    - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco)
     - Compilare il form in tutte le sue parti (diversamente non verrà inviato)
-    - Se uno o più menù a discesa non caricano/risultano vuoti ricaricare la pagina
-    N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate
+    - Durante il compilamento del Form attendere il caricamento delle voci nei cari menù a discesa
+    N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate, quando non presenti segnalazioni viene mostrato messaggio di nessuna segnalazione aperta
 
 <style>
   .ticket-container { max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; color: #fff; }
@@ -117,11 +117,11 @@ title: Segnalazioni
       <label for="piattaforma">Dispositivo / Piattaforma (Obbligatorio):</label>
       <select id="piattaforma" class="form-control" required>
         <option value="">-- Seleziona Dispositivo --</option>
-        <option value="Android TV / Kodi">Android TV / Kodi</option>
-        <option value="Fire TV Stick / Kodi">Fire TV Stick / Kodi</option>
-        <option value="PC Windows / Linux / Kodi">PC Windows / Linux / Kodi</option>
-        <option value="Smartphone / Tablet Android">Smartphone / Tablet Android</option>
-        <option value="Altro">Altro</option>
+        <option value="Android Tv/Chiavette/Box/Firestick">Android Tv/Chiavette/Box/Firestick</option>
+        <option value="Fire Tv Stick/Fire Cube Tv">Fire Tv Stick/Fire Cube Tv</option>
+        <option value="Pc Windows/Mac/Linux">Pc Windows/Mac/Linux</option>
+        <option value="Smartphone-Tablet Android / iPhone-iPad">Smartphone-Tablet Android / iPhone-iPad</option>
+        <option value="RPI-Pc LibreElec">RPI-Pc LibreElec</option>
       </select>
     </div>
     
