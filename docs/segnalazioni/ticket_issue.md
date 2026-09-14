@@ -1,6 +1,14 @@
 ---
 [:material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
 
+!!! warning "Importante"
+    Qualora Kodi fosse **pre installato** (es. da Store app del dispositivo) senza essere certi se installato con installer preso da proprio sito web, disinstallare e procedere seguendo istruzioni di seguito a seconda del Sistema Operativo 
+
+!!! tip "Attenzione"
+    Per un pieno funzionamento di Kodi con tutte le sue dipendenze corrette, **scaricare Kodi dal proprio sito** per i vari Sistemi Operativi seguendo i passaggi sotto riportati
+
+!!! important "Come richiedere assistenza"
+    <span id="info"></span>**Informazioni obbligatorie** per una *corretta richiesta* di assistenza / segnalazione
 
 ---
 
@@ -40,14 +48,7 @@
       </tbody>
     </table>
   </div>
-!!! warning "Importante"
-    Qualora Kodi fosse **pre installato** (es. da Store app del dispositivo) senza essere certi se installato con installer preso da proprio sito web, disinstallare e procedere seguendo istruzioni di seguito a seconda del Sistema Operativo 
 
-!!! tip "Attenzione"
-    Per un pieno funzionamento di Kodi con tutte le sue dipendenze corrette, **scaricare Kodi dal proprio sito** per i vari Sistemi Operativi seguendo i passaggi sotto riportati
-
-!!! important "Come richiedere assistenza"
-    <span id="info"></span>**Informazioni obbligatorie** per una *corretta richiesta* di assistenza / segnalazione
 
   <hr style="border: 0; border-top: 1px solid #444; margin: 30px 0;">
 
