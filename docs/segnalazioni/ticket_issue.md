@@ -18,7 +18,7 @@ title: Segnalazioni
 !!! important "Compilare form "Invia Nuova Segnalazione""
     - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco)
     - Compilare il form in tutte le sue parti (diversamente non verrà inviato)
-    - Durante il compilamento del Form attendere il caricamento delle voci nei cari menù a discesa
+    - Durante il compilamento del Form attendere il caricamento delle voci nei cari menù a discesa<br>
     N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate, quando non presenti segnalazioni viene mostrato messaggio di nessuna segnalazione aperta
 
 <style>
