@@ -3,7 +3,7 @@ layout: page
 title: Segnalazioni
 ---
 
-[:material-face-agent: Torna ad Assistenza](../ask_help.md){ .md-button .md-button--primary } [:material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
+[:material-face-agent: Torna ad Assistenza](../){ .md-button .md-button--primary } [:material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
 
 <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
 
@@ -232,7 +232,7 @@ title: Segnalazioni
       });
   }
 
-  function loadMenu() {
+  function loadMenu(callback) {
     isMenuLoading = true;
     var cacheBuster = "&_ts=" + new Date().getTime();
 
@@ -241,21 +241,18 @@ title: Segnalazioni
       .then(function(data) { 
         rawData = data || {}; 
         isMenuLoading = false;
-        var catSelect = document.getElementById("categoria-principale");
-        if (catSelect && catSelect.value) {
-          onCatChange();
-        }
+        if (callback) callback(true);
       })
       .catch(function(err) { 
         console.error("Errore recupero menu:", err); 
         rawData = null;
         isMenuLoading = false;
+        if (callback) callback(false);
       });
   }
 
   function getCategoryItems(catKey) {
     if (!rawData) return [];
-    // Cerca la chiave esatta oppure senza distinzione di maiuscole/minuscole
     if (rawData[catKey]) return rawData[catKey];
     var keys = Object.keys(rawData);
     for (var i = 0; i < keys.length; i++) {
@@ -293,35 +290,51 @@ title: Segnalazioni
         subSel.appendChild(opt);
       });
     } else if (cat === "Live" || cat === "Radio") {
-      if (isMenuLoading) {
-        subSel.innerHTML = '<option value="">⏳ Caricamento sotto-categorie in corso...</option>';
-        return;
-      }
-      if (!rawData) {
-        subSel.innerHTML = '<option value="">❌ Errore caricamento menu. Ricarica pagina.</option>';
-        return;
-      }
-    
-      var list = getCategoryItems(cat);
-      if (!list || list.length === 0) {
-        subSel.innerHTML = '<option value="">Nessuna sotto-categoria trovata</option>';
+      if (rawData) {
+        populateSubCategories(cat);
       } else {
-        list.forEach(function(item) {
-          var opt = document.createElement("option");
-          opt.value = item; opt.textContent = item;
-          subSel.appendChild(opt);
+        subSel.innerHTML = '<option value="">⏳ Caricamento sotto-categorie in corso...</option>';
+        loadMenu(function(success) {
+          if (success) {
+            populateSubCategories(cat);
+          } else {
+            subSel.innerHTML = '<option value="RETRY">⚠️ Connessione lenta. Clicca qui per Riprovare</option>';
+          }
         });
       }
     }
   }
 
+  function populateSubCategories(cat) {
+    var subSel = document.getElementById("sotto-categoria");
+    subSel.innerHTML = '<option value="">-- Seleziona Sotto-Categoria --</option>';
+
+    var list = getCategoryItems(cat);
+    if (!list || list.length === 0) {
+      subSel.innerHTML = '<option value="">Nessuna sotto-categoria trovata</option>';
+    } else {
+      list.forEach(function(item) {
+        var opt = document.createElement("option");
+        opt.value = item; opt.textContent = item;
+        subSel.appendChild(opt);
+      });
+    }
+  }
+
   function onSubChange() {
     var cat = document.getElementById("categoria-principale").value;
-    var sub = document.getElementById("sotto-categoria").value;
+    var subSel = document.getElementById("sotto-categoria");
+    var sub = subSel.value;
     var contSel = document.getElementById("contenuto-lista");
     var groupCont = document.getElementById("group-contenuto");
     var groupDet = document.getElementById("group-dettaglio");
 
+    // Gestione Retry su errore di caricamento
+    if (sub === "RETRY") {
+      onCatChange();
+      return;
+    }
+    
     contSel.innerHTML = '<option value="">-- Seleziona Contenuto --</option>';
     groupCont.style.display = "none";
     groupDet.style.display = "none";
