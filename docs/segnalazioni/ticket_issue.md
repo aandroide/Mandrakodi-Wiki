@@ -117,7 +117,7 @@ title: Segnalazioni
       <label for="piattaforma">Dispositivo / Piattaforma (Obbligatorio):</label>
       <select id="piattaforma" class="form-control" required>
         <option value="">-- Seleziona Dispositivo --</option>
-        <option value="Android Tv/Chiavette/Box/Firestick">Android Tv/Chiavette/Box/Firestick</option>
+        <option value="Android Tv/Chiavette/Box">Android Tv/Chiavette/Box</option>
         <option value="Fire Tv Stick/Fire Cube Tv">Fire Tv Stick/Fire Cube Tv</option>
         <option value="Pc Windows/Mac/Linux">Pc Windows/Mac/Linux</option>
         <option value="Smartphone-Tablet Android / iPhone-iPad">Smartphone-Tablet Android / iPhone-iPad</option>
