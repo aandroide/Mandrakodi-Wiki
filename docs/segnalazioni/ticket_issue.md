@@ -1,29 +1,26 @@
 ---
 [:material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
 
-!!! tip "Segnalazionie"
-    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato attivo<br>
+​---
+
+!!! tip "Segnalazioni"
+    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>
 Ad ogni apertura viene caricato nel box "Segnalazioni Attive" le segnalazioi aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
-Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte, riprogrammando l'addon per la corretta estrazione
+Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
 
-!!! warning "Importante"
-    Qualora Kodi fosse **pre installato** (es. da Store app del dispositivo) senza essere certi se installato con installer preso da proprio sito web, disinstallare e procedere seguendo istruzioni di seguito a seconda del Sistema Operativo 
+!!! warning "ATTENZIONE"
+    Le segnalazioni vanno fatte *solamente* quando è **TUTTA LA SEZIONE non funzionante** e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
 
-!!! important "Fase 1 - creare file configurazione per Wireguard"
-    Creare file ".conf" **senza scadenza** da utilizzare in Wireguard su Chiavette/Tv/Box/Firestick
+!!! important "Compilare form "Invia Nuova Segnalazione""
+    - Attendere il caricamento completo della pagina con le "Segnalazioni Attive"
+    - Compilare il form in tutte le sue parti (diversamente non verrà inviato)
+    - Se uno o più menù a discesa non caricano/risultano vuoti riselezionare
 
-??? info "Web Config Generator + Web Convertitore per Wireguard"
-       **Generare file ".conf" senza scadenza** (con Browser da Pc/Smartphone/Tablet - *non usare app Dowmloader*)
+---
 
-    * <a href="https://warp-generator.vercel.app" target="_blank">Config Generator</a>
-    * Premere il pulsante "**Generate**" per generare la configurazione
-    * Premere il pulsante "**Copy**" per copiare negli appunti la configurazione
-    * <a href="/Mandrakodi-Wiki/guide/converter.html" target="_blank">Convertitore per Wireguard</a>
-    * Nel box di testo "Input" **incollare** la configurazione
-    * Premere il pulsante "**Converti**" per generare configurazione nel box di testo "Ouput"
-    * Premere il pulsante "**Scarica file**" per salvare file "wireguard.conf"
-    * N.B.: verificare che il file "wireguard" salvato abbia l'estensione "**.conf**" (se diversa, **rinominare** correggendo)
-
+---
+layout: page
+title: Segnalazioni
 
 ---
 
@@ -112,7 +109,7 @@ Non esiste una tempistica certa in mertio alla risoluzione della segnalazione st
     <div class="form-group">
       <label for="problema">Tipo di Problema (Obbligatorio):</label>
       <select id="problema" class="form-control" required>
-        <option value="INTERA sezione non funzionante (NON singolo link)" selected>INTERA sezione non funzionante (NON singolo link)</option>
+        <option value="INTERA sezione offline (NON singolo link)" selected>INTERA sezione offline (NON singolo link)</option>
       </select>
     </div>
     
@@ -120,18 +117,18 @@ Non esiste una tempistica certa in mertio alla risoluzione della segnalazione st
       <label for="piattaforma">Dispositivo / Piattaforma (Obbligatorio):</label>
       <select id="piattaforma" class="form-control" required>
         <option value="">-- Seleziona Dispositivo --</option>
-        <option value="Android Tv/Chiavette/Box">Android Tv/Chiavette/Box</option>
-        <option value="Fire TV Stick / FireTV Cube">Fire TV Stick / Fire TV Cube</option>
-        <option value="Pc Windows / Linux / Mac">Pc Windows / Linux / Mac</option>
-        <option value="Smartphone-Tablet Android / iPhone-iPad">Smartphone-Tablet Android / iPhone-iPad</option>
-        <option value="Rpi-Pc LibreElec">Rpi-Pc LibreElec</option>
+        <option value="Android TV / Kodi">Android TV / Kodi</option>
+        <option value="Fire TV Stick / Kodi">Fire TV Stick / Kodi</option>
+        <option value="PC Windows / Linux / Kodi">PC Windows / Linux / Kodi</option>
+        <option value="Smartphone / Tablet Android">Smartphone / Tablet Android</option>
+        <option value="Altro">Altro</option>
       </select>
     </div>
     
     <div style="margin-bottom: 20px; background: #3a2e12; border: 1px solid #ffa000; padding: 12px; border-radius: 6px;">
       <label style="cursor: pointer; display: flex; align-items: flex-start; gap: 10px;">
         <input type="checkbox" id="check-conferma" required style="margin-top: 3px;">
-        <span><strong>Confermo:</strong> la segnalazione riguarda <strong>TUTTA la sezione</strong> non funzionante e NON solo alcuni link che non vanno (problema sul flusso di cui l'addon non può risolvere)</span>
+        <span><strong>Confermo:</strong> La segnalazione riguarda l'<strong>INTERA sezione o sottosezione</strong> non funzionante e non un singolo canale/link temporaneamente offline.</span>
       </label>
     </div>
     
@@ -145,7 +142,7 @@ Non esiste una tempistica certa in mertio alla risoluzione della segnalazione st
 <script>
 (function() {
   var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTQJzxvLspR-1GdYh1wOXSLrF8h4TIeswEAIUJGtM9z1I4pIUZD3N_ANO2oewKmaI/exec";
-  var rawData = {};
+  var rawData = null; // Impostato a null per verificare l'effettivo caricamento
 
   function init() {
     loadReports();
@@ -173,12 +170,12 @@ Non esiste una tempistica certa in mertio alla risoluzione della segnalazione st
         }
         data.forEach(function(item) {
           var st = (item.stato || '').toUpperCase();
-          var bgStyle = "background: #ff9800; color: #000;"; // Arancione/Giallo di default per "In attesa"
+          var bgStyle = "background: #ff9800; color: #000;";
     
           if (st === "OFFLINE") {
-            bgStyle = "background: #d32f2f; color: #fff;"; // Rosso per OFFLINE
+            bgStyle = "background: #d32f2f; color: #fff;";
           } else if (st === "IN LAVORAZIONE") {
-            bgStyle = "background: #0288d1; color: #fff;"; // Blu per In Lavorazione
+            bgStyle = "background: #0288d1; color: #fff;";
           }
     
           tbody.innerHTML += '<tr>' +
@@ -199,8 +196,18 @@ Non esiste una tempistica certa in mertio alla risoluzione della segnalazione st
   function loadMenu() {
     fetch(SCRIPT_URL + "?action=getMenu", { method: "GET" })
       .then(function(res) { return res.json(); })
-      .then(function(data) { rawData = data; })
-      .catch(function(err) { console.error("Errore recupero menu:", err); });
+      .then(function(data) { 
+        rawData = data || {}; 
+        // Se l'utente ha già selezionato una categoria prima del termine del caricamento, aggiorna le sottocategorie
+        var catSelect = document.getElementById("categoria-principale");
+        if (catSelect && catSelect.value) {
+          onCatChange();
+        }
+      })
+      .catch(function(err) { 
+        console.error("Errore recupero menu:", err); 
+        rawData = {};
+      });
   }
 
   function onCatChange() {
@@ -223,12 +230,20 @@ Non esiste una tempistica certa in mertio alla risoluzione della segnalazione st
         subSel.appendChild(opt);
       });
     } else if (cat === "Live") {
+      if (!rawData) {
+        subSel.innerHTML = '<option value="">Caricamento sotto-categorie in corso...</option>';
+        return;
+      }
       var list = rawData["Live"] || [];
-      list.forEach(function(item) {
-        var opt = document.createElement("option");
-        opt.value = item; opt.textContent = item;
-        subSel.appendChild(opt);
-      });
+      if (list.length === 0) {
+        subSel.innerHTML = '<option value="">Nessuna sotto-categoria trovata</option>';
+      } else {
+        list.forEach(function(item) {
+          var opt = document.createElement("option");
+          opt.value = item; opt.textContent = item;
+          subSel.appendChild(opt);
+        });
+      }
     } else if (cat === "On Demand") {
       var opts = ["Movie Club", "Anime & Cartoon", "Old Tv", "Doctor Who", "Raiplay", "Pluto Tv", "Federmoto Tv", "MandraTube"];
       opts.forEach(function(o) {
@@ -237,12 +252,20 @@ Non esiste una tempistica certa in mertio alla risoluzione della segnalazione st
         subSel.appendChild(opt);
       });
     } else if (cat === "Radio") {
+      if (!rawData) {
+        subSel.innerHTML = '<option value="">Caricamento sotto-categorie in corso...</option>';
+        return;
+      }
       var list = rawData["Radio"] || [];
-      list.forEach(function(item) {
-        var opt = document.createElement("option");
-        opt.value = item; opt.textContent = item;
-        subSel.appendChild(opt);
-      });
+      if (list.length === 0) {
+        subSel.innerHTML = '<option value="">Nessuna sotto-categoria trovata</option>';
+      } else {
+        list.forEach(function(item) {
+          var opt = document.createElement("option");
+          opt.value = item; opt.textContent = item;
+          subSel.appendChild(opt);
+        });
+      }
     }
   }
 
@@ -257,7 +280,7 @@ Non esiste una tempistica certa in mertio alla risoluzione della segnalazione st
     groupCont.style.display = "none";
     groupDet.style.display = "none";
     
-    if (!cat || !sub) return;
+    if (!cat || !sub || !rawData) return;
     
     if (cat === "Sport") {
       if (sub === "Live Eventi") {
@@ -305,7 +328,7 @@ Non esiste una tempistica certa in mertio alla risoluzione della segnalazione st
     detSel.innerHTML = '<option value="">-- Seleziona Nazione --</option>';
     groupDet.style.display = "none";
     
-    if (cat === "Sport" && sub === "Liste Canali" && cont === "MPD (Nazioni)") {
+    if (cat === "Sport" && sub === "Liste Canali" && cont === "MPD (Nazioni)" && rawData) {
       groupDet.style.display = "block";
       (rawData["Sport_MPDNazioni"] || []).forEach(function(i) {
         var opt = document.createElement("option");
