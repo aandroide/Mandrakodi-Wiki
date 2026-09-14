@@ -18,7 +18,7 @@ title: Segnalazioni
 !!! important "Compilare form "Invia Nuova Segnalazione""
     - Attendere il caricamento completo della pagina con le "Segnalazioni Attive"
     - Compilare il form in tutte le sue parti (diversamente non verrà inviato)
-    - Se uno o più menù a discesa non caricano/risultano vuoti ricaricare la pagina
+    - Se uno o più menù a discesa non caricano/risultano vuoti ricaricare la pagina<br>
     N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate
 
 <style>
