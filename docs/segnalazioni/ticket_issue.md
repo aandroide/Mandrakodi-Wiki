@@ -10,7 +10,7 @@ title: Segnalazioni
 !!! tip "Segnalazioni"
     Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>
     Ad ogni apertura viene caricato nel box "Segnalazioni Attive" le segnalazioi aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
-    Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
+    Non existe una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
 
 !!! warning "ATTENZIONE"
     Le segnalazioni vanno fatte *solamente* quando è **TUTTA LA SEZIONE non funzionante** e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
@@ -18,11 +18,12 @@ title: Segnalazioni
 !!! important "Compilare form "Invia Nuova Segnalazione""
     - Attendere il caricamento completo della pagina con le "Segnalazioni Attive"
     - Compilare il form in tutte le sue parti (diversamente non verrà inviato)
-    - Se uno o più menù a discesa non caricano/risultano vuoti ricaricare la pagina<br>
+    - Se uno o più menù a discesa non caricano/risultano vuoti ricaricare la pagina
     N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate
 
 <style>
   .ticket-container { max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; color: #fff; }
+  .ticket-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
   .ticket-table { width: 100%; border-collapse: collapse; text-align: left; background: #1e1e1e; color: #fff; border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
   .ticket-table th, .ticket-table td { padding: 10px; border-bottom: 1px solid #333; }
   .ticket-table th { background: #333; }
@@ -31,12 +32,19 @@ title: Segnalazioni
   .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
   .form-control { width: 100%; padding: 10px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; }
   .btn-submit { width: 100%; padding: 12px; background: #107c41; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; }
+  .btn-refresh { padding: 6px 12px; background: #252526; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 5px; }
+  .btn-refresh:hover { background: #333; }
+  .btn-reset-form { margin-top: 10px; padding: 8px 15px; background: #107c41; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; }
   .status-msg { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; text-align: center; }
 </style>
 
 <div class="ticket-container">
 
-  <h2>📋 Segnalazioni Attive</h2>
+  <div class="ticket-header">
+    <h2 style="margin: 0;">📋 Segnalazioni Attive</h2>
+    <button type="button" id="btn-refresh-list" class="btn-refresh">🔄 Aggiorna Elenco</button>
+  </div>
+
   <div style="overflow-x: auto;">
     <table class="ticket-table">
       <thead>
@@ -140,21 +148,40 @@ title: Segnalazioni
     loadReports();
     loadMenu();
 
+    document.getElementById("btn-refresh-list").addEventListener("click", loadReports);
     document.getElementById("categoria-principale").addEventListener("change", onCatChange);
     document.getElementById("sotto-categoria").addEventListener("change", onSubChange);
     document.getElementById("contenuto-lista").addEventListener("change", onContChange);
     document.getElementById("form-segnalazione").addEventListener("submit", onSubmit);
   }
 
+  function resetForm() {
+    document.getElementById("form-segnalazione").reset();
+    var msg = document.getElementById("messaggio-stato");
+    msg.style.display = "none";
+    msg.innerHTML = "";
+    onCatChange();
+  }
+
   function loadReports() {
     var tbody = document.getElementById('tabella-segnalazioni');
+    var btnRefresh = document.getElementById("btn-refresh-list");
     if (!tbody) return;
 
+    if (btnRefresh) {
+      btnRefresh.disabled = true;
+      btnRefresh.textContent = "⏳ Aggiornamento...";
+    }
+    
     var cacheBuster = "&_ts=" + new Date().getTime();
     
     fetch(SCRIPT_URL + "?action=getOpen" + cacheBuster, { method: "GET" })
       .then(function(res) { return res.json(); })
       .then(function(data) {
+        if (btnRefresh) {
+          btnRefresh.disabled = false;
+          btnRefresh.textContent = "🔄 Aggiorna Elenco";
+        }
         tbody.innerHTML = '';
         if (!data || data.length === 0 || data.error) {
           tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nessuna segnalazione attiva al momento.</td></tr>';
@@ -180,6 +207,10 @@ title: Segnalazioni
         });
       })
       .catch(function(err) {
+        if (btnRefresh) {
+          btnRefresh.disabled = false;
+          btnRefresh.textContent = "🔄 Aggiorna Elenco";
+        }
         console.error("Errore caricamento segnalazioni:", err);
         tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nessuna segnalazione attiva.</td></tr>';
       });
@@ -370,14 +401,19 @@ title: Segnalazioni
       if (data.result === "success") {
         msg.style.background = "#1b5e20";
         msg.style.color = "#fff";
-        msg.innerHTML = "✅ Segnalazione inviata con successo!<br><small style='margin-top:5px; display:inline-block;'>🔄 Ricarica la pagina per visualizzare la richiesta inviata.</small>";
-        document.getElementById("form-segnalazione").reset();
-        onCatChange();
+        msg.innerHTML = "✅ Segnalazione inviata con successo!";
+        resetForm();
         loadReports();
       } else if (data.result === "duplicate") {
         msg.style.background = "#b71c1c";
         msg.style.color = "#fff";
-        msg.innerHTML = "⚠️ Risulta già una segnalazione attiva per questo contenuto.";
+        msg.innerHTML = "⚠️ Risulta già una segnalazione attiva per questo contenuto.<br>" +
+                        "<button type='button' id='btn-reset-dup' class='btn-reset-form'>🔄 Nuova Segnalazione</button>";
+        
+        var btnResetDup = document.getElementById("btn-reset-dup");
+        if (btnResetDup) {
+          btnResetDup.addEventListener("click", resetForm);
+        }
       } else {
         msg.style.background = "#b71c1c";
         msg.style.color = "#fff";
