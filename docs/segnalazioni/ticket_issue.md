@@ -10,7 +10,7 @@ title: Segnalazioni
 !!! tip "Segnalazioni"
     Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>
     Ad ogni apertura viene caricato nel box "Segnalazioni Attive" le segnalazioi aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
-    Non existe una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
+    Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
 
 !!! warning "ATTENZIONE"
     Le segnalazioni vanno fatte *solamente* quando è **TUTTA LA SEZIONE non funzionante** e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
@@ -32,7 +32,7 @@ title: Segnalazioni
   .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
   .form-control { width: 100%; padding: 10px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; box-sizing: border-box; }
   .btn-submit { width: 100%; padding: 12px; background: #107c41; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; }
-  .btn-refresh { padding: 6px 12px; background: #252526; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; gap: 5px; }
+  .btn-refresh { padding: 6px 12px; background: #252526; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; font-size: 14px; display: none; align-items: center; gap: 5px; }
   .btn-refresh:hover { background: #333; }
   .btn-reset-form { margin-top: 10px; padding: 8px 15px; background: #107c41; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; }
   .status-msg { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; text-align: center; }
@@ -178,15 +178,31 @@ title: Segnalazioni
     fetch(SCRIPT_URL + "?action=getOpen" + cacheBuster, { method: "GET" })
       .then(function(res) { return res.json(); })
       .then(function(data) {
+        tbody.innerHTML = '';
+        
+        if (data && data.error) {
+          // In caso di errore nel recupero dati, mostra il pulsante di aggiornamento
+          if (btnRefresh) {
+            btnRefresh.style.display = "inline-flex";
+            btnRefresh.disabled = false;
+            btnRefresh.textContent = "🔄 Aggiorna Elenco";
+          }
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ff5252;">⚠️ Impossibile caricare l\'elenco. Riprova con il tasto in alto.</td></tr>';
+          return;
+        }
+    
+        // Caricamento riuscito: nascondi il pulsante di aggiornamento
         if (btnRefresh) {
+          btnRefresh.style.display = "none";
           btnRefresh.disabled = false;
           btnRefresh.textContent = "🔄 Aggiorna Elenco";
         }
-        tbody.innerHTML = '';
-        if (!data || data.length === 0 || data.error) {
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nessuna segnalazione attiva al momento.</td></tr>';
+    
+        if (!data || data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #4caf50; font-weight: bold; background: #1b3e20; padding: 15px;">✅ Nessuna segnalazione aperta al momento.</td></tr>';
           return;
         }
+    
         data.forEach(function(item) {
           var st = (item.stato || '').toUpperCase();
           var bgStyle = "background: #ff9800; color: #000;";
@@ -207,12 +223,13 @@ title: Segnalazioni
         });
       })
       .catch(function(err) {
+        console.error("Errore caricamento segnalazioni:", err);
         if (btnRefresh) {
+          btnRefresh.style.display = "inline-flex";
           btnRefresh.disabled = false;
           btnRefresh.textContent = "🔄 Aggiorna Elenco";
         }
-        console.error("Errore caricamento segnalazioni:", err);
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nessuna segnalazione attiva.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ff5252;">⚠️ Errore di connessione. Riprova con il tasto in alto.</td></tr>';
       });
   }
 
