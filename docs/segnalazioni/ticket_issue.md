@@ -143,6 +143,7 @@ title: Segnalazioni
 (function() {
   var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTQJzxvLspR-1GdYh1wOXSLrF8h4TIeswEAIUJGtM9z1I4pIUZD3N_ANO2oewKmaI/exec";
   var rawData = null;
+  var isMenuLoading = false;
 
   function init() {
     loadReports();
@@ -181,7 +182,6 @@ title: Segnalazioni
         tbody.innerHTML = '';
         
         if (data && data.error) {
-          // In caso di errore nel recupero dati, mostra il pulsante di aggiornamento
           if (btnRefresh) {
             btnRefresh.style.display = "inline-flex";
             btnRefresh.disabled = false;
@@ -191,7 +191,6 @@ title: Segnalazioni
           return;
         }
     
-        // Caricamento riuscito: nascondi il pulsante di aggiornamento
         if (btnRefresh) {
           btnRefresh.style.display = "none";
           btnRefresh.disabled = false;
@@ -234,10 +233,14 @@ title: Segnalazioni
   }
 
   function loadMenu() {
-    fetch(SCRIPT_URL + "?action=getMenu", { method: "GET" })
+    isMenuLoading = true;
+    var cacheBuster = "&_ts=" + new Date().getTime();
+
+    fetch(SCRIPT_URL + "?action=getMenu" + cacheBuster, { method: "GET" })
       .then(function(res) { return res.json(); })
       .then(function(data) { 
         rawData = data || {}; 
+        isMenuLoading = false;
         var catSelect = document.getElementById("categoria-principale");
         if (catSelect && catSelect.value) {
           onCatChange();
@@ -245,8 +248,22 @@ title: Segnalazioni
       })
       .catch(function(err) { 
         console.error("Errore recupero menu:", err); 
-        rawData = {};
+        rawData = null;
+        isMenuLoading = false;
       });
+  }
+
+  function getCategoryItems(catKey) {
+    if (!rawData) return [];
+    // Cerca la chiave esatta oppure senza distinzione di maiuscole/minuscole
+    if (rawData[catKey]) return rawData[catKey];
+    var keys = Object.keys(rawData);
+    for (var i = 0; i < keys.length; i++) {
+      if (keys[i].toLowerCase() === catKey.toLowerCase()) {
+        return rawData[keys[i]];
+      }
+    }
+    return [];
   }
 
   function onCatChange() {
@@ -268,21 +285,6 @@ title: Segnalazioni
         opt.value = o; opt.textContent = o;
         subSel.appendChild(opt);
       });
-    } else if (cat === "Live") {
-      if (!rawData) {
-        subSel.innerHTML = '<option value="">Caricamento sotto-categorie in corso...</option>';
-        return;
-      }
-      var list = rawData["Live"] || [];
-      if (list.length === 0) {
-        subSel.innerHTML = '<option value="">Nessuna sotto-categoria trovata</option>';
-      } else {
-        list.forEach(function(item) {
-          var opt = document.createElement("option");
-          opt.value = item; opt.textContent = item;
-          subSel.appendChild(opt);
-        });
-      }
     } else if (cat === "On Demand") {
       var opts = ["Movie Club", "Anime & Cartoon", "Old Tv", "Doctor Who", "Raiplay", "Pluto Tv", "Federmoto Tv", "MandraTube"];
       opts.forEach(function(o) {
@@ -290,13 +292,18 @@ title: Segnalazioni
         opt.value = o; opt.textContent = o;
         subSel.appendChild(opt);
       });
-    } else if (cat === "Radio") {
-      if (!rawData) {
-        subSel.innerHTML = '<option value="">Caricamento sotto-categorie in corso...</option>';
+    } else if (cat === "Live" || cat === "Radio") {
+      if (isMenuLoading) {
+        subSel.innerHTML = '<option value="">⏳ Caricamento sotto-categorie in corso...</option>';
         return;
       }
-      var list = rawData["Radio"] || [];
-      if (list.length === 0) {
+      if (!rawData) {
+        subSel.innerHTML = '<option value="">❌ Errore caricamento menu. Ricarica pagina.</option>';
+        return;
+      }
+    
+      var list = getCategoryItems(cat);
+      if (!list || list.length === 0) {
         subSel.innerHTML = '<option value="">Nessuna sotto-categoria trovata</option>';
       } else {
         list.forEach(function(item) {
@@ -324,21 +331,21 @@ title: Segnalazioni
     if (cat === "Sport") {
       if (sub === "Live Eventi") {
         groupCont.style.display = "block";
-        (rawData["Sport_LiveEventi"] || []).forEach(function(i) {
+        (getCategoryItems("Sport_LiveEventi") || []).forEach(function(i) {
           var opt = document.createElement("option");
           opt.value = i; opt.textContent = i;
           contSel.appendChild(opt);
         });
       } else if (sub === "Liste Canali") {
         groupCont.style.display = "block";
-        (rawData["Sport_ListeCanali"] || []).forEach(function(i) {
+        (getCategoryItems("Sport_ListeCanali") || []).forEach(function(i) {
           var opt = document.createElement("option");
           opt.value = i; opt.textContent = i;
           contSel.appendChild(opt);
         });
       } else if (sub === "Sport Replay") {
         groupCont.style.display = "block";
-        (rawData["Sport_Replay"] || []).forEach(function(i) {
+        (getCategoryItems("Sport_Replay") || []).forEach(function(i) {
           var opt = document.createElement("option");
           opt.value = i; opt.textContent = i;
           contSel.appendChild(opt);
@@ -369,7 +376,7 @@ title: Segnalazioni
     
     if (cat === "Sport" && sub === "Liste Canali" && cont === "MPD (Nazioni)" && rawData) {
       groupDet.style.display = "block";
-      (rawData["Sport_MPDNazioni"] || []).forEach(function(i) {
+      (getCategoryItems("Sport_MPDNazioni") || []).forEach(function(i) {
         var opt = document.createElement("option");
         opt.value = i; opt.textContent = i;
         detSel.appendChild(opt);
