@@ -9,7 +9,7 @@ title: Segnalazioni
 
 !!! tip "Segnalazioni"
     Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>
-    Ad ogni apertura viene caricato nel box "Segnalazioni Attive" le segnalazioi aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
+    Ad ogni apertura viene caricato il box "Segnalazioni Attive" con le segnalazioi eventualmente aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
     Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
 
 !!! warning "ATTENZIONE"
@@ -18,7 +18,7 @@ title: Segnalazioni
 !!! important "Compilare form "Invia Nuova Segnalazione""
     - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco)
     - Compilare il form in tutte le sue parti (diversamente non verrà inviato)
-    - Durante il compilamento del Form attendere il caricamento delle voci nei cari menù a discesa<br>
+    - Durante il compilamento del form attendere il caricamento delle voci nei vari menù a discesa<br>
     N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate, quando non presenti segnalazioni viene mostrato messaggio di nessuna segnalazione aperta
 
 <style>
