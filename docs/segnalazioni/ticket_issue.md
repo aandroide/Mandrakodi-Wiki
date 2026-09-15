@@ -15,11 +15,11 @@ title: Segnalazioni
     Le segnalazioni vanno fatte *solamente* quando è **TUTTA LA SEZIONE non funzionante** e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
 
 !!! important "Compilare form "Invia Nuova Segnalazione""
+
     - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco)
     - Compilare il form in tutte le sue parti (diversamente non verrà inviato), attendere il caricamento delle voci nei vari menù a discesa
     - Dopo l'invio della segnalazione, la tabella "Segnalazioni Attive" si aggiorna automaticamente senza dover ricaricare la pagina<br>
-
-​    N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate, quando non presenti segnalazioni viene mostrato messaggio di nessuna segnalazione aperta
+    - N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate, quando non presenti segnalazioni viene mostrato messaggio di nessuna segnalazione aperta
 
 <style>
   .ticket-container { max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; color: #fff; }
