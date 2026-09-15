@@ -12,7 +12,7 @@ title: Segnalazioni
     Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
 
 !!! warning "ATTENZIONE"
-    Le segnalazioni vanno fatte *solamente* quando è **TUTTA LA SEZIONE non funzionante** e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
+    Le segnalazioni vanno fatte *solamente* quando è **TUTTI LA SEZIONE non funzionante** e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
 
 !!! important "Compilare form "Invia Nuova Segnalazione""
 
@@ -128,7 +128,7 @@ title: Segnalazioni
     <div style="margin-bottom: 20px; background: #3a2e12; border: 1px solid #ffa000; padding: 12px; border-radius: 6px;">
       <label style="cursor: pointer; display: flex; align-items: flex-start; gap: 10px;">
         <input type="checkbox" id="check-conferma" required style="margin-top: 3px;">
-        <span><strong>Confermo:</strong> La segnalazione riguarda l'<strong>INTERA sezione o sottosezione</strong> non funzionante e non un singolo canale/link temporaneamente offline.</span>
+        <span><strong>Confermo:</strong> la segnalazione riguarda <strong>TUTTA LA SEZIONE</strong> non funzionante e NON per alcuni link temporaneamente offline.</span>
       </label>
     </div>
     
