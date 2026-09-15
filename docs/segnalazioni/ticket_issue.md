@@ -6,10 +6,9 @@ title: Segnalazioni
 [:material-face-agent: Torna ad Assistenza](../){ .md-button .md-button--primary } [:material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
 
 <hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
-
 !!! tip "Segnalazioni"
     Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>
-    Ad ogni apertura viene caricato il box "Segnalazioni Attive" con le segnalazioi eventualmente aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
+    Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
     Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
 
 !!! warning "ATTENZIONE"
@@ -17,9 +16,10 @@ title: Segnalazioni
 
 !!! important "Compilare form "Invia Nuova Segnalazione""
     - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco)
-    - Compilare il form in tutte le sue parti (diversamente non verrà inviato)
-    - Durante il compilamento del form attendere il caricamento delle voci nei vari menù a discesa<br>
-    N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate, quando non presenti segnalazioni viene mostrato messaggio di nessuna segnalazione aperta
+    - Compilare il form in tutte le sue parti (diversamente non verrà inviato), attendere il caricamento delle voci nei vari menù a discesa
+    - Dopo l'invio della segnalazione, la tabella "Segnalazioni Attive" si aggiorna automaticamente senza dover ricaricare la pagina<br>
+
+​    N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate, quando non presenti segnalazioni viene mostrato messaggio di nessuna segnalazione aperta
 
 <style>
   .ticket-container { max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; color: #fff; }
