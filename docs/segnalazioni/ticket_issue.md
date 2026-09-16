@@ -1,21 +1,16 @@
----
 layout: page
 title: Segnalazioni
----
+:material-face-agent: Torna ad Assistenza{ .md-button .md-button--primary } :material-home: Torna alla Home{ .md-button .md-button--primary } :material-comment-question: FAQ{ .md-button .md-button--primary }
 
-[:material-face-agent: Torna ad Assistenza](../){ .md-button .md-button--primary } [:material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
-
-<hr style="border: 0; border-top: 1px solid #444; margin: 20px 0;">
 !!! tip "Segnalazioni"
-    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>
-    Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, quando risolte vengono automaticamente eliminate dall'elenco<br>
-    Non esiste una tempistica certa in mertio alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
+    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato.
+    Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, quando risolte vengono automaticamente eliminate dall'elenco.
+    Non esiste una tempistica certa in merito alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
 
 !!! warning "ATTENZIONE"
-    Le segnalazioni vanno fatte *solamente* quando è **TUTTI LA SEZIONE non funzionante** e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
+    Le segnalazioni vanno fatte solamente quando è TUTTI LA SEZIONE non funzionante e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
 
 !!! important "Compilare form "Invia Nuova Segnalazione""
-
     - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco)
     - Compilare il form in tutte le sue parti (diversamente non verrà inviato), attendere il caricamento delle voci nei vari menù a discesa
     - Dopo l'invio della segnalazione, la tabella "Segnalazioni Attive" si aggiorna automaticamente senza dover ricaricare la pagina<br>
@@ -39,104 +34,97 @@ title: Segnalazioni
 </style>
 
 <div class="ticket-container">
-
   <div class="ticket-header">
-    <h2 style="margin: 0;">📋 Segnalazioni Attive</h2>
-    <button type="button" id="btn-refresh-list" class="btn-refresh">🔄 Aggiorna Elenco</button>
+    <h3>📋 Segnalazioni Attive</h3>
+    <button id="btn-refresh-list" class="btn-refresh">🔄 Aggiorna Elenco</button>
   </div>
+  <table class="ticket-table">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Sezione</th>
+        <th>Contenuto</th>
+        <th>Problema</th>
+        <th>Stato</th>
+      </tr>
+    </thead>
+    <tbody id="tabella-segnalazioni">
+      <tr>
+        <td colspan="5" style="text-align: center;">Caricamento in corso...</td>
+      </tr>
+    </tbody>
+  </table>
 
-  <div style="overflow-x: auto;">
-    <table class="ticket-table">
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Sezione</th>
-          <th>Contenuto</th>
-          <th>Problema</th>
-          <th>Stato</th>
-        </tr>
-      </thead>
-      <tbody id="tabella-segnalazioni">
-        <tr>
-          <td colspan="5" style="text-align: center;">Caricamento in corso...</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="ticket-form">
+    <h3>📌 Invia Nuova Segnalazione</h3>
+    <form id="form-segnalazione">
+
+      <!-- Livello 1: Categoria Madre -->
+      <div class="form-group">
+        <label for="categoria-principale">Categoria Madre (Obbligatorio):</label>
+        <select id="categoria-principale" class="form-control" required>
+          <option value="">-- Seleziona Categoria --</option>
+          <option value="Sport">Sport</option>
+          <option value="Live">Live</option>
+          <option value="On Demand">On Demand</option>
+          <option value="Radio">Radio</option>
+        </select>
+      </div>
+    
+      <!-- Livello 2: Sotto-Categoria -->
+      <div class="form-group">
+        <label for="sotto-categoria">Sotto-Categoria (Obbligatorio):</label>
+        <select id="sotto-categoria" class="form-control" required>
+          <option value="">-- Seleziona Prima Categoria --</option>
+        </select>
+      </div>
+    
+      <!-- Livello 3: Contenuto / Lista -->
+      <div class="form-group" id="group-contenuto" style="display: none;">
+        <label for="contenuto-lista">Contenuto / Lista Specifica:</label>
+        <select id="contenuto-lista" class="form-control">
+          <option value="">-- Seleziona Contenuto --</option>
+        </select>
+      </div>
+    
+      <!-- Livello 4: Dettaglio / Nazione -->
+      <div class="form-group" id="group-dettaglio" style="display: none;">
+        <label for="dettaglio-lista">Dettaglio Nazione:</label>
+        <select id="dettaglio-lista" class="form-control">
+          <option value="">-- Seleziona Nazione --</option>
+        </select>
+      </div>
+    
+      <div class="form-group">
+        <label for="problema">Tipo di Problema (Obbligatorio):</label>
+        <select id="problema" class="form-control" required>
+          <option value="INTERA sezione offline (NON singolo link)" selected>INTERA sezione offline (NON singolo link)</option>
+        </select>
+      </div>
+    
+      <div class="form-group">
+        <label for="piattaforma">Dispositivo / Piattaforma (Obbligatorio):</label>
+        <select id="piattaforma" class="form-control" required>
+          <option value="">-- Seleziona Dispositivo --</option>
+          <option value="Android Tv/Chiavette/Box">Android Tv/Chiavette/Box</option>
+          <option value="Fire Tv Stick/Fire Cube Tv">Fire Tv Stick/Fire Cube Tv</option>
+          <option value="Pc Windows/Mac/Linux">Pc Windows/Mac/Linux</option>
+          <option value="Smartphone-Tablet Android / iPhone-iPad">Smartphone-Tablet Android / iPhone-iPad</option>
+          <option value="RPI-Pc LibreElec">RPI-Pc LibreElec</option>
+        </select>
+      </div>
+    
+      <div style="margin-bottom: 20px; background: #3a2e12; border: 1px solid #ffa000; padding: 12px; border-radius: 6px;">
+        <label style="cursor: pointer; display: flex; align-items: flex-start; gap: 10px;">
+          <input type="checkbox" id="check-conferma" required style="margin-top: 3px;">
+          <span><strong>Confermo:</strong>  la segnalazione riguarda <strong>TUTTA LA SEZIONE</strong> non funzionante e NON solamente per alcuni link offline</span>
+        </label>
+      </div>
+    
+      <button type="submit" id="btn-invia" class="btn-submit">Invia Segnalazione</button>
+      <div id="messaggio-stato" class="status-msg"></div>
+    </form>
   </div>
-
-  <hr style="border: 0; border-top: 1px solid #444; margin: 30px 0;">
-
-  <h2>📌 Invia Nuova Segnalazione</h2>
-
-  <form id="form-segnalazione" class="ticket-form">
-
-    <!-- Livello 1: Categoria Madre -->
-    <div class="form-group">
-      <label for="categoria-principale">Categoria Madre (Obbligatorio):</label>
-      <select id="categoria-principale" class="form-control" required>
-        <option value="">-- Seleziona Categoria --</option>
-        <option value="Sport">Sport</option>
-        <option value="Live">Live</option>
-        <option value="On Demand">On Demand</option>
-        <option value="Radio">Radio</option>
-      </select>
-    </div>
-    
-    <!-- Livello 2: Sotto-Categoria -->
-    <div class="form-group">
-      <label for="sotto-categoria">Sotto-Categoria (Obbligatorio):</label>
-      <select id="sotto-categoria" class="form-control" required>
-        <option value="">-- Seleziona Prima Categoria --</option>
-      </select>
-    </div>
-    
-    <!-- Livello 3: Contenuto / Lista -->
-    <div class="form-group" id="group-contenuto" style="display: none;">
-      <label for="contenuto-lista">Contenuto / Lista Specifica:</label>
-      <select id="contenuto-lista" class="form-control">
-        <option value="">-- Seleziona Contenuto --</option>
-      </select>
-    </div>
-    
-    <!-- Livello 4: Dettaglio / Nazione -->
-    <div class="form-group" id="group-dettaglio" style="display: none;">
-      <label for="dettaglio-lista">Dettaglio Nazione:</label>
-      <select id="dettaglio-lista" class="form-control">
-        <option value="">-- Seleziona Nazione --</option>
-      </select>
-    </div>
-    
-    <div class="form-group">
-      <label for="problema">Tipo di Problema (Obbligatorio):</label>
-      <select id="problema" class="form-control" required>
-        <option value="INTERA sezione offline (NON singolo link)" selected>INTERA sezione offline (NON singolo link)</option>
-      </select>
-    </div>
-    
-    <div class="form-group">
-      <label for="piattaforma">Dispositivo / Piattaforma (Obbligatorio):</label>
-      <select id="piattaforma" class="form-control" required>
-        <option value="">-- Seleziona Dispositivo --</option>
-        <option value="Android Tv/Chiavette/Box">Android Tv/Chiavette/Box</option>
-        <option value="Fire Tv Stick/Fire Cube Tv">Fire Tv Stick/Fire Cube Tv</option>
-        <option value="Pc Windows/Mac/Linux">Pc Windows/Mac/Linux</option>
-        <option value="Smartphone-Tablet Android / iPhone-iPad">Smartphone-Tablet Android / iPhone-iPad</option>
-        <option value="RPI-Pc LibreElec">RPI-Pc LibreElec</option>
-      </select>
-    </div>
-    
-    <div style="margin-bottom: 20px; background: #3a2e12; border: 1px solid #ffa000; padding: 12px; border-radius: 6px;">
-      <label style="cursor: pointer; display: flex; align-items: flex-start; gap: 10px;">
-        <input type="checkbox" id="check-conferma" required style="margin-top: 3px;">
-        <span><strong>Confermo:</strong> la segnalazione riguarda <strong>TUTTA LA SEZIONE</strong> non funzionante e NON per alcuni link temporaneamente offline.</span>
-      </label>
-    </div>
-    
-    <button type="submit" id="btn-invia" class="btn-submit">Invia Segnalazione</button>
-    <div id="messaggio-stato" class="status-msg"></div>
-
-  </form>
-
 </div>
 
 <script>
@@ -148,7 +136,6 @@ title: Segnalazioni
   function init() {
     loadReports();
     loadMenu();
-
     document.getElementById("btn-refresh-list").addEventListener("click", loadReports);
     document.getElementById("categoria-principale").addEventListener("change", onCatChange);
     document.getElementById("sotto-categoria").addEventListener("change", onSubChange);
@@ -329,7 +316,6 @@ title: Segnalazioni
     var groupCont = document.getElementById("group-contenuto");
     var groupDet = document.getElementById("group-dettaglio");
 
-    // Gestione Retry su errore di caricamento
     if (sub === "RETRY") {
       onCatChange();
       return;
