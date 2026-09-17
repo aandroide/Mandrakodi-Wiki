@@ -1,6 +1,6 @@
 layout: page
 title: Segnalazioni
-[:material-book-open-page-variant: Torna ad Assistenza](ask_help.md){ .md-button .md-button--primary }  [:material-home: Torna alla Home](../index.md){.md-button .md-button--primary} [:material-comment-question: FAQ](../ask_help.md){ .md-button .md-button--primary }
+[:material-book-open-page-variant: Torna ad Assistenza](../ask_help.md){ .md-button .md-button--primary }  [:material-home: Torna alla Home](../index.md){.md-button .md-button--primary} [:material-comment-question: FAQ](../ask_help.md){ .md-button .md-button--primary }
 
 ------
 
