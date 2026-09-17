@@ -1,6 +1,8 @@
 layout: page
 title: Segnalazioni
-:material-face-agent: Torna ad Assistenza{ .md-button .md-button--primary } :material-home: Torna alla Home{ .md-button .md-button--primary } :material-comment-question: FAQ{ .md-button .md-button--primary }
+[:material-face-agent: Torna ad Assistenza(ask_help.md){ .md-button .md-button--primary } material-home: Torna alla Home](../){ .md-button .md-button--primary } [:material-comment-question: FAQ](faq/faq.md){ .md-button .md-button--primary }
+
+------
 
 !!! tip "Segnalazioni"
     Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato.
