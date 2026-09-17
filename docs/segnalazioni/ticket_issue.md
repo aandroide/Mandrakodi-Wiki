@@ -5,17 +5,16 @@ title: Segnalazioni
 ------
 
 !!! tip "Segnalazioni"
-    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato.
-    Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, mentre quando risolte vengono automaticamente eliminate dall'elenco<br>Non  esiste una tempistica certa in merito alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione
+    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, mentre quando risolte vengono automaticamente eliminate dall'elenco<br>Non  esiste una tempistica certa in merito alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione
 
 !!! warning "ATTENZIONE"
     Le segnalazioni vanno fatte solamente quando è TUTTA LA SEZIONE non funzionante e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
 
 !!! important "Compilare form "Invia Nuova Segnalazione""
     - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco)
-    - Compilare il form in tutte le sue parti (diversamente non verrà inviato), attendere il caricamento delle voci nei vari menù a discesa
+    - Compilare il form in tutte le sue parti, diversamente non verrà inviato (attendere sempre il caricamento delle voci nei menù a discesa)
     - Dopo l'invio della segnalazione, la tabella "Segnalazioni Attive" si aggiorna automaticamente senza dover ricaricare la pagina<br>
-    - N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate, quando non presenti segnalazioni viene mostrato messaggio di nessuna segnalazione aperta
+    - N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate (quando non presenti segnalazioni viene mostrato messaggio di "Nessuna segnalazione aperta")
 
 <style>
   .ticket-container { max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; color: #fff; }
