@@ -32,8 +32,8 @@
     </button>
 
 
-    <!-- Pagina Segnalazioni -->
-    <a href="../ticket_issue/" class="btn-apri">Pagina Segnalazioni ➔</a>
+    <!-- Visualizzare/Inviare Segnalazioni -->
+    <a href="../ticket_issue/" class="btn-apri">Visualizzare/Inviare Segnalazioni ➔</a>
 
   </div>
 </div>
