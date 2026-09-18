@@ -4,6 +4,12 @@
 
 [:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
 
+<div class="segnalazioni-actions">
+    <!-- Pulsante Ricarica Dinamico -->
+    <button id="btn-reload" onclick="caricaSegnalazioni()" title="Ricarica conteggio">
+      🔄
+    </button>
+
 <div class="segnalazioni-widget">
   <div class="segnalazioni-info">
     <span class="badge badge-offline">🔴 FONTI OFFLINE: <strong id="cnt-offline">-</strong></span>
@@ -11,11 +17,7 @@
   </div>
 
 
-  <div class="segnalazioni-actions">
-    <!-- Pulsante Ricarica Dinamico -->
-    <button id="btn-reload" onclick="caricaSegnalazioni()" title="Ricarica conteggio">
-      🔄
-    </button>
+
 
     <!-- Pulsante per aprire la pagina delle Segnalazioni completa -->
     <a href="../segnalazioni/ticket_issue/" class="md-button md-button--primary">
