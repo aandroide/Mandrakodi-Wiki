@@ -16,8 +16,8 @@
     <button id="btn-reload" onclick="caricaSegnalazioni()" title="Ricarica conteggio">
       🔄
     </button>
+[:material-ticket-confirmation: Elenco Segnalazioni](../segnalazioni/ticket_issue/){ .md-button .md-button--primary }
 
-    [:material-ticket-confirmation: Elenco Segnalazioni](../segnalazioni/ticket_issue/){ .md-button .md-button--primary }
   </div>
 </div>
 
