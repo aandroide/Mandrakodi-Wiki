@@ -3,7 +3,7 @@
 ------
 
 !!! tip "Impostazioni Kodi"
-    Di seguito **settaggi consigliati** per migliori prestazioni dei vari flussi video 
+    **Settaggi consigliati** per migliori prestazioni dei vari flussi video 
 
 ------
 

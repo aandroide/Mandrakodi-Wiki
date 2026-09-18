@@ -3,7 +3,7 @@
 ------
 
 !!! tip "Impostazioni e guide"
-    Di seguito tutorials utili al **corretto funzionamento** delle varie sezioni di Mandrakodi
+    Indicazioni utili al **corretto funzionamento** delle varie sezioni di Mandrakodi
 
 ------
 
