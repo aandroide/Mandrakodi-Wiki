@@ -32,7 +32,7 @@
     </button>
 
 
-    <!-- Elenco Segnalazioni -->
+    <!-- Pagina Segnalazioni -->
     <a href="../ticket_issue/" class="btn-apri">Elenco Segnalazioni ➔</a>
 
   </div>
