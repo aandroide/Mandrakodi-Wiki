@@ -17,9 +17,7 @@
     </button>
 
     <!-- Elenco Segnalazioni -->
-    <a href="../segnalazioni/ticket_issue/" class="md-button md-button--primary">
-      Pagina Segnalazioni
-    </a>
+    <a href="../ticket_issue/" class="btn-apri">Elenco Segnalazioni ➔</a>
   </div>
 </div>
 
