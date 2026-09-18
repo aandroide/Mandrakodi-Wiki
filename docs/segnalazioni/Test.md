@@ -33,7 +33,7 @@
 
 
     <!-- Pagina Segnalazioni -->
-    <a href="../ticket_issue/" class="btn-apri">Elenco Segnalazioni ➔</a>
+    <a href="../ticket_issue/" class="btn-apri">Pagina Segnalazioni ➔</a>
 
   </div>
 </div>
