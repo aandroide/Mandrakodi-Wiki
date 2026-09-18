@@ -1,6 +1,6 @@
 # **Benvenuti nella Wiki ufficiale di MandraKodi**
 
-![icon](/home/server/Documenti/Mandrakodi-Wiki/docs/images/icon.gif)
+![icon](images/icon.gif)
 
 [:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
 
@@ -17,7 +17,7 @@
     </button>
 
     <!-- Pulsante per aprire la pagina delle Segnalazioni completa -->
-    <a href="../segnalazioni/ticket_issue/" class="md-button md-button--primary">
+    <a href="../segnalazioni/ticket_issue.md" class="md-button md-button--primary">
       Elenco Segnalazioni
     </a>
   </div>
