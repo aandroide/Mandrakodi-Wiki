@@ -82,4 +82,4 @@
     **Motivo:** Raramente capita che all'apertura l'addon non si aggiorni<br>    **Soluzione:** In Mandrakodi, sezione "**Help Me**", "**Update Code**" (verrà mostrato eventuale aggiornamento installato oppure conferma che l'addon è già aggiornato)
 
 ??? info "21) Durante la visione il player spesso si stoppa ed esce"
-    **Motivo:** Al netto del flusso che può essere instabile, anche un dispositivo poco performante può incidere<br>    **Soluzione:** Provare utilizzando un [Player Esterno](../guide/kodi_settings.md#dnsdispositivo), se non migliora allora è questione di fonte sovraccarica e/o propria connessione
+    **Motivo:** Al netto del flusso che può essere instabile, anche un dispositivo poco performante può incidere<br>    **Soluzione:** Provare utilizzando un [Player Esterno](../guide/kodi_settings.md#players), se non migliora allora è questione di fonte sovraccarica e/o propria connessione
