@@ -1,8 +1,15 @@
+# **Benvenuti nella Wiki ufficiale di MandraKodi**
+
+![icon](/home/server/Documenti/Mandrakodi-Wiki/docs/images/icon.gif)
+
+[:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
+
 <div class="segnalazioni-widget">
   <div class="segnalazioni-info">
-    <span class="badge badge-offline">🔴 OFFLINE: <strong id="cnt-offline">-</strong></span>
-    <span class="badge badge-attesa">🟡 IN ATTESA: <strong id="cnt-attesa">-</strong></span>
+    <span class="badge badge-offline">🔴 FONTI OFFLINE: <strong id="cnt-offline">-</strong></span>
+    <span class="badge badge-attesa">🟡 SEGNALAZIONI IN ATTESA: <strong id="cnt-attesa">-</strong></span>
   </div>
+
 
   <div class="segnalazioni-actions">
     <!-- Pulsante Ricarica Dinamico -->
@@ -10,8 +17,7 @@
       🔄
     </button>
 
-    <!-- Pulsante per aprire la pagina delle Segnalazioni completa -->
-    [Elenco Segnalazioni](../segnalazioni/ticket_issue.md)
+    [:material-ticket-confirmation: Elenco Segnalazioni](../segnalazioni/ticket_issue/){ .md-button .md-button--primary }
   </div>
 </div>
 
@@ -135,12 +141,6 @@ if (document.readyState === "complete" || document.readyState === "interactive")
   document.addEventListener("DOMContentLoaded", caricaSegnalazioni);
 }
 </script>
-
-# **Benvenuti nella Wiki ufficiale di MandraKodi**
-
-![icon](/home/server/Documenti/Mandrakodi-Wiki/docs/images/icon.gif)
-
-[:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
 
 ------
 
