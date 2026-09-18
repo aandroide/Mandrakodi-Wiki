@@ -9,7 +9,7 @@
 
 ??? info "1) Impossibile connettersi al server"
     **Motivo:** L'indirizzo Github inserito in Kodi non è scritto correttamente  
-    **Soluzione:** Leggere la [Guida Installazione](../installazione/install.md#addon)
+    **Soluzione:** Leggere la [Guida Installazione](../installazione/install/#addon)
 
 ??? info "2) Addon Under Maintenance"
     **Motivo:** L'addon è temporaneamente in manutenzione  
@@ -33,7 +33,7 @@
 
 ??? info "7) Lo script 'script.module.resolveurl' non risulta installato"
     **Motivo:** Dipendenza mancante nel sistema  
-    **Soluzione:** Installare o aggiornare il modulo ResolveURL seguendo i passaggi della [Guida Installazione](../installazione/install/#addon)
+    **Soluzione:** Installare o aggiornare il modulo ResolveURL seguendo i passaggi della [Guida Installazione](../installazione/install.md#addon)
 
 ??? info "8) Riproduzione fallita di uno o più elementi. Controlla il log per ulteriori informazioni su questo messaggio"
     **Motivo:** Il link recuperato da MandraKodi e inviato al player non funziona  
