@@ -1,8 +1,11 @@
+---
 layout: page
 title: Segnalazioni
-[:material-face-agent: Torna ad Assistenza](../ask_help.md){ .md-button .md-button--primary }  [:material-home: Torna alla Home](../index.md){.md-button .md-button--primary} [:material-comment-question: FAQ](../ask_help.md){ .md-button .md-button--primary }
+---
 
-------
+[:material-face-agent: Torna ad Assistenza](../ask_help.md){ .md-button .md-button--primary }  [:material-home: Torna alla Home](../index.md){ .md-button .md-button--primary } [:material-comment-question: FAQ](../ask_help.md){ .md-button .md-button--primary }
+
+---
 
 !!! tip "Segnalazioni"
     Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, mentre quando risolte vengono automaticamente eliminate dall'elenco<br>Non  esiste una tempistica certa in merito alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione
@@ -124,6 +127,7 @@ title: Segnalazioni
       <button type="submit" id="btn-invia" class="btn-submit">Invia Segnalazione</button>
       <div id="messaggio-stato" class="status-msg"></div>
     </form>
+
   </div>
 </div>
 
@@ -308,25 +312,11 @@ title: Segnalazioni
     }
   }
 
-  function onSubChange() {
-    var cat = document.getElementById("categoria-principale").value;
-    var subSel = document.getElementById("sotto-categoria");
-    var sub = subSel.value;
+  function renderContentOptions(cat, sub) {
     var contSel = document.getElementById("contenuto-lista");
     var groupCont = document.getElementById("group-contenuto");
-    var groupDet = document.getElementById("group-dettaglio");
-
-    if (sub === "RETRY") {
-      onCatChange();
-      return;
-    }
-    
     contSel.innerHTML = '<option value="">-- Seleziona Contenuto --</option>';
-    groupCont.style.display = "none";
-    groupDet.style.display = "none";
-    
-    if (!cat || !sub || !rawData) return;
-    
+
     if (cat === "Sport") {
       if (sub === "Live Eventi") {
         groupCont.style.display = "block";
@@ -360,6 +350,40 @@ title: Segnalazioni
           contSel.appendChild(opt);
         });
       }
+    }
+  }
+
+  function onSubChange() {
+    var cat = document.getElementById("categoria-principale").value;
+    var subSel = document.getElementById("sotto-categoria");
+    var sub = subSel.value;
+    var contSel = document.getElementById("contenuto-lista");
+    var groupCont = document.getElementById("group-contenuto");
+    var groupDet = document.getElementById("group-dettaglio");
+
+    if (sub === "RETRY") {
+      onCatChange();
+      return;
+    }
+    
+    contSel.innerHTML = '<option value="">-- Seleziona Contenuto --</option>';
+    groupCont.style.display = "none";
+    groupDet.style.display = "none";
+    
+    if (!cat || !sub) return;
+    
+    if (rawData) {
+      renderContentOptions(cat, sub);
+    } else {
+      groupCont.style.display = "block";
+      contSel.innerHTML = '<option value="">⏳ Caricamento contenuti in corso...</option>';
+      loadMenu(function(success) {
+        if (success) {
+          renderContentOptions(cat, sub);
+        } else {
+          contSel.innerHTML = '<option value="">⚠️ Errore di caricamento. Seleziona nuovamente la sotto-categoria.</option>';
+        }
+      });
     }
   }
 
