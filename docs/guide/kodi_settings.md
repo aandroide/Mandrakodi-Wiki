@@ -43,7 +43,7 @@
 ------
 
 !!! important "Flussi MPD"
-    I link MDP sfruttano la libreria di kodi "**inputstream-adaptive**" che *regola automaticamente* la risoluzione video del flusso a seconda della propria connessione e del dispositivo <br> E' possibile sia impostare dei valori min/max sia **selezionare** una **risoluzione video** a piacimento tra quelle disponibili per ogni flusso video<br> N.B.: questi link *sono fruibili solo con il player interno di kodi*, i players esterni non li gestiscono
+     <span id="mpd"></span>I link MDP sfruttano la libreria di kodi "**inputstream-adaptive**" che *regola automaticamente* la risoluzione video del flusso a seconda della propria connessione e del dispositivo <br> E' possibile sia impostare dei valori min/max sia **selezionare** una **risoluzione video** a piacimento tra quelle disponibili per ogni flusso video<br> N.B.: questi link *sono fruibili solo con il player interno di kodi*, i players esterni non li gestiscono
 
 ??? info "Impostazioni Flussi MPD"
     **Avviare Kodi**

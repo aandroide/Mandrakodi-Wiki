@@ -3,7 +3,7 @@
 ------
 
 !!! tip "Ace, flussi P2P ad alta qualità"
-    Sono link che sfruttano un protocollo basato sulla condivisione di flussi streaming tramite rete **p2p** (peer to peer) creando interconnessioni dirette tra più utenti senza transitare per un server/sito, proprio come con i famosi  eMule/Torrent<br>Questo significa che “chi guarda in streaming, trasmette anche agli altri utenti, ovvero *più utenti guardano e condividono a loro volta con altri interconnessi*, *meno blocchi ci sono durante la visione*”: **questo avviene esclusivamente se sul proprio router viene aperta la porta 8621 udp**
+    Sono link che sfruttano un protocollo basato sulla condivisione di flussi streaming tramite rete **p2p** (peer to peer) creando interconnessioni dirette tra più utenti senza transitare per un server/sito, proprio come con i famosi  eMule/Torrent<br>Questo significa che “chi guarda in streaming, trasmette anche agli altri utenti, ovvero *più utenti guardano e condividono a loro volta con altri interconnessi*, *meno blocchi ci sono durante la visione*”: **questo avviene esclusivamente se sul proprio router viene aperta la porta 8621 Udp**
 
 !!! warning "Lingua contenuti"
     I link Ace sono **praticamente totalmente stranieri**, in quanto in Italia - salvo rarissime occasioni - poco utilizzati per *mancanza della cultura* di condivisione alla base di tutti i sistemi P2P 
@@ -69,7 +69,7 @@
 ------
 
 !!! important "EXTRA - AceServe con dispositivi poco performanti"
-    Con *dispositivi poco performanti*  (tv/chiavetta con 1Gb/1,5Gb Ram e 8Gb storage) è consigliabile eseguire AceServe su **altro dispositivo** (generalmente smartphone) **purché connesso alla medesima rete,**  sfruttando maggiori risorse per cache disco e ram 
+    Con *dispositivi poco performanti*  (tv/chiavetta con 1Gb/1,5Gb Ram e 8Gb storage) è consigliabile eseguire AceServe su **altro dispositivo** (generalmente smartphone/tablet) **purché connesso alla medesima rete,**  sfruttando maggiori risorse per cache disco e ram 
 
 ??? info "Kodi su Tv/Chiavetta + AceServe su Android Smartphone/Tablet"
     **Eseguire AceServe su dispositivo terzo**

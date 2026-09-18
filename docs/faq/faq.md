@@ -21,7 +21,7 @@
 
 ??? info "4) Con i DNS attualmente impostati, **x.x.x.x - x.x.x.x**, potresti avere problemi a recuperare i link da alcuni siti"
     **Motivo:** MandraKodi ha trovato dei **DNS** diversi da quelli di Cloudflare e/o OpenDNS  
-    **Soluzione:** [Modificare i DNS](../guide/dns.md) sul **router**, se possibile<br>In alternativa, [modificarli sul singolo device](../guide/dns.md#dnsdispositivo) su cui è installato Kodi
+    **Soluzione:** [Modificare i DNS](../guide/dns.md) sul **router**, se possibile<br>In alternativa, [modificare DNS sul singolo device](../guide/dns.md#dnsdispositivo) su cui è installato Kodi
 
 ??? info "5) Spiacenti, la fonte non è raggiungibile"
     **Motivo:** La sorgente impostata non è raggiungibile  
@@ -82,4 +82,4 @@
     **Motivo:** Raramente capita che all'apertura l'addon non si aggiorni<br>    **Soluzione:** In Mandrakodi, sezione "**Help Me**", "**Update Code**" (verrà mostrato eventuale aggiornamento installato oppure conferma che l'addon è già aggiornato)
 
 ??? info "21) Durante la visione il player spesso si stoppa ed esce"
-    **Motivo:** Al netto del flusso che può essere instabile, anche un dispositivo poco performante può incidere<br>    **Soluzione:** Provare utilizzando un [Players Esterni](../guide/kodi_settings.md#dnsdispositivo), se non migliora allora è questione di fonte sovraccarica e/o propria connessione
+    **Motivo:** Al netto del flusso che può essere instabile, anche un dispositivo poco performante può incidere<br>    **Soluzione:** Provare utilizzando un [Player Esterno](../guide/kodi_settings.md#dnsdispositivo), se non migliora allora è questione di fonte sovraccarica e/o propria connessione
