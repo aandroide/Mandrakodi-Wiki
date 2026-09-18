@@ -9,7 +9,7 @@
 
 ??? info "1) Impossibile connettersi al server"
     **Motivo:** L'indirizzo Github inserito in Kodi non è scritto correttamente  
-    **Soluzione:** Leggere la [Guida Installazione](/installazione/install/#addon)
+    **Soluzione:** Leggere la [Guida Installazione](../installazione/install/#addon)
 
 ??? info "2) Addon Under Maintenance"
     **Motivo:** L'addon è temporaneamente in manutenzione  
@@ -21,7 +21,7 @@
 
 ??? info "4) Con i DNS attualmente impostati, **x.x.x.x - x.x.x.x**, potresti avere problemi a recuperare i link da alcuni siti"
     **Motivo:** MandraKodi ha trovato dei **DNS** diversi da quelli di Cloudflare e/o OpenDNS  
-    **Soluzione:** [Modificare i DNS](../guide/dns.md) sul **router**, se possibile<br>In alternativa, [modificarli sul singolo device](/guide/dns/#dnsdispositivo) su cui è installato Kodi
+    **Soluzione:** [Modificare i DNS](../guide/dns.md) sul **router**, se possibile<br>In alternativa, [modificarli sul singolo device](../guide/dns/#dnsdispositivo) su cui è installato Kodi
 
 ??? info "5) Spiacenti, la fonte non è raggiungibile"
     **Motivo:** La sorgente impostata non è raggiungibile  
@@ -33,7 +33,7 @@
 
 ??? info "7) Lo script 'script.module.resolveurl' non risulta installato"
     **Motivo:** Dipendenza mancante nel sistema  
-    **Soluzione:** Installare o aggiornare il modulo ResolveURL seguendo i passaggi della [Guida Installazione](/installazione/install/#addon)
+    **Soluzione:** Installare o aggiornare il modulo ResolveURL seguendo i passaggi della [Guida Installazione](../installazione/install/#addon)
 
 ??? info "8) Riproduzione fallita di uno o più elementi. Controlla il log per ulteriori informazioni su questo messaggio"
     **Motivo:** Il link recuperato da MandraKodi e inviato al player non funziona  
@@ -82,4 +82,4 @@
     **Motivo:** Raramente capita che all'apertura l'addon non si aggiorni<br>    **Soluzione:** In Mandrakodi, sezione "**Help Me**", "**Update Code**" (verrà mostrato eventuale aggiornamento installato oppure conferma che l'addon è già aggiornato)
 
 ??? info "21) Durante la visione il player spesso si stoppa ed esce"
-    **Motivo:** Al netto del flusso che può essere instabile, anche un dispositivo poco performante può incidere<br>    **Soluzione:** Provare utilizzando un [Players Esterni](/installazione/kodi_settings/#players), se non migliora allora è questione di fonte sovraccarica e/o propria connessione
+    **Motivo:** Al netto del flusso che può essere instabile, anche un dispositivo poco performante può incidere<br>    **Soluzione:** Provare utilizzando un [Players Esterni](../installazione/kodi_settings/#players), se non migliora allora è questione di fonte sovraccarica e/o propria connessione
