@@ -53,7 +53,7 @@
 
 
 !!! warning "Attenzione"
-    Per "Opzione DIRETTO" prima eseguire procedura per abilitare i "[Players Esterni](https://campipaolo.github.io/Mandrakodi-Wiki/guide/kodi_settings/)" (se non precedentemente eseguita)
+    Per "Opzione DIRETTO" prima eseguire procedura per abilitare i "[Player Esterno](../guide/kodi_settings.md#players)" (se non precedentemente eseguita)
 
 ??? info "Opzione **DIRETTO**"
     **Play fuori da Kodi (es. Vlc, Mx Player)**
