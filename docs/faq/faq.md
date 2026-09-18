@@ -33,7 +33,7 @@
 
 ??? info "7) Lo script 'script.module.resolveurl' non risulta installato"
     **Motivo:** Dipendenza mancante nel sistema  
-    **Soluzione:** Installare o aggiornare il modulo ResolveURL seguendo i passaggi della [Guida Installazione](../installazione/install.md#addon)
+    **Soluzione:** Installare o aggiornare il modulo ResolverURL seguendo i passaggi della [Guida Installazione](../installazione/install.md#addon)
 
 ??? info "8) Riproduzione fallita di uno o più elementi. Controlla il log per ulteriori informazioni su questo messaggio"
     **Motivo:** Il link recuperato da MandraKodi e inviato al player non funziona  
@@ -82,4 +82,4 @@
     **Motivo:** Raramente capita che all'apertura l'addon non si aggiorni<br>    **Soluzione:** In Mandrakodi, sezione "**Help Me**", "**Update Code**" (verrà mostrato eventuale aggiornamento installato oppure conferma che l'addon è già aggiornato)
 
 ??? info "21) Durante la visione il player spesso si stoppa ed esce"
-    **Motivo:** Al netto del flusso che può essere instabile, anche un dispositivo poco performante può incidere<br>    **Soluzione:** Provare utilizzando un [Players Esterni](../guide/kodi_settings.md#players), se non migliora allora è questione di fonte sovraccarica e/o propria connessione
+    **Motivo:** Al netto del flusso che può essere instabile, anche un dispositivo poco performante può incidere<br>    **Soluzione:** Provare utilizzando un [Players Esterni](../guide/kodi_settings.md#dnsdispositivo), se non migliora allora è questione di fonte sovraccarica e/o propria connessione
