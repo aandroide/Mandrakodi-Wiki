@@ -1,7 +1,7 @@
 <div class="segnalazioni-widget">
   <div class="segnalazioni-info">
     <span class="badge badge-offline">🔴 OFFLINE: <strong id="cnt-offline">-</strong></span>
-    <span class="badge badge-attesa">🟡 In Attesa: <strong id="cnt-attesa">-</strong></span>
+    <span class="badge badge-attesa">🟡 IN ATTESA: <strong id="cnt-attesa">-</strong></span>
   </div>
 
   <div class="segnalazioni-actions">
@@ -18,18 +18,18 @@
 </div>
 
 <style>
-/* Stili per la riga compatta */
 .segnalazioni-widget {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--md-code-bg-color, #f5f5f5);
-  border: 1px solid var(--md-typeset-table-color, #e0e0e0);
+  background-color: #252526;
+  border: 1px solid #444;
   border-radius: 8px;
   padding: 8px 14px;
   margin: 15px 0;
   gap: 10px;
   flex-wrap: wrap;
+  color: #fff;
 }
 
 .segnalazioni-info {
@@ -42,12 +42,12 @@
 .badge {
   padding: 4px 10px;
   border-radius: 20px;
-  font-weight: 500;
-  background-color: rgba(0,0,0,0.05);
+  font-weight: bold;
+  background-color: #1e1e1e;
 }
 
-.badge-offline { border: 1px solid #e53935; color: #c62828; }
-.badge-attesa { border: 1px solid #fdd835; color: #f57f17; }
+.badge-offline { border: 1px solid #d32f2f; color: #ff5252; }
+.badge-attesa { border: 1px solid #ffa000; color: #ffb74d; }
 
 .segnalazioni-actions {
   display: flex;
@@ -56,8 +56,9 @@
 }
 
 #btn-reload {
-  background: transparent;
-  border: 1px solid var(--md-typeset-table-color, #ccc);
+  background: #333;
+  color: #fff;
+  border: 1px solid #555;
   border-radius: 4px;
   padding: 4px 8px;
   cursor: pointer;
@@ -66,13 +67,13 @@
 }
 
 #btn-reload:hover {
-  background-color: rgba(0,0,0,0.05);
+  background-color: #444;
 }
 
 .btn-apri {
-  background-color: var(--md-typeset-a-color, #007bc7);
+  background-color: #107c41;
   color: #fff !important;
-  padding: 4px 12px;
+  padding: 6px 12px;
   border-radius: 4px;
   text-decoration: none !important;
   font-size: 0.85em;
@@ -83,7 +84,6 @@
   opacity: 0.9;
 }
 
-/* Animazione di rotazione per il refresh */
 .spin {
   animation: spin 0.8s linear infinite;
 }
@@ -91,44 +91,49 @@
 </style>
 
 <script>
-// SOSTITUISCI QUESTO URL CON IL TUO WEB APP URL DI GOOGLE APPS SCRIPT
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTQJzxvLspR-1GdYh1wOXSLrF8h4TIeswEAIUJGtM9z1I4pIUZD3N_ANO2oewKmaI/exec?sheet=Segnalazioni";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTQJzxvLspR-1GdYh1wOXSLrF8h4TIeswEAIUJGtM9z1I4pIUZD3N_ANO2oewKmaI/exec";
 
-async function caricaSegnalazioni() {
+function caricaSegnalazioni() {
   const btnReload = document.getElementById('btn-reload');
   const elemOffline = document.getElementById('cnt-offline');
   const elemAttesa = document.getElementById('cnt-attesa');
 
-  // Animazione pulsante ricarica
   if (btnReload) btnReload.classList.add('spin');
   elemOffline.innerText = "...";
   elemAttesa.innerText = "...";
 
-  try {
-    const res = await fetch(SCRIPT_URL);
-    const data = await res.json();
+  const cacheBuster = "&_ts=" + new Date().getTime();
+
+  fetch(SCRIPT_URL + "?action=getOpen" + cacheBuster, { method: "GET" })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      let countOffline = 0;
+      let countAttesa = 0;
+
+      if (Array.isArray(data)) {
+        data.forEach(function(item) {
+          const st = (item.stato || '').toString().trim().toUpperCase();
+          if (st === "OFFLINE") countOffline++;
+          if (st === "IN ATTESA") countAttesa++;
+        });
+      }
     
-    let countOffline = 0;
-    let countAttesa = 0;
-    
-    // Legge la colonna F (indice 5) di ogni riga ritornata dal foglio "Segnalazioni"
-    data.forEach(riga => {
-      const stato = (riga[5] || riga.Stato || "").toString().trim().toUpperCase();
-      if (stato === "OFFLINE") countOffline++;
-      if (stato === "IN ATTESA") countAttesa++;
+      elemOffline.innerText = countOffline;
+      elemAttesa.innerText = countAttesa;
+    })
+    .catch(function(err) {
+      console.error("Errore conteggio segnalazioni:", err);
+      elemOffline.innerText = "Err";
+      elemAttesa.innerText = "Err";
+    })
+    .finally(function() {
+      if (btnReload) btnReload.classList.remove('spin');
     });
-    
-    elemOffline.innerText = countOffline;
-    elemAttesa.innerText = countAttesa;
-  } catch (err) {
-    console.error("Errore nel caricamento delle segnalazioni:", err);
-    elemOffline.innerText = "Err";
-    elemAttesa.innerText = "Err";
-  } finally {
-    if (btnReload) btnReload.classList.remove('spin');
-  }
 }
 
-// Caricamento automatico al caricamento della pagina
-document.addEventListener("DOMContentLoaded", caricaSegnalazioni);
+if (document.readyState === "complete" || document.readyState === "interactive") {
+  setTimeout(caricaSegnalazioni, 1);
+} else {
+  document.addEventListener("DOMContentLoaded", caricaSegnalazioni);
+}
 </script>
