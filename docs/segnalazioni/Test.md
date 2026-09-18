@@ -15,8 +15,6 @@
     <button id="btn-reload" onclick="caricaSegnalazioni()" title="Ricarica conteggio">
       🔄
     </button>
-<br>
-
 
     <!-- Pulsante per aprire la pagina delle Segnalazioni completa -->
     <a href="../segnalazioni/ticket_issue/" class="md-button md-button--primary">
