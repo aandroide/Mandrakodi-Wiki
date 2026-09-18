@@ -18,7 +18,9 @@
     </button>
 
     <!-- Pulsante per aprire la pagina delle Segnalazioni completa -->
-    [Elenco Segnalazioni](../segnalazioni/ticket_issue/){ .md-button .md-button--primary }
+    <a href="../segnalazioni/ticket_issue/" class="md-button md-button--primary">
+      Elenco Segnalazioni
+    </a>
   </div>
 </div>
 
