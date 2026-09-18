@@ -1,6 +1,6 @@
 # **Benvenuti nella Wiki ufficiale di MandraKodi**
 
-![icon](images/icon.gif)
+![icon](../images/icon.gif)
 
 [:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
 
