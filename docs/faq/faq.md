@@ -9,7 +9,7 @@
 
 ??? info "1) Impossibile connettersi al server"
     **Motivo:** L'indirizzo Github inserito in Kodi non è scritto correttamente  
-    **Soluzione:** Leggere la [Guida Installazione](../installazione/install/#addon)
+    **Soluzione:** Leggere la [Guida Installazione](../installazione/install.md#addon)
 
 ??? info "2) Addon Under Maintenance"
     **Motivo:** L'addon è temporaneamente in manutenzione  
