@@ -182,7 +182,7 @@ title: Segnalazioni
       <div style="margin-bottom: 20px; background: #3a2e12; border: 1px solid #ffa000; padding: 12px; border-radius: 6px;">
         <label style="cursor: pointer; display: flex; align-items: flex-start; gap: 10px;">
           <input type="checkbox" id="check-conferma" required style="margin-top: 3px;">
-          <span><strong>Confermo:</strong> la segnalazione riguarda <strong>TUTTA LA SEZIONE</strong> non funzionante e NON solamente per alcuni link offline</span>
+          <span><strong>Confermo:</strong> la segnalazione riguarda <strong>TUTTA LA SEZIONE</strong> non funzionante e NON solamente per alcuni link offline, di avere <strong>impostato correttamente i DNS</strong> come da guida nella Wiki Page</span>
         </label>
       </div>
     
