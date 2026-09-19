@@ -35,7 +35,7 @@
 
 
     <!-- Visualizzare/Inviare Segnalazioni -->
-    <a href="segnalazioni/ticket_issue.md/" class="btn-apri">Visualizzare/Inviare Segnalazioni ➔</a>
+    <a href="/segnalazioni/ticket_issue/" class="btn-apri">Visualizzare/Inviare Segnalazioni ➔</a>
 
   </div>
 </div>
