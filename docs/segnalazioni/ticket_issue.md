@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Segnalazioni
+
 ---
 
 [:material-face-agent: Torna ad Assistenza](../ask_help.md){ .md-button .md-button--primary }  [:material-home: Torna alla Home](../index.md){ .md-button .md-button--primary } [:material-comment-question: FAQ](../ask_help.md){ .md-button .md-button--primary }
@@ -8,21 +9,22 @@ title: Segnalazioni
 ---
 
 !!! tip "Segnalazioni"
-    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, mentre quando risolte vengono automaticamente eliminate dall'elenco<br>Non  esiste una tempistica certa in merito alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione
+    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, mentre quando risolte vengono automaticamente eliminate dall'elenco<br>Non esiste una tempistica certa in merito alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione
 
 !!! warning "ATTENZIONE"
-    Le segnalazioni vanno fatte esclusivamente quando è **TUTTA LA SEZIONE** non funzionante/accessibile con riportato errore addon e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
+    Le segnalazioni vanno fatte esclusivamente quando è TUTTA LA SEZIONE non funzionante/accessibile con riportato errore addon e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
 
 !!! important "Compilare form "Invia Nuova Segnalazione""
     - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco)
     - Compilare il form in tutte le sue parti, diversamente non verrà inviato (attendere sempre il caricamento delle voci nei menù a discesa)
-    - Dopo l'invio della segnalazione, la tabella "Segnalazioni Attive" si aggiorna automaticamente senza dover ricaricare la pagina<br>
+    - Dopo l'invio della segnalazione, la tabella "Segnalazioni Attive" si aggiorna automaticamente senza dover ricaricare la pagina
     - N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate (quando non presenti segnalazioni viene mostrato messaggio di "Nessuna segnalazione aperta")
 
 <style>
   .ticket-container { max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; color: #fff; }
   .ticket-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .ticket-table { width: 100%; border-collapse: collapse; text-align: left; background: #1e1e1e; color: #fff; border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
+  .table-responsive { width: 100%; overflow-x: auto; margin-bottom: 30px; }
+  .ticket-table { width: 100%; border-collapse: collapse; text-align: left; background: #1e1e1e; color: #fff; border-radius: 8px; overflow: hidden; }
   .ticket-table th, .ticket-table td { padding: 10px; border-bottom: 1px solid #333; }
   .ticket-table th { background: #333; }
   .ticket-form { background: #252526; padding: 20px; border-radius: 8px; }
@@ -34,34 +36,94 @@ title: Segnalazioni
   .btn-refresh:hover { background: #333; }
   .btn-reset-form { margin-top: 10px; padding: 8px 15px; background: #107c41; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; }
   .status-msg { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; text-align: center; }
+
+
+  /* CSS Responsive per Smartphone (Card Layout) */
+  @media (max-width: 600px) {
+    .ticket-table, .ticket-table thead, .ticket-table tbody, .ticket-table th, .ticket-table td, .ticket-table tr {
+      display: block;
+    }
+    .ticket-table thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+    .ticket-table tr {
+      border: 1px solid #333;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      background: #1e1e1e;
+      padding: 6px 10px;
+    }
+    .ticket-table td {
+      border: none;
+      border-bottom: 1px solid #2a2a2a;
+      position: relative;
+      padding-left: 45%;
+      text-align: right;
+      font-size: 14px;
+      word-break: break-word;
+    }
+    .ticket-table td:last-child {
+      border-bottom: 0;
+    }
+    .ticket-table td::before {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 40%;
+      padding-right: 10px;
+      white-space: nowrap;
+      text-align: left;
+      font-weight: bold;
+      color: #aaa;
+      content: attr(data-label);
+    }
+    .ticket-table td[colspan] {
+      padding-left: 10px;
+      text-align: center;
+    }
+    .ticket-table td[colspan]::before {
+      content: "";
+    }
+  }
 </style>
 
 <div class="ticket-container">
+
+
   <div class="ticket-header">
-    <h3>📋 Segnalazioni Attive</h3>
+    <h3 style="margin: 0;">📋 Segnalazioni Attive</h3>
     <button id="btn-refresh-list" class="btn-refresh">🔄 Aggiorna Elenco</button>
   </div>
-  <table class="ticket-table">
-    <thead>
-      <tr>
-        <th>Data</th>
-        <th>Sezione</th>
-        <th>Contenuto</th>
-        <th>Problema</th>
-        <th>Stato</th>
-      </tr>
-    </thead>
-    <tbody id="tabella-segnalazioni">
-      <tr>
-        <td colspan="5" style="text-align: center;">Caricamento in corso...</td>
-      </tr>
-    </tbody>
-  </table>
+
+
+  <div class="table-responsive">
+    <table class="ticket-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Sezione</th>
+          <th>Contenuto</th>
+          <th>Problema</th>
+          <th>Stato</th>
+        </tr>
+      </thead>
+      <tbody id="tabella-segnalazioni">
+        <tr>
+          <td colspan="5" style="text-align: center;">Caricamento in corso...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
 
   <div class="ticket-form">
     <h3>📌 Invia Nuova Segnalazione</h3>
-    <form id="form-segnalazione">
 
+
+    <form id="form-segnalazione">
+    
       <!-- Livello 1: Categoria Madre -->
       <div class="form-group">
         <label for="categoria-principale">Categoria Madre (Obbligatorio):</label>
@@ -120,15 +182,17 @@ title: Segnalazioni
       <div style="margin-bottom: 20px; background: #3a2e12; border: 1px solid #ffa000; padding: 12px; border-radius: 6px;">
         <label style="cursor: pointer; display: flex; align-items: flex-start; gap: 10px;">
           <input type="checkbox" id="check-conferma" required style="margin-top: 3px;">
-          <span><strong>Confermo:</strong>  la segnalazione riguarda <strong>TUTTA LA SEZIONE</strong> non funzionante e NON solamente per alcuni link offline</span>
+          <span><strong>Confermo:</strong> la segnalazione riguarda <strong>TUTTA LA SEZIONE</strong> non funzionante e NON solamente per alcuni link offline</span>
         </label>
       </div>
     
       <button type="submit" id="btn-invia" class="btn-submit">Invia Segnalazione</button>
       <div id="messaggio-stato" class="status-msg"></div>
+    
     </form>
 
   </div>
+
 </div>
 
 <script>
@@ -136,6 +200,7 @@ title: Segnalazioni
   var SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTQJzxvLspR-1GdYh1wOXSLrF8h4TIeswEAIUJGtM9z1I4pIUZD3N_ANO2oewKmaI/exec";
   var rawData = null;
   var isMenuLoading = false;
+
 
   function init() {
     loadInit();
@@ -154,7 +219,6 @@ title: Segnalazioni
     onCatChange();
   }
 
-  // CARICAMENTO INIZIALE UNIFICATO: menu + segnalazioni in una sola chiamata
   function loadInit() {
     fetch(SCRIPT_URL + "?action=getInit", { method: "GET" })
       .then(function(res) { return res.json(); })
@@ -174,7 +238,6 @@ title: Segnalazioni
       });
   }
 
-  // AGGIORNAMENTO SOLO SEGNALAZIONI (usato dal tasto "Aggiorna Elenco" e dopo un invio)
   function loadReports() {
     var btnRefresh = document.getElementById("btn-refresh-list");
     if (btnRefresh) {
@@ -203,6 +266,7 @@ title: Segnalazioni
           btnRefresh.textContent = "🔄 Aggiorna Elenco";
         }
       });
+
   }
 
   function renderReports(data) {
@@ -234,13 +298,14 @@ title: Segnalazioni
       }
     
       tbody.innerHTML += '<tr>' +
-        '<td>' + (item.data || '') + '</td>' +
-        '<td><span style="background: #444; padding: 3px 8px; border-radius: 4px;">' + (item.sezione || '') + '</span></td>' +
-        '<td><strong>' + (item.contenuto || '') + '</strong></td>' +
-        '<td>' + (item.problema || '') + '</td>' +
-        '<td><span style="' + bgStyle + ' padding: 3px 8px; border-radius: 4px; font-weight: bold;">' + (item.stato || 'In attesa') + '</span></td>' +
+        '<td data-label="Data">' + (item.data || '') + '</td>' +
+        '<td data-label="Sezione"><span style="background: #444; padding: 3px 8px; border-radius: 4px;">' + (item.sezione || '') + '</span></td>' +
+        '<td data-label="Contenuto"><strong>' + (item.contenuto || '') + '</strong></td>' +
+        '<td data-label="Problema">' + (item.problema || '') + '</td>' +
+        '<td data-label="Stato"><span style="' + bgStyle + ' padding: 3px 8px; border-radius: 4px; font-weight: bold;">' + (item.stato || 'In attesa') + '</span></td>' +
       '</tr>';
     });
+
   }
 
   function renderReportsError() {
@@ -273,6 +338,7 @@ title: Segnalazioni
         isMenuLoading = false;
         if (callback) callback(false);
       });
+
   }
 
   function getCategoryItems(catKey) {
@@ -327,6 +393,7 @@ title: Segnalazioni
         });
       }
     }
+
   }
 
   function populateSubCategories(cat) {
@@ -343,6 +410,7 @@ title: Segnalazioni
         subSel.appendChild(opt);
       });
     }
+
   }
 
   function renderContentOptions(cat, sub) {
@@ -384,6 +452,7 @@ title: Segnalazioni
         });
       }
     }
+
   }
 
   function onSubChange() {
@@ -418,6 +487,7 @@ title: Segnalazioni
         }
       });
     }
+
   }
 
   function onContChange() {
@@ -438,6 +508,7 @@ title: Segnalazioni
         detSel.appendChild(opt);
       });
     }
+
   }
 
   function onSubmit(e) {
@@ -508,6 +579,7 @@ title: Segnalazioni
       msg.style.color = "#fff";
       msg.innerHTML = "❌ Errore di connessione.";
     });
+
   }
 
   if (document.readyState === "complete" || document.readyState === "interactive") {
