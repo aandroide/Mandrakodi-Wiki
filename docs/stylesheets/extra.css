@@ -19,3 +19,16 @@
 [data-md-color-scheme="slate"] {
   --md-typeset-mark-color: #ffd600 !important; /* Giallo acceso */
 }
+
+/* Spaziatura tra i pulsanti .md-button quando più pulsanti sono affiancati */
+.md-typeset .md-button {
+  margin: 6px 8px 6px 0;
+}
+
+/* Su mobile i pulsanti vanno spesso a capo: garantisce margine anche in verticale */
+@media screen and (max-width: 76.1875em) {
+  .md-typeset .md-button {
+    display: inline-block;
+    margin: 6px 8px 6px 0;
+  }
+}
