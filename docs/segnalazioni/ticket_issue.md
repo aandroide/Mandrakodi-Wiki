@@ -138,8 +138,7 @@ title: Segnalazioni
   var isMenuLoading = false;
 
   function init() {
-    loadReports();
-    loadMenu();
+    loadInit();
     document.getElementById("btn-refresh-list").addEventListener("click", loadReports);
     document.getElementById("categoria-principale").addEventListener("change", onCatChange);
     document.getElementById("sotto-categoria").addEventListener("change", onSubChange);
@@ -155,72 +154,106 @@ title: Segnalazioni
     onCatChange();
   }
 
-  function loadReports() {
-    var tbody = document.getElementById('tabella-segnalazioni');
-    var btnRefresh = document.getElementById("btn-refresh-list");
-    if (!tbody) return;
+  // CARICAMENTO INIZIALE UNIFICATO: menu + segnalazioni in una sola chiamata
+  function loadInit() {
+    fetch(SCRIPT_URL + "?action=getInit", { method: "GET" })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        if (data && data.error) {
+          renderReportsError();
+          rawData = null;
+          return;
+        }
+        rawData = data.menu || {};
+        renderReports(data.open || []);
+      })
+      .catch(function(err) {
+        console.error("Errore caricamento iniziale:", err);
+        rawData = null;
+        renderReportsError();
+      });
+  }
 
+  // AGGIORNAMENTO SOLO SEGNALAZIONI (usato dal tasto "Aggiorna Elenco" e dopo un invio)
+  function loadReports() {
+    var btnRefresh = document.getElementById("btn-refresh-list");
     if (btnRefresh) {
       btnRefresh.disabled = true;
       btnRefresh.textContent = "⏳ Aggiornamento...";
     }
-    
+
     var cacheBuster = "&_ts=" + new Date().getTime();
     
     fetch(SCRIPT_URL + "?action=getOpen" + cacheBuster, { method: "GET" })
       .then(function(res) { return res.json(); })
       .then(function(data) {
-        tbody.innerHTML = '';
-        
         if (data && data.error) {
-          if (btnRefresh) {
-            btnRefresh.style.display = "inline-flex";
-            btnRefresh.disabled = false;
-            btnRefresh.textContent = "🔄 Aggiorna Elenco";
-          }
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ff5252;">⚠️ Impossibile caricare l\'elenco. Riprova con il tasto in alto.</td></tr>';
+          renderReportsError();
           return;
         }
-    
-        if (btnRefresh) {
-          btnRefresh.style.display = "none";
-          btnRefresh.disabled = false;
-          btnRefresh.textContent = "🔄 Aggiorna Elenco";
-        }
-    
-        if (!data || data.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #4caf50; font-weight: bold; background: #1b3e20; padding: 15px;">✅ Nessuna segnalazione aperta al momento.</td></tr>';
-          return;
-        }
-    
-        data.forEach(function(item) {
-          var st = (item.stato || '').toUpperCase();
-          var bgStyle = "background: #ff9800; color: #000;";
-    
-          if (st === "OFFLINE") {
-            bgStyle = "background: #d32f2f; color: #fff;";
-          } else if (st === "IN LAVORAZIONE") {
-            bgStyle = "background: #0288d1; color: #fff;";
-          }
-    
-          tbody.innerHTML += '<tr>' +
-            '<td>' + (item.data || '') + '</td>' +
-            '<td><span style="background: #444; padding: 3px 8px; border-radius: 4px;">' + (item.sezione || '') + '</span></td>' +
-            '<td><strong>' + (item.contenuto || '') + '</strong></td>' +
-            '<td>' + (item.problema || '') + '</td>' +
-            '<td><span style="' + bgStyle + ' padding: 3px 8px; border-radius: 4px; font-weight: bold;">' + (item.stato || 'In attesa') + '</span></td>' +
-          '</tr>';
-        });
+        renderReports(data || []);
       })
       .catch(function(err) {
         console.error("Errore caricamento segnalazioni:", err);
+        renderReportsError();
+      })
+      .finally(function() {
         if (btnRefresh) {
-          btnRefresh.style.display = "inline-flex";
           btnRefresh.disabled = false;
           btnRefresh.textContent = "🔄 Aggiorna Elenco";
         }
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ff5252;">⚠️ Errore di connessione. Riprova con il tasto in alto.</td></tr>';
       });
+  }
+
+  function renderReports(data) {
+    var tbody = document.getElementById('tabella-segnalazioni');
+    var btnRefresh = document.getElementById("btn-refresh-list");
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    
+    if (btnRefresh) {
+      btnRefresh.style.display = "none";
+      btnRefresh.disabled = false;
+      btnRefresh.textContent = "🔄 Aggiorna Elenco";
+    }
+    
+    if (!data || data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #4caf50; font-weight: bold; background: #1b3e20; padding: 15px;">✅ Nessuna segnalazione aperta al momento.</td></tr>';
+      return;
+    }
+    
+    data.forEach(function(item) {
+      var st = (item.stato || '').toUpperCase();
+      var bgStyle = "background: #ff9800; color: #000;";
+    
+      if (st === "OFFLINE") {
+        bgStyle = "background: #d32f2f; color: #fff;";
+      } else if (st === "IN LAVORAZIONE") {
+        bgStyle = "background: #0288d1; color: #fff;";
+      }
+    
+      tbody.innerHTML += '<tr>' +
+        '<td>' + (item.data || '') + '</td>' +
+        '<td><span style="background: #444; padding: 3px 8px; border-radius: 4px;">' + (item.sezione || '') + '</span></td>' +
+        '<td><strong>' + (item.contenuto || '') + '</strong></td>' +
+        '<td>' + (item.problema || '') + '</td>' +
+        '<td><span style="' + bgStyle + ' padding: 3px 8px; border-radius: 4px; font-weight: bold;">' + (item.stato || 'In attesa') + '</span></td>' +
+      '</tr>';
+    });
+  }
+
+  function renderReportsError() {
+    var tbody = document.getElementById('tabella-segnalazioni');
+    var btnRefresh = document.getElementById("btn-refresh-list");
+    if (btnRefresh) {
+      btnRefresh.style.display = "inline-flex";
+      btnRefresh.disabled = false;
+      btnRefresh.textContent = "🔄 Aggiorna Elenco";
+    }
+    if (tbody) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ff5252;">⚠️ Impossibile caricare l\'elenco. Riprova con il tasto in alto.</td></tr>';
+    }
   }
 
   function loadMenu(callback) {
@@ -229,13 +262,13 @@ title: Segnalazioni
 
     fetch(SCRIPT_URL + "?action=getMenu" + cacheBuster, { method: "GET" })
       .then(function(res) { return res.json(); })
-      .then(function(data) { 
-        rawData = data || {}; 
+      .then(function(data) {
+        rawData = data || {};
         isMenuLoading = false;
         if (callback) callback(true);
       })
-      .catch(function(err) { 
-        console.error("Errore recupero menu:", err); 
+      .catch(function(err) {
+        console.error("Errore recupero menu:", err);
         rawData = null;
         isMenuLoading = false;
         if (callback) callback(false);
@@ -456,7 +489,7 @@ title: Segnalazioni
         msg.style.color = "#fff";
         msg.innerHTML = "⚠️ Risulta già una segnalazione attiva per questo contenuto.<br>" +
                         "<button type='button' id='btn-reset-dup' class='btn-reset-form'>🔄 Nuova Segnalazione</button>";
-        
+    
         var btnResetDup = document.getElementById("btn-reset-dup");
         if (btnResetDup) {
           btnResetDup.addEventListener("click", resetForm);
