@@ -1,5 +1,5 @@
 {
-  "ultimo_aggiornamento": "20/09/2026 14:12:24",
+  "ultimo_aggiornamento": "20/09/2026 14:23:10",
   "partite": [
     {
       "lega": "Italia - Serie A",
@@ -75,13 +75,13 @@
     },
     {
       "lega": "Italia - Serie A",
-      "dettagli": "Live - + - 13:00 - HT - Frosinone 2 - 0 Como - Paramount+, Peacock, DAZN Canada, Disney+ Premium Caribbean, fuboTV Canada",
+      "dettagli": "Live - + - 13:00 - 53' - Frosinone 2 - 0 Como - Paramount+, Peacock, DAZN Canada, Disney+ Premium Caribbean, fuboTV Canada",
       "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
-      "dettagli": "Live - + - 13:00 - 49' - Parma 1 - 0 Genoa - CBS Sports Network, Paramount+, fuboTV, Peacock, Telemundo Deportes Ahora",
+      "dettagli": "Live - + - 13:00 - 60' - Parma 1 - 0 Genoa - CBS Sports Network, Paramount+, fuboTV, Peacock, Telemundo Deportes Ahora",
       "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
@@ -147,19 +147,19 @@
     },
     {
       "lega": "Italia - Serie A",
-      "dettagli": "5\t▲ - 2-0 - Frosinone - 5\t3\t1\t1\t9\t4\t5\t10 - P - V - V - S",
+      "dettagli": "5 - Como - 4\t3\t1\t0\t9\t4\t5\t10 - V - V - V - P",
       "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
-      "dettagli": "6\t▼ - 2-0 - Como - 5\t3\t1\t1\t9\t6\t3\t10 - V - V - V - P",
+      "dettagli": "6 - Milan - 4\t2\t2\t0\t7\t4\t3\t8 - P - P - V - V",
       "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
-      "dettagli": "7 - Milan - 4\t2\t2\t0\t7\t4\t3\t8 - P - P - V - V",
+      "dettagli": "7 - Frosinone - 4\t2\t1\t1\t7\t4\t3\t7 - P - V - V - S",
       "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
@@ -207,31 +207,31 @@
     },
     {
       "lega": "Italia - Serie A",
-      "dettagli": "15\t▲ - 1-0 - Parma - 5\t1\t1\t3\t3\t6\t-3\t4 - S - P - S - S",
+      "dettagli": "15 - Monza - 5\t1\t1\t3\t8\t12\t-4\t4 - V - S - P - S - S",
       "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
-      "dettagli": "16 - Monza - 5\t1\t1\t3\t8\t12\t-4\t4 - V - S - P - S - S",
+      "dettagli": "16 - Fiorentina - 5\t1\t1\t3\t6\t12\t-6\t4 - P - V - S - S - S",
       "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
-      "dettagli": "17 - Fiorentina - 5\t1\t1\t3\t6\t12\t-6\t4 - P - V - S - S - S",
+      "dettagli": "17 - Bologna - 5\t0\t2\t3\t3\t6\t-3\t2 - P - S - P - S - S",
       "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
-      "dettagli": "18 - Bologna - 5\t0\t2\t3\t3\t6\t-3\t2 - P - S - P - S - S",
+      "dettagli": "18 - Parma - 4\t0\t1\t3\t2\t6\t-4\t1 - S - P - S - S",
       "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
-      "dettagli": "19 - 1-0 - Genoa - 5\t0\t1\t4\t2\t9\t-7\t1 - P - S - S - S",
+      "dettagli": "19 - Genoa - 4\t0\t1\t3\t2\t8\t-6\t1 - P - S - S - S",
       "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
@@ -539,12 +539,6 @@
       "lega": "Italia - Serie A",
       "dettagli": "J. KarlstromUdinese - 1 - 0",
       "is_live": false,
-      "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
-    },
-    {
-      "lega": "Italia - Serie A",
-      "dettagli": "Atlético MadridSet 2014:15Real Madrid",
-      "is_live": true,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
