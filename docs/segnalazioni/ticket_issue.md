@@ -11,7 +11,7 @@ title: Segnalazioni
     Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, mentre quando risolte vengono automaticamente eliminate dall'elenco<br>Non  esiste una tempistica certa in merito alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione
 
 !!! warning "ATTENZIONE"
-    Le segnalazioni vanno fatte esclusivamente quando è **TUTTA LA SEZIONE** non funzionante/accessibile con riportato errore addon e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)
+    Le segnalazioni vanno fatte esclusivamente quando è **TUTTA LA SEZIONE** non funzionante/accessibile con riportato errore addon e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)<br> N.B.: **prima di inviare** la segnalazione, **testare bene** la sezione che presenta errore:<br> - svuotare cache Kodi<br> - alla sezione "Help Me", cliccare "Update Code" per verificare eventuale aggiornamento addon<br> - verificare di avere impostato correttamente i DNS ed aver eseguito test per conferma come da guida<br> - testare sezione da differenti connessioni (fissa/mobile)
 
 !!! important "Compilare form "Invia Nuova Segnalazione""
     - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco)
