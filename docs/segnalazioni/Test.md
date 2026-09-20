@@ -15,7 +15,7 @@ async function caricaPartite() {
     const data = await res.json();
     
     if (!data.partite || data.partite.length === 0) {
-      container.innerHTML = "<p>Nessun evento trovato al momento.</p>";
+      container.innerHTML = "<p>Nessun evento trovato per le leghe selezionate.</p>";
       return;
     }
     
@@ -26,19 +26,34 @@ async function caricaPartite() {
     
     html += '<ul style="line-height: 1.8; list-style-type: none; padding-left: 0;">';
     
+    const oraAttuale = new Date();
+    const minutiAttuali = oraAttuale.getHours() * 60 + oraAttuale.getMinutes();
+    
     data.partite.forEach(p => {
-      // Badge LIVE per eventi in corso
-      const badgeLive = p.is_live 
-        ? '<span style="background-color: #d9534f; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.8em; margin-right: 5px;">🔴 LIVE</span>' 
+      let isLiveOra = p.is_live;
+    
+      // Se non è segnata già come terminata e ha un orario, calcola la finestra LIVE (orario inizio -> +115 min)
+      if (!p.is_finished && p.orario) {
+        const partiOrario = p.orario.split(':');
+        if (partiOrario.length === 2) {
+          const minutiInizio = parseInt(partiOrario[0], 10) * 60 + parseInt(partiOrario[1], 10);
+          const minutiFine = minutiInizio + 115; // Un match dura circa 115 minuti
+          
+          if (minutiAttuali >= minutiInizio && minutiAttuali <= minutiFine) {
+            isLiveOra = True;
+          }
+        }
+      }
+    
+      // Badge LIVE solo se la partita è effettivamente in corso adesso
+      const badgeLive = isLiveOra 
+        ? '<span style="background-color: #d9534f; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.8em; margin-right: 6px;">🔴 LIVE</span>' 
         : '';
-        
-      // Usa p.dettagli invece di p.raw_data!
-      const infoPartita = p.dettagli || p.raw_data || "Nessun dettaglio";
     
       html += `<li style="margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px;">
         ${badgeLive}
-        <strong>[${p.lega || 'Calcio'}]</strong>: ${infoPartita} 
-        <a href="${p.url || '#'}" target="_blank" rel="noopener" style="font-size: 0.85em; margin-left: 6px;">🔗 Fonte</a>
+        <strong>[${p.lega}]</strong>: ${p.dettagli} 
+        <a href="${p.url}" target="_blank" rel="noopener" style="font-size: 0.85em; margin-left: 6px;">🔗 Fonte</a>
       </li>`;
     });
     
