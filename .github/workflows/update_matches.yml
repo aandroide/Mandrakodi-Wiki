@@ -4,14 +4,14 @@ on:
   schedule:
     # Esegue ogni giorno alle 02:00 UTC
     - cron: '0 2 * * *'
-  workflow_dispatch: # Permette l'esecuzione manuale da GitHub
+  workflow_dispatch: # Permette l'esecuzione manuale da GitHub Web
 
 jobs:
   scrape-and-commit:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write # Permessi per fare il commit nel repository
+      contents: write # Permessi necessari per fare il commit nel repository
 
     steps:
       - name: Checkout Repository
@@ -29,8 +29,8 @@ jobs:
           playwright install chromium
           playwright install-deps chromium
 
-      - name: Esegui Scraper
-        run: python scraper.py
+      - name: Esegui Script Python
+        run: python scripts/scraper.py
 
       - name: Commit e Push del file JSON
         run: |
