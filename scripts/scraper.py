@@ -1,18 +1,26 @@
 import json
 import os
 import sys
+from datetime import datetime
 from playwright.sync_api import sync_playwright
 
 def scarica_partite():
     partite_trovate = []
     
-    # Determina la cartella docs/ rispetto alla posizione dello script
+    # Cartelle e percorsi
     script_dir = os.path.dirname(os.path.abspath(__file__))
     repo_root = os.path.abspath(os.path.join(script_dir, ".."))
     docs_dir = os.path.join(repo_root, "docs")
     
     os.makedirs(docs_dir, exist_ok=True)
     output_path = os.path.join(docs_dir, "partite.json")
+
+    # Pagine target da analizzare
+    targets = [
+        {"lega": "Italia - Serie A", "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"},
+        {"lega": "Italia - Serie B", "url": "https://www.livesoccertv.com/it/competitions/italy/serie-b/"},
+        {"lega": "Italia - Serie C", "url": "https://www.livesoccertv.com/it/competitions/italy/lega-pro-1/"}
+    ]
 
     try:
         with sync_playwright() as p:
@@ -23,54 +31,67 @@ def scarica_partite():
             )
             page = context.new_page()
 
-            # Pagina palinsesto programmazione
-            url = "https://www.livesoccertv.com/it/schedules/"
-            print(f"Connecting to {url}...")
-            page.goto(url, wait_until="domcontentloaded", timeout=60000)
-            
-            # Attendi il caricamento completo del palinsesto
-            page.wait_for_timeout(4000)
+            for target in targets:
+                lega_nome = target["lega"]
+                url = target["url"]
+                print(f"Scraping {lega_nome} da {url}...")
 
-            # Cerca tutte le righe di partite presenti nel palinsesto
-            rows = page.query_selector_all("tr")
-
-            for row in rows:
                 try:
-                    text = row.inner_text().strip()
-                    if not text:
-                        continue
+                    page.goto(url, wait_until="domcontentloaded", timeout=40000)
+                    page.wait_for_timeout(3000)
 
-                    # Parole chiave per intercettare gli eventi inerenti l'Italia / campionati italiani
-                    keywords = [
-                        "Serie A", "Serie B", "Serie C", "Coppa Italia", 
-                        "Supercoppa", "Italia", "Italian"
-                    ]
+                    # Seleziona le righe delle tabelle o dei container eventi
+                    rows = page.query_selector_all("tr.match-row, tr[id*='match'], div.match-row, tr")
 
-                    if any(k.lower() in text.lower() for k in keywords):
-                        # Pulisci e formatta il testo eliminando troppi a capo consecutivi
-                        righe_pulite = [r.strip() for r in text.split("\n") if r.strip()]
-                        testo_formattato = " - ".join(righe_pulite)
-                        
-                        # Evita duplicati o blocchi di testo troppo lunghi
-                        if len(testo_formattato) < 400:
-                            partite_trovate.append({"raw_data": testo_formattato})
-                except Exception as inner_e:
-                    continue
+                    for row in rows:
+                        try:
+                            text = row.inner_text().strip()
+                            if not text or len(text) < 5 or len(text) > 350:
+                                continue
+
+                            # Verifica presenza di stato LIVE
+                            # Su LiveSoccerTV le partite live hanno classi come 'live' o testo 'LIVE' / 'FT' / 'HT'
+                            is_live = False
+                            row_html = row.inner_html().lower()
+                            if "live" in row_html or "in diretta" in text.lower() or "′" in text:
+                                is_live = True
+
+                            # Pulisci il testo
+                            righe_pulite = [r.strip() for r in text.split("\n") if r.strip()]
+                            testo_formattato = " - ".join(righe_pulite)
+
+                            # Filtriamo le righe intestazione inutili
+                            if any(header in testo_formattato.lower() for header in ["data", "squadra", "competizione", "fase"]):
+                                continue
+
+                            partite_trovate.append({
+                                "lega": lega_nome,
+                                "dettagli": testo_formattato,
+                                "is_live": is_live,
+                                "url": url
+                            })
+
+                        except Exception:
+                            continue
+
+                except Exception as err_target:
+                    print(f"Errore caricamento {lega_nome}: {err_target}")
 
             browser.close()
 
     except Exception as e:
-        print(f"Errore durante lo scraping: {e}")
+        print(f"Errore generale durante lo scraping: {e}")
 
-    # Salva i dati estratti nel file JSON
+    # Salva il file JSON con timestamp di aggiornamento
     data_to_save = {
+        "ultimo_aggiornamento": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
         "partite": partite_trovate
     }
     
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data_to_save, f, ensure_ascii=False, indent=2)
         
-    print(f"Salvate {len(partite_trovate)} partite in: {output_path}")
+    print(f"Salvate {len(partite_trovate)} partite totali in: {output_path}")
 
 if __name__ == "__main__":
     scarica_partite()
