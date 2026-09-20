@@ -264,6 +264,8 @@ Basta **cambiare** server DNS, impostandone uno che non oscura
     * Selezionare “DNS Privato”
     * Selezionare “Nome host del provider DNS Privato”
     * Inserire DNS per rete mobile
+    * Eseguire <a href="https://dnsleaktest.com" target="_blank">test dns</a>
+    * Selezionare "Extended test" e attendere, deve segnare ISP con nome dei dns impostati
 
 
 
