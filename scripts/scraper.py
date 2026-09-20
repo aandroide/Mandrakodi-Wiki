@@ -7,7 +7,6 @@ from playwright.sync_api import sync_playwright
 def scarica_partite():
     partite_trovate = []
     
-    # Cartelle e percorsi
     script_dir = os.path.dirname(os.path.abspath(__file__))
     repo_root = os.path.abspath(os.path.join(script_dir, ".."))
     docs_dir = os.path.join(repo_root, "docs")
@@ -15,7 +14,6 @@ def scarica_partite():
     os.makedirs(docs_dir, exist_ok=True)
     output_path = os.path.join(docs_dir, "partite.json")
 
-    # Pagine target da analizzare
     targets = [
         {"lega": "Italia - Serie A", "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"},
         {"lega": "Italia - Serie B", "url": "https://www.livesoccertv.com/it/competitions/italy/serie-b/"},
@@ -40,7 +38,6 @@ def scarica_partite():
                     page.goto(url, wait_until="domcontentloaded", timeout=40000)
                     page.wait_for_timeout(3000)
 
-                    # Seleziona le righe delle tabelle o dei container eventi
                     rows = page.query_selector_all("tr.match-row, tr[id*='match'], div.match-row, tr")
 
                     for row in rows:
@@ -49,18 +46,14 @@ def scarica_partite():
                             if not text or len(text) < 5 or len(text) > 350:
                                 continue
 
-                            # Verifica presenza di stato LIVE
-                            # Su LiveSoccerTV le partite live hanno classi come 'live' o testo 'LIVE' / 'FT' / 'HT'
                             is_live = False
                             row_html = row.inner_html().lower()
                             if "live" in row_html or "in diretta" in text.lower() or "′" in text:
                                 is_live = True
 
-                            # Pulisci il testo
                             righe_pulite = [r.strip() for r in text.split("\n") if r.strip()]
                             testo_formattato = " - ".join(righe_pulite)
 
-                            # Filtriamo le righe intestazione inutili
                             if any(header in testo_formattato.lower() for header in ["data", "squadra", "competizione", "fase"]):
                                 continue
 
@@ -82,7 +75,6 @@ def scarica_partite():
     except Exception as e:
         print(f"Errore generale durante lo scraping: {e}")
 
-    # Salva il file JSON con timestamp di aggiornamento
     data_to_save = {
         "ultimo_aggiornamento": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
         "partite": partite_trovate
