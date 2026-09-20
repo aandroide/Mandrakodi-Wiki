@@ -1,84 +1,64 @@
 {
-  "ultimo_aggiornamento": "20/09/2026 16:05:24",
+  "ultimo_aggiornamento": "20/09/2026 16:25:07",
   "partite": [
     {
       "lega": "Italia - Serie A",
       "orario": "18:45",
-      "dettagli": "18:45 - FIN - Venezia 0 - 2 Lazio - Disponibile on-demand",
-      "is_live": false,
-      "is_finished": true,
+      "dettagli": "18:45 - FIN - Venezia 0 - 2 Lazio",
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
       "orario": "10:30",
-      "dettagli": "10:30 - FIN - Fiorentina 1 - 1 Napoli - Disponibile on-demand",
-      "is_live": false,
-      "is_finished": true,
+      "dettagli": "10:30 - FIN - Fiorentina 1 - 1 Napoli",
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
       "orario": "13:00",
-      "dettagli": "13:00 - FIN - Frosinone 2 - 0 Como - Disponibile on-demand",
-      "is_live": false,
-      "is_finished": true,
+      "dettagli": "13:00 - FIN - Frosinone 2 - 0 Como",
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
       "orario": "13:00",
-      "dettagli": "13:00 - FIN - Parma 2 - 1 Genoa - Disponibile on-demand",
-      "is_live": false,
-      "is_finished": true,
+      "dettagli": "13:00 - FIN - Parma 2 - 1 Genoa",
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
       "orario": "16:00",
-      "dettagli": "Live - 16:00 - 3' - Juventus 0 - 0 Atalanta - Paramount+, Peacock, CBS Sports Golazo, DAZN Canada, TLN",
-      "is_live": true,
-      "is_finished": false,
+      "dettagli": "16:00 - 22' - Juventus 0 - 0 Atalanta - Paramount+, Peacock, CBS Sports Golazo, DAZN Canada, TLN",
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
       "orario": "18:45",
       "dettagli": "18:45 - Milan - Lecce - Paramount+, fuboTV, Peacock, Telemundo, Telemundo Deportes En Vivo",
-      "is_live": false,
-      "is_finished": false,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
       "orario": "13:00",
       "dettagli": "13:00 - Genoa - Fiorentina - Paramount+, Disney+ Premium Caribbean, fuboTV Canada, Disney+ Premium Mexico, Disney+ Premium Norte",
-      "is_live": false,
-      "is_finished": false,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
       "orario": "16:00",
       "dettagli": "16:00 - Internazionale - Parma - Paramount+, TLN, Disney+ Premium Caribbean, fuboTV Canada, Disney+ Premium Mexico",
-      "is_live": false,
-      "is_finished": false,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
       "orario": "18:45",
       "dettagli": "18:45 - Napoli - Frosinone - Paramount+, TLN, Disney+ Premium Caribbean, fuboTV Canada, Disney+ Premium Mexico",
-      "is_live": false,
-      "is_finished": false,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
       "orario": "10:30",
       "dettagli": "10:30 - Como - Roma - Paramount+, Disney+ Premium Caribbean, fuboTV Canada, Disney+ Premium Mexico, Disney+ Premium Norte",
-      "is_live": false,
-      "is_finished": false,
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     }
   ]
