@@ -3,8 +3,6 @@
 <script>
 async function caricaPartite() {
   const container = document.getElementById('lista-partite');
-
-  // Costruisce l'URL assoluto puntando sempre alla radice /Mandrakodi-Wiki/partite.json
   const urlAssoluto = window.location.origin + '/Mandrakodi-Wiki/partite.json';
 
   try {
@@ -14,24 +12,37 @@ async function caricaPartite() {
       throw new Error(`File non trovato (HTTP ${res.status})`);
     }
     
-    const contentType = res.headers.get("content-type");
-    if (contentType && contentType.includes("text/html")) {
-      throw new Error("MkDocs ha restituito una pagina 404 invece del file JSON.");
-    }
-    
     const data = await res.json();
     
     if (!data.partite || data.partite.length === 0) {
-      container.innerHTML = "<p>Nessuna partita trovata per oggi.</p>";
+      container.innerHTML = "<p>Nessun evento trovato al momento.</p>";
       return;
     }
     
-    let html = '<ul style="line-height: 1.6;">';
-    data.partite.forEach(p => {
-      html += `<li>${p.raw_data}</li>`;
-    });
-    html += '</ul>';
+    let html = '';
+    if (data.ultimo_aggiornamento) {
+      html += `<p style="font-size: 0.85em; opacity: 0.7;"><i>Ultimo aggiornamento: ${data.ultimo_aggiornamento}</i></p>`;
+    }
     
+    html += '<ul style="line-height: 1.8; list-style-type: none; padding-left: 0;">';
+    
+    data.partite.forEach(p => {
+      // Badge LIVE per eventi in corso
+      const badgeLive = p.is_live 
+        ? '<span style="background-color: #d9534f; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold; font-size: 0.8em; margin-right: 5px;">🔴 LIVE</span>' 
+        : '';
+        
+      // Usa p.dettagli invece di p.raw_data!
+      const infoPartita = p.dettagli || p.raw_data || "Nessun dettaglio";
+    
+      html += `<li style="margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px;">
+        ${badgeLive}
+        <strong>[${p.lega || 'Calcio'}]</strong>: ${infoPartita} 
+        <a href="${p.url || '#'}" target="_blank" rel="noopener" style="font-size: 0.85em; margin-left: 6px;">🔗 Fonte</a>
+      </li>`;
+    });
+    
+    html += '</ul>';
     container.innerHTML = html;
 
   } catch (err) {
