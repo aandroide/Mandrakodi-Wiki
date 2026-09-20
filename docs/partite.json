@@ -1,4 +1,23 @@
 {
-  "ultimo_aggiornamento": "20/09/2026 16:42:33",
-  "partite": []
+  "ultimo_aggiornamento": "20/09/2026 16:57:02",
+  "partite": [
+    {
+      "lega": "Italia - Serie A",
+      "orario": "99:99",
+      "dettagli": "▴ - Italia - Serie A",
+      "url": "https://www.livesoccertv.com/it/schedules/"
+    },
+    {
+      "lega": "Italia - Serie B",
+      "orario": "99:99",
+      "dettagli": "▴ - Italia - Serie B",
+      "url": "https://www.livesoccertv.com/it/schedules/"
+    },
+    {
+      "lega": "Italia - Serie A",
+      "orario": "99:99",
+      "dettagli": "▴ - Ecuador - Serie A ecuadoriana",
+      "url": "https://www.livesoccertv.com/it/schedules/"
+    }
+  ]
 }
