@@ -38,49 +38,54 @@ def scarica_partite():
                     page.goto(url, wait_until="domcontentloaded", timeout=40000)
                     page.wait_for_timeout(3000)
 
-                    # Seleziona specificamente le tabelle o i container delle partite
-                    matches = page.query_selector_all("tr.match-row, tr[id^='m_'], table.schedules tr")
+                    # Trova le righe delle partite nella tabella
+                    rows = page.query_selector_all("tr.match-row, tr[id^='m_'], table.schedules tr")
 
-                    for m in matches:
+                    for row in rows:
                         try:
-                            # Estrai il testo e rimuovi spazi e a capo multipli
-                            inner_text = m.inner_text().strip()
-                            if not inner_text:
+                            text = row.inner_text().strip()
+                            if not text:
                                 continue
 
-                            # Pulisci le righe e filtra la spazzatura
-                            righe = [r.strip() for r in inner_text.split("\n") if r.strip()]
+                            righe = [r.strip() for r in text.split("\n") if r.strip()]
                             testo_completo = " - ".join(righe)
-
-                            # Filtri di esclusione per righe di intestazione / spazzatura
                             testo_lower = testo_completo.lower()
-                            parole_da_scartare = [
-                                "competizione", "fase", "canale", "trasmessa", 
-                                "diritti tv", "prossime partite", "classifica", 
-                                "risultati precedenti", "squadra", "ora/stato"
-                            ]
-                            
-                            if any(p in testo_lower for p in parole_da_scartare):
+
+                            # Scarta intestazioni di data e menu
+                            if any(header in testo_lower for header in [
+                                "competizione", "fase", "canale", "squadra", "lunedì", "martedì", 
+                                "mercoledì", "giovedì", "venerdì", "sabato", "domenica", "gennaio", 
+                                "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", 
+                                "agosto", "settembre", "ottobre", "novembre", "dicembre"
+                            ]) and not re.search(r'\d{1,2}:\d{2}', testo_completo):
                                 continue
 
-                            # Un match valido deve contenere un orario (es. 15:00) o un indicatore di stato
-                            has_time = re.search(r'\b\d{1,2}:\d{2}\b', testo_completo)
-                            is_live = False
+                            # Cerca l'orario (es. 13:00, 15:00, 18:45, 20:45)
+                            time_match = re.search(r'\b(\d{1,2}:\d{2})\b', testo_completo)
+                            orario = time_match.group(1) if time_match else None
 
-                            # Controllo stato LIVE (tramite classi o testo)
-                            html_row = m.inner_html().lower()
-                            if "live" in html_row or "in diretta" in testo_lower or "′" in testo_completo:
+                            # Se è una partita terminata (FIN), scartala o segnala non live
+                            is_finished = "fin" in testo_lower or "disponibile on-demand" in testo_lower
+                            
+                            # Rileva se è REALE LIVE (es. presenta minuto di gioco 89', 90+5' e non è finita)
+                            has_minutes = re.search(r"\b\d{1,2}'|\b\d{1,2}\+\d{1,2}'", testo_completo)
+                            is_live = False
+                            if (has_minutes or "in diretta" in testo_lower or "live -" in testo_lower) and not is_finished:
                                 is_live = True
 
-                            # Se non ha né l'orario né è live, né un risultato tipico (es. 2 - 1), scarta
-                            has_score = re.search(r'\b\d+\s*-\s*\d+\b', testo_completo)
-                            if not (has_time or is_live or has_score):
+                            # Deve avere almeno un orario o essere in corso
+                            if not (orario or is_live or has_minutes):
                                 continue
+
+                            # Pulisci il testo rimuovendo prefissi inutili come "FIN - + -" o "Live - + -"
+                            testo_pulito = re.sub(r'^(FIN|Live)\s*-\s*\+\s*-\s*', '', testo_completo, flags=re.IGNORECASE)
 
                             partite_trovate.append({
                                 "lega": lega_nome,
-                                "dettagli": testo_completo,
+                                "orario": orario,
+                                "dettagli": testo_pulito,
                                 "is_live": is_live,
+                                "is_finished": is_finished,
                                 "url": url
                             })
 
@@ -103,7 +108,7 @@ def scarica_partite():
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(data_to_save, f, ensure_ascii=False, indent=2)
         
-    print(f"Salvate {len(partite_trovate)} partite pulite in: {output_path}")
+    print(f"Salvate {len(partite_trovate)} partite in: {output_path}")
 
 if __name__ == "__main__":
     scarica_partite()
