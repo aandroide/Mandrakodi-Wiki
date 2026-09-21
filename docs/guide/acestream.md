@@ -43,7 +43,7 @@
     Apri il **Terminale** (`⌘ + Spazio` → `Terminale`) ed esegui:
     
     ```bash
-    /bin/bash -c "$(curl -fsSL [https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh](https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh))"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     ```
     
     Al termine, segui gli eventuali comandi mostrati dall'installer per aggiungere Homebrew al `PATH`.
@@ -140,7 +140,7 @@
     Esegui:
     
     ```bash
-    curl -sS "[http://127.0.0.1:6878/webui/api/service?method=get_version](http://127.0.0.1:6878/webui/api/service?method=get_version)" | jq
+    curl -sS "http://127.0.0.1:6878/webui/api/service?method=get_version" | jq
     ```
     
     Nella risposta controlla:
@@ -165,7 +165,7 @@
 
 
 !!! warning "Attenzione"
-    Per "Opzione DIRETTO" prima eseguire procedura per abilitare i "[Player Esterno](../guide/kodi_settings.md#players)" (se non precedentemente eseguita)
+    Per "Opzione DIRETTO" prima eseguire procedura per abilitare i "[Players Esterni](../guide/kodi_settings.md#players)" (se non precedentemente eseguita)
 
 ??? info "Opzione **DIRETTO**"
     **Play fuori da Kodi (es. Vlc, Mx Player)**
