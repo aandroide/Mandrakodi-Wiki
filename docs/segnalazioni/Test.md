@@ -1,48 +1,173 @@
-# Palinsesto Partite
+```markdown
+# Partite di calcio
 
-<div id="lista-partite">Caricamento palinsesto completo in corso...</div>
+Le prossime partite di Serie A, Serie B e Serie C.
+
+<div id="partite">
+  Caricamento partite...
+</div>
 
 <script>
 async function caricaPartite() {
-  const container = document.getElementById('lista-partite');
-  const urlAssoluto = window.location.origin + '/Mandrakodi-Wiki/partite.json';
+  const container = document.getElementById("partite");
 
   try {
-    const res = await fetch(urlAssoluto + '?v=' + new Date().getTime());
-    
-    if (!res.ok) {
-      throw new Error(`File non trovato (HTTP ${res.status})`);
+    const response = await fetch("./partite.json");
+
+    if (!response.ok) {
+      throw new Error("Impossibile caricare partite.json");
     }
-    
-    const data = await res.json();
-    
+
+    const data = await response.json();
+
     if (!data.partite || data.partite.length === 0) {
-      container.innerHTML = "<p>Nessun evento disponibile nel palinsesto.</p>";
+      container.innerHTML = "<p>Nessuna partita trovata.</p>";
       return;
     }
-    
-    let html = '';
-    if (data.ultimo_aggiornamento) {
-      html += `<p style="font-size: 0.85em; opacity: 0.7;"><i>Ultimo aggiornamento: ${data.ultimo_aggiornamento}</i></p>`;
+
+    const gruppi = {};
+
+    for (const partita of data.partite) {
+      if (!gruppi[partita.data]) {
+        gruppi[partita.data] = [];
+      }
+
+      gruppi[partita.data].push(partita);
     }
-    
-    html += '<ul style="line-height: 1.8; list-style-type: none; padding-left: 0;">';
-    
-    data.partite.forEach(p => {
-      html += `<li style="margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px;">
-        <strong>[${p.lega}]</strong> ${p.dettagli} 
-        <a href="${p.url}" target="_blank" rel="noopener" style="font-size: 0.85em; margin-left: 6px;">🔗 Fonte</a>
-      </li>`;
-    });
-    
-    html += '</ul>';
+
+    let html = "";
+
+    for (const dataPartita of Object.keys(gruppi).sort()) {
+      const dataObj = new Date(dataPartita + "T00:00:00");
+
+      const dataFormattata = dataObj.toLocaleDateString(
+        "it-IT",
+        {
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+          year: "numeric"
+        }
+      );
+
+      html += `
+        <section class="giornata">
+          <h2>${dataFormattata}</h2>
+      `;
+
+      for (const partita of gruppi[dataPartita]) {
+        html += `
+          <div class="partita">
+            <div class="ora">
+              ${partita.ora}
+            </div>
+
+            <div class="squadre">
+              <strong>${partita.casa}</strong>
+              <span> - </span>
+              <strong>${partita.trasferta}</strong>
+            </div>
+
+            <div class="competizione">
+              ${partita.competizione}
+            </div>
+          </div>
+        `;
+      }
+
+      html += `
+        </section>
+      `;
+    }
+
+    html += `
+      <p class="aggiornamento">
+        Ultimo aggiornamento:
+        ${new Date(data.aggiornato).toLocaleString("it-IT")}
+      </p>
+    `;
+
     container.innerHTML = html;
 
-  } catch (err) {
-    console.error("Errore recupero file JSON:", err);
-    container.innerHTML = `<p style="color: red;">Impossibile caricare il palinsesto: ${err.message}</p>`;
+  } catch (error) {
+    console.error(error);
+
+    container.innerHTML = `
+      <p>
+        Errore durante il caricamento delle partite.
+      </p>
+    `;
   }
 }
 
-document.addEventListener("DOMContentLoaded", caricaPartite);
+caricaPartite();
 </script>
+
+<style>
+#partite {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.giornata {
+  margin-bottom: 30px;
+}
+
+.giornata h2 {
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 8px;
+  text-transform: capitalize;
+}
+
+.partita {
+  display: grid;
+  grid-template-columns: 70px 1fr 100px;
+  align-items: center;
+
+  padding: 12px;
+  margin: 6px 0;
+
+  border: 1px solid #ddd;
+  border-radius: 8px;
+
+  background: #fff;
+}
+
+.ora {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.squadre {
+  font-size: 16px;
+}
+
+.competizione {
+  text-align: right;
+  font-size: 13px;
+  color: #666;
+}
+
+.aggiornamento {
+  margin-top: 30px;
+  color: #777;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .partita {
+    grid-template-columns: 60px 1fr;
+  }
+
+  .competizione {
+    grid-column: 2;
+    text-align: left;
+    margin-top: 4px;
+  }
+
+  .squadre {
+    font-size: 14px;
+  }
+}
+</style>
+```
