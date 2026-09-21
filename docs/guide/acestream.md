@@ -38,7 +38,7 @@
 ??? info "Acestream per macOS"
     **AceStream Engine su macOS con Docker**
 
-    1. Installare Homebrew
+    * Installare Homebrew
     
     Apri il **Terminale** (`⌘ + Spazio` → `Terminale`) ed esegui:
     
@@ -56,7 +56,7 @@
     
     > `curl` è già incluso in macOS. Non è necessario installarlo.
     
-    2. Installare Docker Desktop, VLC e jq
+    * Installare Docker Desktop, VLC e jq
     
     Esegui:
     
@@ -80,14 +80,14 @@
     jq --version
     ```
     
-    3. Creare la cartella del progetto
+    * Creare la cartella del progetto
     
     ```bash
     mkdir -p ~/acestream-engine
     cd ~/acestream-engine
     ```
     
-    4. Creare il file Docker Compose
+    * Creare il file Docker Compose
     
     Apri il file:
     
@@ -120,7 +120,7 @@
     cat docker-compose.yml
     ```
     
-    5. Avviare AceStream Engine
+    * Avviare AceStream Engine
     
     Dalla cartella del progetto:
     
@@ -135,7 +135,7 @@
     docker compose ps
     ```
     
-    6. Verificare che AceStream sia avviato
+    * Verificare che AceStream sia avviato
     
     Esegui:
     
