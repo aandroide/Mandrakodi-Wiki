@@ -1,10 +1,16 @@
 {
-  "ultimo_aggiornamento": "20/09/2026 17:15:31",
+  "ultimo_aggiornamento": "21/09/2026 07:26:23",
   "partite": [
     {
       "lega": "Italia - Serie A",
       "orario": "10:30",
       "dettagli": "10:30 - FIN - Fiorentina 1 - 1 Napoli",
+      "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
+    },
+    {
+      "lega": "Italia - Serie A",
+      "orario": "10:30",
+      "dettagli": "10:30 - Como - Roma - Paramount+, Disney+ Premium Caribbean, fuboTV Canada, Disney+ Premium Mexico, Disney+ Premium Norte",
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
@@ -21,14 +27,32 @@
     },
     {
       "lega": "Italia - Serie A",
+      "orario": "13:00",
+      "dettagli": "13:00 - Genoa - Fiorentina - Paramount+, Disney+ Premium Caribbean, fuboTV Canada, Disney+ Premium Mexico, Disney+ Premium Norte",
+      "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
+    },
+    {
+      "lega": "Italia - Serie A",
+      "orario": "13:00",
+      "dettagli": "13:00 - Lazio - Monza - Paramount+, Disney+ Premium Caribbean, fuboTV Canada, Disney+ Premium Mexico, Disney+ Premium Norte",
+      "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
+    },
+    {
+      "lega": "Italia - Serie A",
       "orario": "16:00",
-      "dettagli": "16:00 - 54' - Juventus 1 - 0 Atalanta - Paramount+, Peacock, CBS Sports Golazo, DAZN Canada, TLN",
+      "dettagli": "16:00 - Internazionale - Parma - Paramount+, TLN, Disney+ Premium Caribbean, fuboTV Canada, Disney+ Premium Mexico",
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     },
     {
       "lega": "Italia - Serie A",
       "orario": "18:45",
-      "dettagli": "18:45 - Milan - Lecce - Paramount+, fuboTV, Peacock, Telemundo, Telemundo Deportes En Vivo",
+      "dettagli": "18:45 - FIN - Milan 3 - 0 Lecce",
+      "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
+    },
+    {
+      "lega": "Italia - Serie A",
+      "orario": "18:45",
+      "dettagli": "18:45 - Napoli - Frosinone - Paramount+, TLN, Disney+ Premium Caribbean, fuboTV Canada, Disney+ Premium Mexico",
       "url": "https://www.livesoccertv.com/it/competitions/italy/serie-a/"
     }
   ]
