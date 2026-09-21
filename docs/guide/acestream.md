@@ -32,7 +32,8 @@
 ??? info "Acestream per Linux"
     **Pacchetti per Linux**
 
-    * Installare Acestream a seconda della propria distribuzione in formato "**Snap**" o "**Flatpak**"
+    * <a href="https://github.com/jaimejj54/acestream-flatpak/releases/latest" target="_blank">Android ARMV7A 32bit</a> Flatpak
+    * <a href="https://snapcraft.io/acestreamplayer" target="_blank">Android ARMV7A 32bit</a> Snap
     * Avviare Acestream
 
 ??? info "Acestream per macOS"
