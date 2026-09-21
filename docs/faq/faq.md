@@ -61,7 +61,7 @@
 
 ??? info "14) Come posso sapere su quale canale viene trasmesso un evento live?"
     **Motivo:** L'addon non prevede EPG degli eventi live  
-    **Soluzione:**  Il sito https://www.livesoccertv.com/it/schedules/  informa su quali canali **italiani e stranieri** viene trasmesso l'evento live di interesse: *non fissarsi* sul solo contenuto con *commento in italiano*, i canali *stranieri* spesso offrono *maggiore qualità e stabilità* (se non carica la pagina, [modificare i DNS](../guide/dns.md))
+    **Soluzione:**  Il sito <a href="https://www.livesoccertv.com/it/schedules/" target="_blank">Live Soccer Tv</a>  informa su quali canali **italiani e stranieri** viene trasmesso l'evento live di interesse: *non fissarsi* sul solo contenuto con *commento in italiano*, i canali *stranieri* spesso offrono *maggiore qualità e stabilità* (se non carica la pagina, [modificare i DNS](../guide/dns.md))
 
 ??? info "15) Quando accedo a Mandrakodi / o in  una sezione,  la schermata è vuota con ".." sullo schermo"
     **Motivo:** E' attivo il filtro "Già Visti" [(Foto)](../images/kodi_filtro_attivo.png){ target="_blank" }<br>    **Soluzione:**  Con telecomando spostarsi a sinistra / su Smarthpne & Tablet spostarsi sulla sinistra, appare menù "Opzioni visualizzazioni", cliccare su "Già Visti" e scorrere fino a "Tutto"  [(Foto)](../images/kodi_filtro_disattivare.png){ target="_blank" }
