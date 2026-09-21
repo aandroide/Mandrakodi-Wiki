@@ -1,1 +1,1 @@
-\# Partite Serie A, Serie B, Serie C ## Serie A | Data / Ora | Casa | Risultato | Ospite | |------------|------|-----------|--------| | *Caricamento automatico non disponibile in .md* | | | | ## Serie B | Data / Ora | Casa | Risultato | Ospite | |------------|------|-----------|--------| ## Serie C | Data / Ora | Casa | Risultato | Ospite | |------------|------|-----------|--------|
+\# Segnalazioni [Vedi le partite → partite.html](partite.html)
