@@ -62,14 +62,20 @@
 .cal-btn:hover { background: #1565c0; }
 
 /* Il pulsante intelligente (live o prossima partita) puo' avere un testo piu' lungo del
-   solito "Apri calendario": si restringe invece di spingere fuori schermo il resto della barra. */
-.cal-cta {
+   solito "Apri calendario": il testo vero e proprio sta in uno span a parte perche' i
+   puntini di sospensione funzionano in modo affidabile solo su un elemento a blocco, non
+   dentro un contenitore flessibile come .cal-btn. */
+.cal-cta { min-width: 0; }
+.cal-cta-text {
+  display: inline-block;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
 }
 .cal-bar-desktop .cal-cta { max-width: 320px; }
-.cal-bar-phone .cal-cta { flex: 1; min-width: 0; justify-content: center; }
+.cal-bar-phone .cal-cta { flex: 1; min-width: 0; }
 
 .cal-bar-desktop { align-items: center; gap: 10px; flex-wrap: wrap; }
 .cal-bar-desktop .cal-spacer { flex: 1; }
@@ -139,7 +145,13 @@
       const adesso = new Date();
 
       let totLive = 0;
-      let prossimo = null; // la partita futura piu' vicina nel tempo, di qualunque campionato
+      // Non e' detto che ci sia una sola "prossima partita": Serie A, B e C possono avere
+      // piu' partite allo stesso identico orario, quindi si tiene l'orario piu' vicino e
+      // quante partite lo condividono, non un singolo nome.
+      let prossimoInizio = null;
+      let prossimoTitolo = "";
+      let prossimoOra = "";
+      let prossimoConteggio = 0;
       const conteggi = { "Serie A": 0, "Serie B": 0, "Serie C": 0 };
 
       for (const ev of json.eventi || []) {
@@ -149,8 +161,15 @@
           totLive++;
         } else if (conteggi[ev.competizione] !== undefined) {
           conteggi[ev.competizione]++;
-          if (inizio > adesso && (!prossimo || inizio < prossimo.inizio)) {
-            prossimo = { inizio, titolo: ev.titolo, ora: ev.ora };
+          if (inizio > adesso) {
+            if (!prossimoInizio || inizio < prossimoInizio) {
+              prossimoInizio = inizio;
+              prossimoTitolo = ev.titolo;
+              prossimoOra = ev.ora;
+              prossimoConteggio = 1;
+            } else if (inizio.getTime() === prossimoInizio.getTime()) {
+              prossimoConteggio++;
+            }
           }
         }
       }
@@ -158,18 +177,20 @@
       const totale = totLive + conteggi["Serie A"] + conteggi["Serie B"] + conteggi["Serie C"];
 
       // Il pulsante principale punta sempre al punto piu' interessante in questo momento:
-      // al live se c'e', altrimenti dritto alla prossima partita in assoluto (non solo
-      // alla sezione del suo campionato), col nome gia' scritto sopra al pulsante.
+      // al live se c'e', altrimenti dritto alla prossima partita (o alle prossime, se piu'
+      // di una comincia insieme) in assoluto, non solo alla sezione del suo campionato.
       let ctaHref = PAGINA_CALENDARIO;
       let ctaLabel = "Apri il calendario ›";
       if (totLive > 0) {
         ctaHref = `${PAGINA_CALENDARIO}#live`;
         ctaLabel = "🔴 Vai al live ›";
-      } else if (prossimo) {
+      } else if (prossimoInizio) {
         ctaHref = `${PAGINA_CALENDARIO}#prossimo`;
-        ctaLabel = `Prossima: ${prossimo.titolo} · ${prossimo.ora} ›`;
+        ctaLabel = prossimoConteggio > 1
+          ? `Prossimi (${prossimoConteggio}) · ${prossimoOra} ›`
+          : `Prossima: ${prossimoTitolo} · ${prossimoOra} ›`;
       }
-      const ctaHtml = `<a href="${ctaHref}" class="cal-btn cal-cta">${ctaLabel}</a>`;
+      const ctaHtml = `<a href="${ctaHref}" class="cal-btn cal-cta"><span class="cal-cta-text">${ctaLabel}</span></a>`;
 
       // Desktop: tutti i contatori affiancati
       desktop.innerHTML = `
@@ -225,10 +246,6 @@
     La qualità è la stabilità di questi link dipendono esclusivamente dal server che li trasmette.  <br>Molti server (soprattutto quelli che trasmettono eventi live sul web), quando le richieste aumentano, *abbassano la qualità* per *guadagnare sulla stabilità*. <br>Altri, invece, **raggiunta una soglia di banda**, cominciano a dare **problemi di blocchi continui** (il server non riesce a trasmettere la quantità necessaria di “informazioni” per permettere una visione fluida)
 
 ------
-
-[:material-cog-box: Installazione ](installazione/install.md){.md-button .md-button--primary} [:material-book-open-page-variant: Guide ](guide/tutorials.md){.md-button .md-button--primary} [:material-comment-question: FAQ ](faq/faq.md){.md-button .md-button--primary}
-
-
 
 <div class="segnalazioni-widget">
   <div class="segnalazioni-info">
@@ -351,4 +368,4 @@ if (document.readyState === "complete" || document.readyState === "interactive")
 }
 </script>
 
-
+[:material-cog-box: Installazione ](installazione/install.md){.md-button .md-button--primary} [:material-book-open-page-variant: Guide ](guide/tutorials.md){.md-button .md-button--primary} [:material-comment-question: FAQ ](faq/faq.md){.md-button .md-button--primary}
