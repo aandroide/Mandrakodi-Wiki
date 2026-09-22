@@ -164,13 +164,21 @@
 
   const MAX_CANALI_VISIBILI = 3;
 
+  let idProssimoAssegnato = false;
+
   function creaElementoEvento(evento, isLive) {
     const div = document.createElement("div");
     const classi = ["cal-evento"];
     if (isLive) classi.push("is-live");
     if (evento.prossimo) classi.push("is-prossimo");
     div.className = classi.join(" ");
-    if (evento.prossimo) div.id = "prossimo";
+    // Piu' schede possono condividere lo stesso orario "prossimo": l'ancora #prossimo deve
+    // esistere una volta sola, sulla prima che viene disegnata; le altre restano evidenziate
+    // allo stesso modo ma senza id duplicato.
+    if (evento.prossimo && !idProssimoAssegnato) {
+      div.id = "prossimo";
+      idProssimoAssegnato = true;
+    }
 
     let canaliHtml;
     if (evento.canali.length) {
@@ -232,6 +240,7 @@
   function renderizza() {
     const contenitore = document.getElementById("cal-content");
     contenitore.innerHTML = "";
+    idProssimoAssegnato = false; // ridisegnato da zero: si puo' riassegnare l'id una volta
 
     const { live, futuri } = datiCache;
 
@@ -292,9 +301,13 @@
       futuri.sort((a, b) => a.data - b.data);
       live.sort((a, b) => a.data - b.data);
 
-      // La prima della lista, qualunque sia il suo campionato, e' "la prossima partita in
-      // assoluto": e' quella a cui punta il pulsante intelligente della home (#prossimo).
-      if (futuri.length > 0) futuri[0].prossimo = true;
+      // "Prossima" e' un orario, non una singola partita: se piu' campionati iniziano
+      // insieme vanno segnalate tutte, altrimenti la scheda dorata ne mostrerebbe una
+      // sola lasciando intendere che le altre comincino dopo, quando invece sono insieme.
+      if (futuri.length > 0) {
+        const primoInizio = futuri[0].data.getTime();
+        futuri.forEach(ev => { if (ev.data.getTime() === primoInizio) ev.prossimo = true; });
+      }
 
       datiCache = { live, futuri };
       document.getElementById("btn-live-tag").textContent = `🔴 LIVE (${live.length})`;
