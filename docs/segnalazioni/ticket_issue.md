@@ -1,31 +1,39 @@
----
 layout: page
 title: Segnalazioni
+:material-face-agent: Torna ad Assistenza{ .md-button .md-button--primary }  :material-home: Torna alla Home{ .md-button .md-button--primary } :material-comment-question: FAQ{ .md-button .md-button--primary }
 
----
-
-[:material-face-agent: Torna ad Assistenza](../ask_help.md){ .md-button .md-button--primary }  [:material-home: Torna alla Home](../index.md){ .md-button .md-button--primary } [:material-comment-question: FAQ](../ask_help.md){ .md-button .md-button--primary }
-
----
 
 !!! tip "Segnalazioni"
-    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato<br>Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, mentre quando risolte vengono automaticamente eliminate dall'elenco<br>Non  esiste una tempistica certa in merito alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione
+    Da questa pagina è possibile inviare segnalazioni oltre che monitorarne lo stato. Ad ogni apertura viene caricato la tabella "Segnalazioni Attive" con le segnalazioni eventualmente aperte, mentre quando risolte vengono automaticamente eliminate dall'elenco. Non esiste una tempistica certa in merito alla risoluzione della segnalazione stessa, dipende dalla complessità in base a cambiamenti/contromisure della fonte da cui l'addon attinge facendo l'estrapolazione.
 
 !!! warning "ATTENZIONE"
-    Le segnalazioni vanno fatte solamente quando è TUTTA LA SEZIONE non funzionante e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline)<br>  N.B.: **prima di inviare** la segnalazione, **testare bene** la sezione che presenta errore:<br> - svuotare cache Kodi<br> - dalla sezione "Help Me", cliccare "Update Code" per verificare eventuale aggiornamento addon<br> - verificare di avere [modificato i DNS su Router](../guide/dns.md) ove possibile o [DNS sul singolo device](../guide/dns.md#dnsdispositivo) su cui è installato Kodi, effettuare <a href="https://dnsleaktest.com" target="_blank">Test DNS</a><br> - testare sezione da differenti connessioni (fissa/mobile)
+    Le segnalazioni vanno fatte solamente quando è TUTTA LA SEZIONE non funzionante e NON per alcuni link non funzionanti (un singolo link, tra tutti quelli presenti, può avere il flusso offline). N.B.: prima di inviare la segnalazione, testare bene la sezione che presenta errore: - svuotare cache Kodi - dalla sezione "Help Me", cliccare "Update Code" per verificare eventuale aggiornamento addon - verificare di avere modificato i DNS su Router ove possibile o DNS sul singolo device su cui è installato Kodi, effettuare Test DNS - testare sezione da differenti connessioni (fissa/mobile).
 
-!!! important "Compilare form "Invia Nuova Segnalazione""
-    - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco)
-    - Compilare il form in tutte le sue parti, diversamente non verrà inviato (attendere sempre il caricamento delle voci nei menù a discesa)
-    - Dopo l'invio della segnalazione, la tabella "Segnalazioni Attive" si aggiorna automaticamente senza dover ricaricare la pagina<br>
-    - N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate (quando non presenti segnalazioni viene mostrato messaggio di "Nessuna segnalazione aperta")
+!!! important "Compilare form 'Invia Nuova Segnalazione'"
+    - Attendere il caricamento completo delle "Segnalazioni Attive" (in caso di errore, premere il pulsante per ricaricare l'elenco).
+    - Compilare il form in tutte le sue parti, diversamente non verrà inviato (attendere sempre il caricamento delle voci nei menù a discesa).
+    - Dopo l'invio della segnalazione, la tabella "Segnalazioni Attive" si aggiorna automaticamente senza dover ricaricare la pagina.
+    - N.B.: eventuali segnalazioni già presenti non verranno inviate e registrate (quando non presenti segnalazioni viene mostrato messaggio di "Nessuna segnalazione aperta").
 
 <style>
   .ticket-container { max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif; color: #fff; }
-  .ticket-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-  .ticket-table { width: 100%; border-collapse: collapse; text-align: left; background: #1e1e1e; color: #fff; border-radius: 8px; overflow: hidden; margin-bottom: 30px; }
+  .ticket-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
+
+
+  /* Contenitore responsivo per lo scroll orizzontale su Mobile */
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 30px;
+    border-radius: 8px;
+  }
+
+  .ticket-table { width: 100%; border-collapse: collapse; text-align: left; background: #1e1e1e; color: #fff; border-radius: 8px; overflow: hidden; }
   .ticket-table th, .ticket-table td { padding: 10px; border-bottom: 1px solid #333; }
-  .ticket-table th { background: #333; }
+  .ticket-table th { background: #333; font-size: 14px; white-space: nowrap; }
+  .ticket-table td { font-size: 14px; }
+
   .ticket-form { background: #252526; padding: 20px; border-radius: 8px; }
   .form-group { margin-bottom: 15px; }
   .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
@@ -35,30 +43,44 @@ title: Segnalazioni
   .btn-refresh:hover { background: #333; }
   .btn-reset-form { margin-top: 10px; padding: 8px 15px; background: #107c41; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 14px; }
   .status-msg { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; text-align: center; }
-</style>
 
+  /* OTTIMIZZAZIONI MOBILE */
+  @media screen and (max-width: 600px) {
+    .ticket-table th, .ticket-table td {
+      padding: 8px 6px;
+      font-size: 12px;
+    }
+    .badge-tag {
+      font-size: 11px;
+      padding: 2px 5px !important;
+      display: inline-block;
+    }
+  }
+</style>
 
 <div class="ticket-container">
   <div class="ticket-header">
     <h3>📋 Segnalazioni Attive</h3>
     <button id="btn-refresh-list" class="btn-refresh">🔄 Aggiorna Elenco</button>
   </div>
-  <table class="ticket-table">
-    <thead>
-      <tr>
-        <th>Data</th>
-        <th>Sezione</th>
-        <th>Contenuto</th>
-        <th>Problema</th>
-        <th>Stato</th>
-      </tr>
-    </thead>
-    <tbody id="tabella-segnalazioni">
-      <tr>
-        <td colspan="5" style="text-align: center;">Caricamento in corso...</td>
-      </tr>
-    </tbody>
-  </table>
+
+
+  <div class="table-responsive">
+    <table class="ticket-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Sezione</th>
+          <th>Contenuto</th>
+          <th>Problema</th>
+          <th>Stato</th>
+        </tr>
+      </thead>
+      <tbody id="tabella-segnalazioni">
+        <tr><td colspan="5" style="text-align: center; padding: 15px;">Caricamento in corso...</td></tr>
+      </tbody>
+    </table>
+  </div>
 
 
   <div class="ticket-form">
@@ -124,7 +146,7 @@ title: Segnalazioni
       <div style="margin-bottom: 20px; background: #3a2e12; border: 1px solid #ffa000; padding: 12px; border-radius: 6px;">
         <label style="cursor: pointer; display: flex; align-items: flex-start; gap: 10px;">
           <input type="checkbox" id="check-conferma" required style="margin-top: 3px;">
-          <span><strong>Confermo:</strong>  la segnalazione riguarda <strong>TUTTA LA SEZIONE</strong> non funzionante e NON solamente per alcuni link offline</span>
+          <span><strong>Confermo:</strong> la segnalazione riguarda <strong>TUTTA LA SEZIONE</strong> non funzionante e NON solamente per alcuni link offline</span>
         </label>
       </div>
     
@@ -159,7 +181,6 @@ title: Segnalazioni
     onCatChange();
   }
 
-  // CARICAMENTO INIZIALE UNIFICATO: menu + segnalazioni in una sola chiamata
   function loadInit() {
     fetch(SCRIPT_URL + "?action=getInit", { method: "GET" })
       .then(function(res) { return res.json(); })
@@ -179,7 +200,6 @@ title: Segnalazioni
       });
   }
 
-  // AGGIORNAMENTO SOLO SEGNALAZIONI (usato dal tasto "Aggiorna Elenco" e dopo un invio)
   function loadReports() {
     var btnRefresh = document.getElementById("btn-refresh-list");
     if (btnRefresh) {
@@ -241,10 +261,10 @@ title: Segnalazioni
     
       tbody.innerHTML += '<tr>' +
         '<td>' + (item.data || '') + '</td>' +
-        '<td><span style="background: #444; padding: 3px 8px; border-radius: 4px;">' + (item.sezione || '') + '</span></td>' +
+        '<td><span class="badge-tag" style="background: #444; padding: 3px 8px; border-radius: 4px;">' + (item.sezione || '') + '</span></td>' +
         '<td><strong>' + (item.contenuto || '') + '</strong></td>' +
         '<td>' + (item.problema || '') + '</td>' +
-        '<td><span style="' + bgStyle + ' padding: 3px 8px; border-radius: 4px; font-weight: bold;">' + (item.stato || 'In attesa') + '</span></td>' +
+        '<td><span class="badge-tag" style="' + bgStyle + ' padding: 3px 8px; border-radius: 4px; font-weight: bold;">' + (item.stato || 'In attesa') + '</span></td>' +
       '</tr>';
     });
 
@@ -259,7 +279,7 @@ title: Segnalazioni
       btnRefresh.textContent = "🔄 Aggiorna Elenco";
     }
     if (tbody) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ff5252;">⚠️ Impossibile caricare l\'elenco. Riprova con il tasto in alto.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #ff5252; padding: 15px;">⚠️ Impossibile caricare l\'elenco. Riprova con il tasto in alto.</td></tr>';
     }
   }
 
