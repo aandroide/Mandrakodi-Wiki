@@ -9,6 +9,7 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+
 .cal-btn-badge {
   display: inline-flex;
   align-items: center;
@@ -63,6 +64,7 @@
 </div>
 
 
+
 <script>
 (function() {
   const BRANCH = "main";
@@ -72,6 +74,7 @@
     { nome: "Serie B", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-b.json` },
     { nome: "Serie C", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-c.json` }
   ];
+
 
 
   const mesi = { gennaio: 0, febbraio: 1, marzo: 2, aprile: 3, maggio: 4, giugno: 5, luglio: 6, agosto: 7, settembre: 8, ottobre: 9, novembre: 10, dicembre: 11 };
@@ -143,16 +146,19 @@
     
     const container = document.getElementById("cal-summary-bar");
     container.innerHTML = `
-     <a href="https://campipaolo.github.io/Mandrakodi-Wiki/calendario/live_events/#live" class="cal-btn-badge cal-btn-live">
+    <a href="/Mandrakodi-Wiki/calendario/live_events/#live" class="cal-btn-badge cal-btn-live">
       🔴 LIVE <span class="cal-count">${totLive}</span>
     </a>
-    <a href="https://campipaolo.github.io/Mandrakodi-Wiki/calendario/live_events/#serie-a" class="cal-btn-badge">
+    
+    <a href="/Mandrakodi-Wiki/calendario/live_events/#serie-a" class="cal-btn-badge">
       🇮🇹 Serie A <span class="cal-count">${conteggi["Serie A"]}</span>
     </a>
-    <a href="https://campipaolo.github.io/Mandrakodi-Wiki/calendario/live_events/#serie-b" class="cal-btn-badge">
+    
+    <a href="/Mandrakodi-Wiki/calendario/live_events/#serie-b" class="cal-btn-badge">
       🇮🇹 Serie B <span class="cal-count">${conteggi["Serie B"]}</span>
     </a>
-    <a href="https://campipaolo.github.io/Mandrakodi-Wiki/calendario/live_events/#serie-c" class="cal-btn-badge">
+    
+    <a href="/Mandrakodi-Wiki/calendario/live_events/#serie-c" class="cal-btn-badge">
       🇮🇹 Serie C <span class="cal-count">${conteggi["Serie C"]}</span>
     </a>
     `;
@@ -162,6 +168,3 @@
   contaEventi();
 })();
 </script>
-
-------
-
