@@ -143,16 +143,16 @@
     
     const container = document.getElementById("cal-summary-bar");
     container.innerHTML = `
-      <a href="../calendario/live_events.md#live" class="cal-btn-badge cal-btn-live">
+      <a href="/calendario/live_events.md#live" class="cal-btn-badge cal-btn-live">
         🔴 LIVE <span class="cal-count">${totLive}</span>
       </a>
-      <a href="../calendario/live_events.md#serie-a" class="cal-btn-badge">
+      <a href="/calendario/live_events.md#serie-a" class="cal-btn-badge">
         🇮🇹 Serie A <span class="cal-count">${conteggi["Serie A"]}</span>
       </a>
-      <a href="../calendario/live_events.md#serie-b" class="cal-btn-badge">
+      <a href="/calendario/live_events.md#serie-b" class="cal-btn-badge">
         🇮🇹 Serie B <span class="cal-count">${conteggi["Serie B"]}</span>
       </a>
-      <a href="../calendario/live_events.md#serie-c" class="cal-btn-badge">
+      <a href="/calendario/live_events.md#serie-c" class="cal-btn-badge">
         🇮🇹 Serie C <span class="cal-count">${conteggi["Serie C"]}</span>
       </a>
     `;
