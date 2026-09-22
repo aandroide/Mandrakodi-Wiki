@@ -161,6 +161,7 @@
     <a href="/Mandrakodi-Wiki/calendario/live_events/#serie-c" class="cal-btn-badge">
       🇮🇹 Serie C <span class="cal-count">${conteggi["Serie C"]}</span>
     </a>
+    
     `;
 
   }
