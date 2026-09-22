@@ -4,6 +4,218 @@
 
 [:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
 
+<style>
+.cal-bar {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 15px 0;
+  background: linear-gradient(180deg, rgba(150,150,150,0.10), rgba(150,150,150,0.04));
+  border: 1px solid rgba(150, 150, 150, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+/* Di base si vede solo la versione desktop; le media query sotto scelgono l'altra */
+.cal-bar-desktop { display: flex; }
+.cal-bar-tablet, .cal-bar-phone { display: none; }
+
+.cal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  background: rgba(150, 150, 150, 0.08);
+  border: 1px solid rgba(150, 150, 150, 0.25);
+  color: inherit;
+}
+
+.cal-badge .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+}
+
+.cal-badge-live { color: #ff6659; border-color: rgba(224, 0, 0, 0.35); }
+.cal-badge-a { color: #64b5f6; border-color: rgba(25, 118, 210, 0.35); }
+.cal-badge-b { color: #81c784; border-color: rgba(46, 125, 50, 0.35); }
+.cal-badge-c { color: #ce93d8; border-color: rgba(106, 27, 154, 0.35); }
+.cal-badge strong { color: inherit; }
+
+.cal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  background: #1976d2;
+  color: #ffffff !important;
+  white-space: nowrap;
+}
+
+.cal-btn:hover { background: #1565c0; }
+
+/* Il pulsante intelligente (live o prossima partita) puo' avere un testo piu' lungo del
+   solito "Apri calendario": si restringe invece di spingere fuori schermo il resto della barra. */
+.cal-cta {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal-bar-desktop .cal-cta { max-width: 320px; }
+.cal-bar-phone .cal-cta { flex: 1; min-width: 0; justify-content: center; }
+
+.cal-bar-desktop { align-items: center; gap: 10px; flex-wrap: wrap; }
+.cal-bar-desktop .cal-spacer { flex: 1; }
+
+.cal-bar-tablet { flex-direction: column; gap: 10px; }
+.cal-bar-tablet .cal-tablet-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+}
+.cal-select {
+  flex: 1;
+  background: rgba(150, 150, 150, 0.08);
+  border: 1px solid rgba(150, 150, 150, 0.3);
+  color: inherit;
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cal-bar-phone { align-items: center; justify-content: space-between; gap: 10px; }
+
+.cal-loading { font-size: 13px; opacity: 0.6; }
+
+/* Sotto i 780px: solo il totale + menu a tendina */
+@media (max-width: 780px) {
+  .cal-bar-desktop { display: none; }
+  .cal-bar-tablet { display: flex; }
+}
+
+/* Sotto i 480px: solo il badge LIVE + pulsante */
+@media (max-width: 480px) {
+  .cal-bar-tablet { display: none; }
+  .cal-bar-phone { display: flex; }
+}
+</style>
+
+<div id="cal-bar-desktop" class="cal-bar cal-bar-desktop">
+  <span class="cal-loading">⏳ Caricamento eventi...</span>
+</div>
+<div id="cal-bar-tablet" class="cal-bar cal-bar-tablet"></div>
+<div id="cal-bar-phone" class="cal-bar cal-bar-phone"></div>
+
+<script>
+(function () {
+  // Un solo file: eventi.json ha gia' data, ora e competizione pronti, niente da ripulire.
+  const EVENTI_URL = "https://raw.githubusercontent.com/aandroide/Livesoccer/master/livesoccertv/output/eventi.json";
+  const PAGINA_CALENDARIO = "calendario/live_events/";
+  const DURATA_PARTITA_MS = 2.5 * 60 * 60 * 1000;
+
+  function badge(cls, label, count) {
+    return `<span class="cal-badge ${cls}"><span class="dot"></span>${label} <strong>${count}</strong></span>`;
+  }
+
+  async function aggiornaBarre() {
+    const desktop = document.getElementById("cal-bar-desktop");
+    const tablet = document.getElementById("cal-bar-tablet");
+    const phone = document.getElementById("cal-bar-phone");
+
+    try {
+      const res = await fetch(EVENTI_URL);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const json = await res.json();
+      const adesso = new Date();
+
+      let totLive = 0;
+      let prossimo = null; // la partita futura piu' vicina nel tempo, di qualunque campionato
+      const conteggi = { "Serie A": 0, "Serie B": 0, "Serie C": 0 };
+
+      for (const ev of json.eventi || []) {
+        const inizio = new Date(`${ev.data}T${ev.ora}:00`);
+        const fine = new Date(inizio.getTime() + DURATA_PARTITA_MS);
+        if (adesso >= inizio && adesso <= fine) {
+          totLive++;
+        } else if (conteggi[ev.competizione] !== undefined) {
+          conteggi[ev.competizione]++;
+          if (inizio > adesso && (!prossimo || inizio < prossimo.inizio)) {
+            prossimo = { inizio, titolo: ev.titolo, ora: ev.ora };
+          }
+        }
+      }
+
+      const totale = totLive + conteggi["Serie A"] + conteggi["Serie B"] + conteggi["Serie C"];
+
+      // Il pulsante principale punta sempre al punto piu' interessante in questo momento:
+      // al live se c'e', altrimenti dritto alla prossima partita in assoluto (non solo
+      // alla sezione del suo campionato), col nome gia' scritto sopra al pulsante.
+      let ctaHref = PAGINA_CALENDARIO;
+      let ctaLabel = "Apri il calendario ›";
+      if (totLive > 0) {
+        ctaHref = `${PAGINA_CALENDARIO}#live`;
+        ctaLabel = "🔴 Vai al live ›";
+      } else if (prossimo) {
+        ctaHref = `${PAGINA_CALENDARIO}#prossimo`;
+        ctaLabel = `Prossima: ${prossimo.titolo} · ${prossimo.ora} ›`;
+      }
+      const ctaHtml = `<a href="${ctaHref}" class="cal-btn cal-cta">${ctaLabel}</a>`;
+
+      // Desktop: tutti i contatori affiancati
+      desktop.innerHTML = `
+        ${badge("cal-badge-live", "LIVE", totLive)}
+        ${badge("cal-badge-a", "Serie A", conteggi["Serie A"])}
+        ${badge("cal-badge-b", "Serie B", conteggi["Serie B"])}
+        ${badge("cal-badge-c", "Serie C", conteggi["Serie C"])}
+        <span class="cal-spacer"></span>
+        ${ctaHtml}
+      `;
+
+      // Tablet: totale eventi, il pulsante intelligente, poi il menu a tendina per le categorie
+      tablet.innerHTML = `
+        <div class="cal-tablet-top">
+          <span>⚽ <strong>${totale}</strong> partite nel calendario</span>
+          ${badge("cal-badge-live", "", totLive)}
+        </div>
+        ${ctaHtml}
+        <select class="cal-select" onchange="if(this.value) window.location.href=this.value;">
+          <option value="">Scegli una categoria…</option>
+          <option value="${PAGINA_CALENDARIO}#live">🔴 In corso ora (${totLive})</option>
+          <option value="${PAGINA_CALENDARIO}#serie-a">🇮🇹 Serie A (${conteggi["Serie A"]})</option>
+          <option value="${PAGINA_CALENDARIO}#serie-b">🇮🇹 Serie B (${conteggi["Serie B"]})</option>
+          <option value="${PAGINA_CALENDARIO}#serie-c">🇮🇹 Serie C (${conteggi["Serie C"]})</option>
+        </select>
+      `;
+
+      // Telefono: solo il numero di partite in corso ora, il pulsante fa il resto del lavoro
+      phone.innerHTML = `
+        ${badge("cal-badge-live", "LIVE", totLive)}
+        ${ctaHtml}
+      `;
+    } catch (e) {
+      const fallback = `<a href="${PAGINA_CALENDARIO}" class="cal-btn">⚽ Apri il calendario</a>`;
+      desktop.innerHTML = fallback;
+      tablet.innerHTML = fallback;
+      phone.innerHTML = fallback;
+      console.error("Errore conteggio calendario", e);
+    }
+  }
+
+  aggiornaBarre();
+  setInterval(aggiornaBarre, 60000);
+})();
+</script>
+
 ------
 
 !!! tip "MandraKodi"
@@ -20,11 +232,9 @@
 
 <div class="segnalazioni-widget">
   <div class="segnalazioni-info">
-    <span class="badge badge-offline">🔴 FONTI OFFLINE: <strong id="cnt-offline">-</strong></span>
-    <span class="badge badge-attesa">🟡 SEGNALAZIONI IN ATTESA: <strong id="cnt-attesa">-</strong></span>
+    <span class="cal-badge cal-badge-attesa"><span class="dot"></span>Attesa <strong id="cnt-attesa">-</strong></span>
+    <span class="cal-badge cal-badge-live"><span class="dot"></span>Offline <strong id="cnt-offline">-</strong></span>
   </div>
-
-
 
   <div class="segnalazioni-actions">
     <!-- Pulsante Ricarica Dinamico -->
@@ -32,47 +242,36 @@
       🔄
     </button>
 
-
-
-    <!-- Visualizzare/Inviare Segnalazioni -->
-    <a href="segnalazioni/ticket_issue/" class="btn-apri">Visualizzare/Inviare Segnalazioni ➔</a>
-
+    <!-- Segnalazioni -->
+    <a href="segnalazioni/ticket_issue/" class="cal-btn">Segnalazioni ›</a>
   </div>
 </div>
 
 <style>
+/* Stesso linguaggio visivo delle barre del calendario qui sopra: badge col puntino colorato
+   invece della pillola piena, cosi' i due riquadri in home sembrano un'unica famiglia. */
 .segnalazioni-widget {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #252526;
-  border: 1px solid #444;
-  border-radius: 8px;
-  padding: 8px 14px;
+  background: linear-gradient(180deg, rgba(150,150,150,0.10), rgba(150,150,150,0.04));
+  border: 1px solid rgba(150, 150, 150, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
   margin: 15px 0;
   gap: 10px;
   flex-wrap: wrap;
-  color: #fff;
+  color: inherit;
 }
-
-
 
 .segnalazioni-info {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 0.9em;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.badge {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: bold;
-  background-color: #1e1e1e;
-}
-
-.badge-offline { border: 1px solid #d32f2f; color: #ff5252; }
-.badge-attesa { border: 1px solid #ffa000; color: #ffb74d; }
+.cal-badge-attesa { color: #ffb74d; border-color: rgba(255, 160, 0, 0.35); }
 
 .segnalazioni-actions {
   display: flex;
@@ -81,32 +280,18 @@
 }
 
 #btn-reload {
-  background: #333;
-  color: #fff;
-  border: 1px solid #555;
-  border-radius: 4px;
-  padding: 4px 8px;
+  background: rgba(150, 150, 150, 0.08);
+  color: inherit;
+  border: 1px solid rgba(150, 150, 150, 0.3);
+  border-radius: 20px;
+  padding: 6px 9px;
   cursor: pointer;
   font-size: 0.9em;
-  transition: transform 0.2s;
+  line-height: 1;
 }
 
 #btn-reload:hover {
-  background-color: #444;
-}
-
-.btn-apri {
-  background-color: #107c41;
-  color: #fff !important;
-  padding: 6px 12px;
-  border-radius: 4px;
-  text-decoration: none !important;
-  font-size: 0.85em;
-  font-weight: bold;
-}
-
-.btn-apri:hover {
-  opacity: 0.9;
+  background: rgba(150, 150, 150, 0.18);
 }
 
 .spin {
@@ -166,107 +351,4 @@ if (document.readyState === "complete" || document.readyState === "interactive")
 }
 </script>
 
-<style>
-.cal-bar-summary {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 15px 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-}
-
-.cal-btn-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-  background: rgba(150, 150, 150, 0.12);
-  color: inherit;
-  border: 1px solid rgba(150, 150, 150, 0.25);
-}
-
-.cal-btn-badge:hover { background: rgba(150, 150, 150, 0.22); }
-
-.cal-btn-live {
-  background: rgba(224, 0, 0, 0.1);
-  color: #d00000;
-  border-color: rgba(224, 0, 0, 0.3);
-}
-
-.cal-btn-live:hover { background: rgba(224, 0, 0, 0.2); }
-
-.cal-count {
-  background: rgba(150, 150, 150, 0.2);
-  color: inherit;
-  font-size: 12px;
-  padding: 2px 7px;
-  border-radius: 10px;
-  font-weight: bold;
-}
-
-.cal-btn-live .cal-count { background: #d00000; color: #ffffff; }
-.cal-loading-dots { font-size: 13px; opacity: 0.6; }
-</style>
-
-<div class="cal-bar-summary" id="cal-summary-bar">
-  <span class="cal-loading-dots">⏳ Caricamento eventi...</span>
-</div>
-
-<script>
-(function () {
-  // Un solo file: eventi.json ha gia' data, ora e competizione pronti, niente da ripulire.
-  const EVENTI_URL = "https://raw.githubusercontent.com/aandroide/Livesoccer/master/livesoccertv/output/eventi.json";
-  const PAGINA_CALENDARIO = "calendario/live_events/";
-  const DURATA_PARTITA_MS = 2.5 * 60 * 60 * 1000;
-
-  async function contaEventi() {
-    const container = document.getElementById("cal-summary-bar");
-    try {
-      const res = await fetch(EVENTI_URL);
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const json = await res.json();
-      const adesso = new Date();
-
-      let totLive = 0;
-      const conteggi = { "Serie A": 0, "Serie B": 0, "Serie C": 0 };
-
-      for (const ev of json.eventi || []) {
-        const inizio = new Date(`${ev.data}T${ev.ora}:00`);
-        const fine = new Date(inizio.getTime() + DURATA_PARTITA_MS);
-        if (adesso >= inizio && adesso <= fine) {
-          totLive++;
-        } else if (conteggi[ev.competizione] !== undefined) {
-          conteggi[ev.competizione]++;
-        }
-      }
-
-      container.innerHTML = `
-        <a href="${PAGINA_CALENDARIO}#live" class="cal-btn-badge cal-btn-live">
-          🔴 LIVE <span class="cal-count">${totLive}</span>
-        </a>
-        <a href="${PAGINA_CALENDARIO}#serie-a" class="cal-btn-badge">
-          🇮🇹 Serie A <span class="cal-count">${conteggi["Serie A"]}</span>
-        </a>
-        <a href="${PAGINA_CALENDARIO}#serie-b" class="cal-btn-badge">
-          🇮🇹 Serie B <span class="cal-count">${conteggi["Serie B"]}</span>
-        </a>
-        <a href="${PAGINA_CALENDARIO}#serie-c" class="cal-btn-badge">
-          🇮🇹 Serie C <span class="cal-count">${conteggi["Serie C"]}</span>
-        </a>
-      `;
-    } catch (e) {
-      container.innerHTML = `<a href="${PAGINA_CALENDARIO}" class="cal-btn-badge">⚽ Apri il calendario</a>`;
-      console.error("Errore conteggio calendario", e);
-    }
-  }
-
-  contaEventi();
-})();
-</script>
 
