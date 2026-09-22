@@ -1,170 +1,97 @@
 # Calendario
 
 <style>
-#cal-wrapper {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  max-width: 900px;
-  margin: 20px auto;
-  color: inherit;
-}
+  #cal-wrapper {
+    --link: var(--md-typeset-a-color, #0066cc);
+    --muted: rgba(150, 150, 150, 0.7);
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 0 16px 40px;
+  }
+  .cal-title {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  .cal-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 25px;
+  }
+  .btn-filter {
+    background: rgba(150, 150, 150, 0.15);
+    color: inherit;
+    border: 1px solid rgba(150, 150, 150, 0.3);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-filter:hover { background: rgba(150, 150, 150, 0.25); }
+  .btn-filter.active { background: var(--link); color: #ffffff; border-color: transparent; }
+  .btn-filter.btn-live-filter.active { background: #d00000; color: #ffffff; }
 
-.cal-title {
-  text-align: center;
-  font-size: 26px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
+  .cal-sezione { margin-top: 25px; scroll-margin-top: 20px; }
+  .cal-sezione-titolo {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    background: rgba(150, 150, 150, 0.12);
+    border-left: 4px solid var(--link);
+  }
+  .cal-sezione-titolo.serie-a { color: #64b5f6; background: rgba(25, 118, 210, 0.12); border-left-color: #1976d2; }
+  .cal-sezione-titolo.serie-b { color: #66bb6a; background: rgba(46, 125, 50, 0.12); border-left-color: #2e7d32; }
+  .cal-sezione-titolo.serie-c { color: #ce93d8; background: rgba(106, 27, 154, 0.12); border-left-color: #6a1b9a; }
+  .cal-live-titolo { background: rgba(224, 0, 0, 0.12); color: #e00000; border-left-color: #e00000; }
 
-.cal-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-  margin-bottom: 25px;
-}
-
-.btn-filter {
-  background: rgba(150, 150, 150, 0.15);
-  color: inherit;
-  border: 1px solid rgba(150, 150, 150, 0.3);
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-filter:hover {
-  background: rgba(150, 150, 150, 0.25);
-}
-
-.btn-filter.active {
-  background: var(--md-typeset-a-color, #0066cc);
-  color: #ffffff !important;
-  border-color: transparent;
-}
-
-.btn-filter.btn-live-filter.active {
-  background: #d00000;
-  color: #ffffff !important;
-}
-
-.cal-sezione {
-  margin-top: 25px;
-  /* Lascia spazio sopra quando si arriva qui tramite ancora, cosi' il titolo non finisce
-     nascosto sotto la barra di navigazione fissa di Material. */
-  scroll-margin-top: 80px;
-}
-
-.cal-sezione-titolo {
-  font-size: 20px;
-  font-weight: bold;
-  padding: 8px 12px;
-  border-radius: 6px;
-  margin-bottom: 12px;
-  background: rgba(150, 150, 150, 0.12);
-  border-left: 4px solid var(--md-typeset-a-color, #0066cc);
-}
-
-/* Colore proprio per ogni serie, invece del bianco del testo normale */
-.cal-sezione-titolo.serie-a { color: #64b5f6; background: rgba(25, 118, 210, 0.12); border-left-color: #1976d2; }
-.cal-sezione-titolo.serie-b { color: #66bb6a; background: rgba(46, 125, 50, 0.12); border-left-color: #2e7d32; }
-.cal-sezione-titolo.serie-c { color: #ce93d8; background: rgba(106, 27, 154, 0.12); border-left-color: #6a1b9a; }
-
-.cal-live-titolo {
-  background: rgba(224, 0, 0, 0.12);
-  color: #e00000;
-  border-left-color: #e00000;
-}
-
-.cal-data {
-  font-size: 15px;
-  font-weight: bold;
-  margin-top: 15px;
-  margin-bottom: 6px;
-  padding: 6px 10px;
-  background: rgba(150, 150, 150, 0.08);
-  border-left: 3px solid rgba(150, 150, 150, 0.5);
-  opacity: 0.9;
-}
-
-.cal-evento {
-  display: grid;
-  grid-template-columns: 65px 85px 1fr;
-  align-items: start;
-  gap: 8px;
-  padding: 10px;
-  border-bottom: 1px solid rgba(150, 150, 150, 0.15);
-}
-
-.cal-ora {
-  font-weight: bold;
-  font-size: 14px;
-  padding-top: 1px;
-}
-
-.cal-categoria {
-  font-size: 12px;
-  font-weight: bold;
-  opacity: 0.7;
-  text-transform: uppercase;
-  padding-top: 2px;
-}
-
-.cal-partita a {
-  color: var(--md-typeset-a-color, #0066cc);
-  text-decoration: none;
-}
-
-.cal-partita a:hover {
-  text-decoration: underline;
-}
-
-.cal-canali {
-  font-size: 12.5px;
-  opacity: 0.75;
-  margin-top: 3px;
-}
-
-.cal-canali.cal-canali-vuoto {
-  font-style: italic;
-}
-
-.cal-evento.is-live {
-  background: rgba(224, 0, 0, 0.06);
-  border-left: 3px solid #e00000;
-}
-
-.cal-evento.is-live .cal-ora {
-  color: #e00000;
-}
-
-.badge-live-tag {
-  display: inline-block;
-  background: #e00000;
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: bold;
-  padding: 2px 5px;
-  border-radius: 3px;
-  margin-right: 4px;
-  vertical-align: middle;
-}
-
-.cal-caricamento {
-  text-align: center;
-  padding: 30px;
-  opacity: 0.7;
-}
-
-.cal-errore {
-  color: #c00000;
-  background: rgba(224, 0, 0, 0.1);
-  padding: 15px;
-  border-radius: 6px;
-  border: 1px solid rgba(224, 0, 0, 0.3);
-}
+  .cal-data {
+    font-size: 15px;
+    font-weight: bold;
+    margin: 15px 0 6px;
+    padding: 6px 10px;
+    background: rgba(150, 150, 150, 0.08);
+    border-left: 3px solid var(--muted);
+    opacity: 0.9;
+  }
+  .cal-evento {
+    display: grid;
+    grid-template-columns: 65px 85px 1fr;
+    align-items: start;
+    gap: 8px;
+    padding: 10px;
+    border-bottom: 1px solid rgba(150, 150, 150, 0.15);
+  }
+  .cal-ora { font-weight: bold; font-size: 14px; }
+  .cal-categoria { font-size: 12px; font-weight: bold; opacity: 0.7; text-transform: uppercase; }
+  .cal-canali { font-size: 12.5px; opacity: 0.75; margin-top: 3px; }
+  .cal-canali.cal-canali-vuoto { font-style: italic; }
+  .cal-evento.is-live { background: rgba(224, 0, 0, 0.06); border-left: 3px solid #e00000; }
+  .cal-evento.is-live .cal-ora { color: #e00000; }
+  .badge-live-tag {
+    display: inline-block;
+    background: #e00000;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+  .cal-caricamento { text-align: center; padding: 30px; opacity: 0.7; }
+  .cal-errore {
+    color: #ff8a80;
+    background: rgba(224, 0, 0, 0.1);
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid rgba(224, 0, 0, 0.3);
+  }
 </style>
 
 <div id="cal-wrapper">
@@ -185,134 +112,49 @@
 
 <script>
 (function () {
-  const BRANCH = "main";
-  const REPO = "aandroide/Livesoccer";
-  const FILES = [
-    { nome: "Serie A", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-a.json` },
-    { nome: "Serie B", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-b.json` },
-    { nome: "Serie C", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-c.json` }
-  ];
+  // Un solo file da leggere: eventi.json ha gia' competizione, titolo, data, ora e canali
+  // pronti all'uso, niente piu' tag [COLOR] da ripulire o nomi di mese da riconoscere.
+  const EVENTI_URL = "https://raw.githubusercontent.com/aandroide/Livesoccer/master/livesoccertv/output/eventi.json";
 
-  // Collega ogni categoria all'id della sua sezione (usato per l'ancora nell'URL e per il colore)
   const CLASSE_SERIE = { "Serie A": "serie-a", "Serie B": "serie-b", "Serie C": "serie-c" };
-  // Collega l'ancora nell'URL (es. #serie-b) al filtro corrispondente, cosi' arrivando dalla
-  // barra riepilogativa della home si vede subito solo quella categoria
   const HASH_TO_FILTER = { "live": "LIVE", "serie-a": "Serie A", "serie-b": "Serie B", "serie-c": "Serie C" };
-
-  const mesi = { gennaio: 0, febbraio: 1, marzo: 2, aprile: 3, maggio: 4, giugno: 5, luglio: 6, agosto: 7, settembre: 8, ottobre: 9, novembre: 10, dicembre: 11 };
+  const DURATA_PARTITA_MS = 2.5 * 60 * 60 * 1000;
 
   let filtroAttivo = "ALL";
   let datiCache = { live: [], futuri: [] };
-  let hashIniziale = (window.location.hash || "").replace("#", "").toLowerCase();
+  const hashIniziale = (window.location.hash || "").replace("#", "").toLowerCase();
   let hashGestito = false;
 
-  function pulisciTesto(testo) {
-    return (testo || "").replace(/\[COLOR [^\]]+\]/gi, "").replace(/\[\/COLOR\]/gi, "").trim();
-  }
-
-  function estraiData(testo) {
-    testo = pulisciTesto(testo);
-    const parti = testo.toLowerCase().replace(/,/g, "").split(/\s+/);
-    let giorno = null, mese = null;
-
-    for (const parte of parti) {
-      if (/^\d+$/.test(parte)) giorno = parseInt(parte, 10);
-      if (mesi[parte] !== undefined) mese = mesi[parte];
-    }
-
-    if (giorno === null || mese === null) return null;
-
-    const oggi = new Date();
-    let anno = oggi.getFullYear();
-    const data = new Date(anno, mese, giorno);
-
-    if (data.getTime() < oggi.getTime() - (180 * 24 * 60 * 60 * 1000)) {
-      anno++;
-    }
-
-    return { giorno, mese, anno, data };
-  }
-
-  function estraiEvento(item, dataCorrente, categoria) {
-    const titolo = pulisciTesto(item.title);
-    const matchOra = titolo.match(/^(\d{1,2}):(\d{2})\s+(.*)$/);
-
-    if (!matchOra || !dataCorrente) return null;
-
-    const ora = parseInt(matchOra[1], 10);
-    const minuti = parseInt(matchOra[2], 10);
-    const partita = matchOra[3].trim();
-
-    const dataEvento = new Date(dataCorrente.anno, dataCorrente.mese, dataCorrente.giorno, ora, minuti, 0, 0);
-
-    let link = "";
-    if (item.info) {
-      const trovato = item.info.match(/https?:\/\/[^\s]+/i);
-      if (trovato) link = trovato[0];
-    }
-
-    const canali = Array.isArray(item.canali) ? item.canali.filter(Boolean) : [];
-
-    return {
-      categoria,
-      partita,
-      ora: `${String(ora).padStart(2, "0")}:${String(minuti).padStart(2, "0")}`,
-      data: dataEvento,
-      link,
-      canali
-    };
-  }
-
-  async function caricaFile(file) {
-    const response = await fetch(file.url);
-    if (!response.ok) throw new Error(`Impossibile scaricare ${file.nome} (HTTP ${response.status})`);
-    const json = await response.json();
-
-    const eventi = [];
-    let dataCorrente = null;
-
-    for (const item of json.items || []) {
-      const titolo = pulisciTesto(item.title);
-      const nuovaData = estraiData(titolo);
-
-      if (nuovaData) {
-        dataCorrente = nuovaData;
-        continue;
-      }
-
-      const evento = estraiEvento(item, dataCorrente, file.nome);
-      if (evento) eventi.push(evento);
-    }
-
-    return eventi;
-  }
-
-  function formatData(data) {
+  function formatDataLunga(data) {
     return data.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
   }
 
-  function creaElementoEvento(evento, isLive = false) {
+  async function caricaEventi() {
+    const risposta = await fetch(EVENTI_URL);
+    if (!risposta.ok) throw new Error(`Impossibile scaricare il calendario (HTTP ${risposta.status})`);
+    const json = await risposta.json();
+
+    return (json.eventi || []).map(ev => ({
+      categoria: ev.competizione,
+      partita: ev.titolo,
+      ora: ev.ora,
+      data: new Date(`${ev.data}T${ev.ora}:00`),
+      canali: Array.isArray(ev.canali) ? ev.canali.filter(Boolean) : []
+    }));
+  }
+
+  function creaElementoEvento(evento, isLive) {
     const div = document.createElement("div");
     div.className = "cal-evento" + (isLive ? " is-live" : "");
-
-    const contenutoPartita = evento.link
-      ? `<a href="${evento.link}" target="_blank" rel="noopener">${evento.partita}</a>`
-      : evento.partita;
 
     const canaliHtml = evento.canali.length
       ? `<div class="cal-canali">📺 ${evento.canali.join(", ")}</div>`
       : `<div class="cal-canali cal-canali-vuoto">Canale non indicato</div>`;
 
     div.innerHTML = `
-      <div class="cal-ora">
-        ${isLive ? '<span class="badge-live-tag">LIVE</span>' : ''}
-        ${evento.ora}
-      </div>
+      <div class="cal-ora">${isLive ? '<span class="badge-live-tag">LIVE</span>' : ''}${evento.ora}</div>
       <div class="cal-categoria">${evento.categoria}</div>
-      <div class="cal-partita">
-        ${contenutoPartita}
-        ${canaliHtml}
-      </div>
+      <div>${evento.partita}${canaliHtml}</div>
     `;
     return div;
   }
@@ -328,25 +170,18 @@
     sezione.appendChild(titolo);
 
     const gruppi = {};
-    for (const evento of eventi) {
-      const chiave = `${evento.data.getFullYear()}-${String(evento.data.getMonth() + 1).padStart(2, "0")}-${String(evento.data.getDate()).padStart(2, "0")}`;
-      if (!gruppi[chiave]) gruppi[chiave] = [];
-      gruppi[chiave].push(evento);
+    for (const ev of eventi) {
+      const chiave = ev.data.toISOString().slice(0, 10);
+      (gruppi[chiave] = gruppi[chiave] || []).push(ev);
     }
 
-    const dateOrdinate = Object.keys(gruppi).sort();
-
-    for (const chiave of dateOrdinate) {
+    for (const chiave of Object.keys(gruppi).sort()) {
       const eventiGiorno = gruppi[chiave].sort((a, b) => a.data - b.data);
-
       const divData = document.createElement("div");
       divData.className = "cal-data";
-      divData.textContent = formatData(eventiGiorno[0].data);
+      divData.textContent = formatDataLunga(eventiGiorno[0].data);
       sezione.appendChild(divData);
-
-      for (const ev of eventiGiorno) {
-        sezione.appendChild(creaElementoEvento(ev, false));
-      }
+      eventiGiorno.forEach(ev => sezione.appendChild(creaElementoEvento(ev, false)));
     }
 
     return sezione;
@@ -362,26 +197,19 @@
       const liveSezione = document.createElement("div");
       liveSezione.className = "cal-sezione";
       liveSezione.id = "live";
-
       const liveTitolo = document.createElement("div");
       liveTitolo.className = "cal-sezione-titolo cal-live-titolo";
       liveTitolo.textContent = "🔴 In Corso (LIVE)";
       liveSezione.appendChild(liveTitolo);
-
-      for (const ev of live) {
-        liveSezione.appendChild(creaElementoEvento(ev, true));
-      }
+      live.forEach(ev => liveSezione.appendChild(creaElementoEvento(ev, true)));
       contenitore.appendChild(liveSezione);
     }
 
     if (filtroAttivo !== "LIVE") {
-      const categorie = (filtroAttivo === "ALL") ? ["Serie A", "Serie B", "Serie C"] : [filtroAttivo];
-
+      const categorie = filtroAttivo === "ALL" ? ["Serie A", "Serie B", "Serie C"] : [filtroAttivo];
       for (const cat of categorie) {
         const eventiCat = futuri.filter(ev => ev.categoria === cat);
-        if (eventiCat.length > 0) {
-          contenitore.appendChild(creaSezioneCategoria(cat, eventiCat));
-        }
+        if (eventiCat.length > 0) contenitore.appendChild(creaSezioneCategoria(cat, eventiCat));
       }
     }
 
@@ -390,10 +218,6 @@
     }
   }
 
-  // Applica, alla primissima visualizzazione, il filtro indicato dall'ancora nell'URL
-  // (es. arrivando da un bottone della home con link "...#serie-b") e porta la pagina
-  // fino a quella sezione. Le volte successive (refresh automatico ogni minuto) non
-  // toccano piu' il filtro scelto dalla persona.
   function applicaHashIniziale() {
     if (hashGestito) return;
     hashGestito = true;
@@ -413,65 +237,40 @@
     }
   }
 
-  async function eseguiAggiornamento() {
+  async function aggiorna() {
     try {
-      const risultati = await Promise.all(FILES.map(caricaFile));
-      const tuttiGliEventi = risultati.flat().sort((a, b) => a.data - b.data);
-
+      const eventi = await caricaEventi();
       const adesso = new Date();
-      const durataPartitaMs = 2 * 60 * 60 * 1000;
+      const live = [], futuri = [];
 
-      const live = [];
-      const futuri = [];
-
-      for (const ev of tuttiGliEventi) {
-        const inizio = ev.data;
-        const fine = new Date(inizio.getTime() + durataPartitaMs);
-
-        if (adesso >= inizio && adesso <= fine) {
-          live.push(ev);
-        } else {
-          futuri.push(ev);
-        }
+      for (const ev of eventi) {
+        const fine = new Date(ev.data.getTime() + DURATA_PARTITA_MS);
+        (adesso >= ev.data && adesso <= fine ? live : futuri).push(ev);
       }
+      futuri.sort((a, b) => a.data - b.data);
+      live.sort((a, b) => a.data - b.data);
 
       datiCache = { live, futuri };
-
-      const btnLive = document.getElementById("btn-live-tag");
-      btnLive.textContent = `🔴 LIVE (${live.length})`;
-
+      document.getElementById("btn-live-tag").textContent = `🔴 LIVE (${live.length})`;
       document.getElementById("cal-filters").style.display = "flex";
 
-      if (!hashGestito) {
-        applicaHashIniziale();
-      } else {
-        renderizza();
-      }
-
+      hashGestito ? renderizza() : applicaHashIniziale();
     } catch (err) {
-      document.getElementById("cal-content").innerHTML = `
-        <div class="cal-errore">
-          <strong>Errore nel caricamento dei dati:</strong><br>${err.message}
-        </div>
-      `;
+      document.getElementById("cal-content").innerHTML =
+        `<div class="cal-errore"><strong>Errore nel caricamento dei dati:</strong><br>${err.message}</div>`;
       console.error(err);
     }
   }
 
   document.getElementById("cal-filters").addEventListener("click", (e) => {
     if (!e.target.classList.contains("btn-filter")) return;
-
     document.querySelectorAll(".btn-filter").forEach(b => b.classList.remove("active"));
     e.target.classList.add("active");
-
     filtroAttivo = e.target.getAttribute("data-filter");
     renderizza();
   });
 
-  eseguiAggiornamento();
-
-  setInterval(eseguiAggiornamento, 60000);
-
+  aggiorna();
+  setInterval(aggiorna, 60000);
 })();
 </script>
-
