@@ -149,7 +149,7 @@
         <div class="cal-bar-row">
           <select class="cal-select" onchange="if(this.value) window.location.href=this.value;">
             <option value="">Scegli una categoria…</option>
-            <option value="${PAGINA_CALENDARIO}#live">🔴 In corso ora (${totLive})</option>
+            <option value="${PAGINA_CALENDARIO}#live">🔴 Live (${totLive})</option>
             <option value="${PAGINA_CALENDARIO}#prossimo">🟡 In arrivo (${prossimoConteggio})</option>
             <option value="${PAGINA_CALENDARIO}#serie-a">🇮🇹 Serie A (${conteggi["Serie A"]})</option>
             <option value="${PAGINA_CALENDARIO}#serie-b">🇮🇹 Serie B (${conteggi["Serie B"]})</option>
