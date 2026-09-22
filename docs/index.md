@@ -166,3 +166,107 @@ if (document.readyState === "complete" || document.readyState === "interactive")
 }
 </script>
 
+<style>
+.cal-bar-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 15px 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.cal-btn-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  background: rgba(150, 150, 150, 0.12);
+  color: inherit;
+  border: 1px solid rgba(150, 150, 150, 0.25);
+}
+
+.cal-btn-badge:hover { background: rgba(150, 150, 150, 0.22); }
+
+.cal-btn-live {
+  background: rgba(224, 0, 0, 0.1);
+  color: #d00000;
+  border-color: rgba(224, 0, 0, 0.3);
+}
+
+.cal-btn-live:hover { background: rgba(224, 0, 0, 0.2); }
+
+.cal-count {
+  background: rgba(150, 150, 150, 0.2);
+  color: inherit;
+  font-size: 12px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+.cal-btn-live .cal-count { background: #d00000; color: #ffffff; }
+.cal-loading-dots { font-size: 13px; opacity: 0.6; }
+</style>
+
+<div class="cal-bar-summary" id="cal-summary-bar">
+  <span class="cal-loading-dots">⏳ Caricamento eventi...</span>
+</div>
+
+<script>
+(function () {
+  // Un solo file: eventi.json ha gia' data, ora e competizione pronti, niente da ripulire.
+  const EVENTI_URL = "https://raw.githubusercontent.com/aandroide/Livesoccer/master/livesoccertv/output/eventi.json";
+  const PAGINA_CALENDARIO = "calendario/live_events/";
+  const DURATA_PARTITA_MS = 2.5 * 60 * 60 * 1000;
+
+  async function contaEventi() {
+    const container = document.getElementById("cal-summary-bar");
+    try {
+      const res = await fetch(EVENTI_URL);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const json = await res.json();
+      const adesso = new Date();
+
+      let totLive = 0;
+      const conteggi = { "Serie A": 0, "Serie B": 0, "Serie C": 0 };
+
+      for (const ev of json.eventi || []) {
+        const inizio = new Date(`${ev.data}T${ev.ora}:00`);
+        const fine = new Date(inizio.getTime() + DURATA_PARTITA_MS);
+        if (adesso >= inizio && adesso <= fine) {
+          totLive++;
+        } else if (conteggi[ev.competizione] !== undefined) {
+          conteggi[ev.competizione]++;
+        }
+      }
+
+      container.innerHTML = `
+        <a href="${PAGINA_CALENDARIO}#live" class="cal-btn-badge cal-btn-live">
+          🔴 LIVE <span class="cal-count">${totLive}</span>
+        </a>
+        <a href="${PAGINA_CALENDARIO}#serie-a" class="cal-btn-badge">
+          🇮🇹 Serie A <span class="cal-count">${conteggi["Serie A"]}</span>
+        </a>
+        <a href="${PAGINA_CALENDARIO}#serie-b" class="cal-btn-badge">
+          🇮🇹 Serie B <span class="cal-count">${conteggi["Serie B"]}</span>
+        </a>
+        <a href="${PAGINA_CALENDARIO}#serie-c" class="cal-btn-badge">
+          🇮🇹 Serie C <span class="cal-count">${conteggi["Serie C"]}</span>
+        </a>
+      `;
+    } catch (e) {
+      container.innerHTML = `<a href="${PAGINA_CALENDARIO}" class="cal-btn-badge">⚽ Apri il calendario</a>`;
+      console.error("Errore conteggio calendario", e);
+    }
+  }
+
+  contaEventi();
+})();
+</script>
+
