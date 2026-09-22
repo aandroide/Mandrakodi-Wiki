@@ -60,30 +60,49 @@
     opacity: 0.9;
   }
   .cal-evento {
-    display: grid;
-    grid-template-columns: 65px 85px 1fr;
-    align-items: start;
-    gap: 8px;
-    padding: 10px;
-    border-bottom: 1px solid rgba(150, 150, 150, 0.15);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: rgba(150, 150, 150, 0.05);
+    border: 1px solid rgba(150, 150, 150, 0.18);
+    border-left: 3px solid var(--link);
+    border-radius: 10px;
   }
-  .cal-ora { font-weight: bold; font-size: 14px; }
+  .cal-ora-blocco { width: 52px; flex-shrink: 0; text-align: center; }
+  .cal-ora { font-weight: bold; font-size: 16px; }
   .cal-categoria { font-size: 12px; font-weight: bold; opacity: 0.7; text-transform: uppercase; }
-  .cal-canali { font-size: 12.5px; opacity: 0.75; margin-top: 3px; }
-  .cal-canali.cal-canali-vuoto { font-style: italic; }
-  .cal-evento.is-live { background: rgba(224, 0, 0, 0.06); border-left: 3px solid #e00000; }
-  .cal-evento.is-live .cal-ora { color: #e00000; }
-  .badge-live-tag {
-    display: inline-block;
-    background: #e00000;
-    color: #ffffff;
-    font-size: 10px;
-    font-weight: bold;
-    padding: 2px 5px;
-    border-radius: 3px;
-    margin-right: 4px;
-    vertical-align: middle;
+  .cal-partita-nome { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .cal-canali { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .cal-canale-chip {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 12px;
+    background: rgba(150, 150, 150, 0.12);
+    border: 1px solid rgba(150, 150, 150, 0.25);
+    white-space: nowrap;
   }
+  .cal-canali-altri { font-size: 11.5px; opacity: 0.7; }
+  .cal-canali.cal-canali-vuoto { font-size: 12.5px; font-style: italic; opacity: 0.6; }
+  .cal-evento.is-live { border-left-color: #e00000; background: rgba(224, 0, 0, 0.06); }
+  .cal-evento.is-live .cal-ora { color: #ff6659; }
+  .cal-evento.is-prossimo {
+    border-left-color: #ffca28;
+    background: rgba(255, 202, 40, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(255, 202, 40, 0.25);
+    scroll-margin-top: 80px;
+  }
+  .badge-live-tag, .prossima-tag {
+    display: block;
+    font-size: 9.5px;
+    font-weight: bold;
+    letter-spacing: .04em;
+    margin-bottom: 2px;
+  }
+  .badge-live-tag { color: #ff6659; }
+  .prossima-tag { color: #ffca28; }
   .cal-caricamento { text-align: center; padding: 30px; opacity: 0.7; }
   .cal-errore {
     color: #ff8a80;
@@ -143,18 +162,41 @@
     }));
   }
 
+  const MAX_CANALI_VISIBILI = 3;
+
   function creaElementoEvento(evento, isLive) {
     const div = document.createElement("div");
-    div.className = "cal-evento" + (isLive ? " is-live" : "");
+    const classi = ["cal-evento"];
+    if (isLive) classi.push("is-live");
+    if (evento.prossimo) classi.push("is-prossimo");
+    div.className = classi.join(" ");
+    if (evento.prossimo) div.id = "prossimo";
 
-    const canaliHtml = evento.canali.length
-      ? `<div class="cal-canali">📺 ${evento.canali.join(", ")}</div>`
-      : `<div class="cal-canali cal-canali-vuoto">Canale non indicato</div>`;
+    let canaliHtml;
+    if (evento.canali.length) {
+      const visibili = evento.canali.slice(0, MAX_CANALI_VISIBILI)
+        .map(c => `<span class="cal-canale-chip">${c}</span>`).join("");
+      const restanti = evento.canali.length - MAX_CANALI_VISIBILI;
+      const altri = restanti > 0 ? `<span class="cal-canali-altri">+${restanti} altri</span>` : "";
+      canaliHtml = `<div class="cal-canali">${visibili}${altri}</div>`;
+    } else {
+      canaliHtml = `<div class="cal-canali cal-canali-vuoto">Canale non indicato</div>`;
+    }
+
+    const tagSopraOra = isLive
+      ? '<span class="badge-live-tag">LIVE</span>'
+      : (evento.prossimo ? '<span class="prossima-tag">PROSSIMA</span>' : '');
 
     div.innerHTML = `
-      <div class="cal-ora">${isLive ? '<span class="badge-live-tag">LIVE</span>' : ''}${evento.ora}</div>
-      <div class="cal-categoria">${evento.categoria}</div>
-      <div>${evento.partita}${canaliHtml}</div>
+      <div class="cal-ora-blocco">
+        ${tagSopraOra}
+        <div class="cal-ora">${evento.ora}</div>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <div class="cal-categoria">${evento.categoria}</div>
+        <div class="cal-partita-nome">${evento.partita}</div>
+        ${canaliHtml}
+      </div>
     `;
     return div;
   }
@@ -249,6 +291,10 @@
       }
       futuri.sort((a, b) => a.data - b.data);
       live.sort((a, b) => a.data - b.data);
+
+      // La prima della lista, qualunque sia il suo campionato, e' "la prossima partita in
+      // assoluto": e' quella a cui punta il pulsante intelligente della home (#prossimo).
+      if (futuri.length > 0) futuri[0].prossimo = true;
 
       datiCache = { live, futuri };
       document.getElementById("btn-live-tag").textContent = `🔴 LIVE (${live.length})`;
