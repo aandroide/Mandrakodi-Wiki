@@ -186,7 +186,7 @@
 <script>
 (function () {
   const BRANCH = "main";
-  const REPO = "campipaolo/Livesoccer";
+  const REPO = "aandroide/Livesoccer";
   const FILES = [
     { nome: "Serie A", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-a.json` },
     { nome: "Serie B", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-b.json` },
