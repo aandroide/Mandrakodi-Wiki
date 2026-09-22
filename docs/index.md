@@ -144,7 +144,7 @@
       bar.innerHTML = `
         <div class="cal-bar-top">
           <span>⚽ <strong>${totale}</strong> partite nel calendario</span>
-          ${badge("cal-badge-live", "", totLive)}
+          ${badge("cal-badge-live", "Live", totLive)}
         </div>
         <div class="cal-bar-row">
           <select class="cal-select" onchange="if(this.value) window.location.href=this.value;">
