@@ -12,23 +12,32 @@
   border: 1px solid rgba(150, 150, 150, 0.25);
   border-radius: 10px;
   padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* Di base si vede solo la versione desktop; le media query sotto scelgono l'altra */
-.cal-bar-desktop { display: flex; }
-.cal-bar-tablet, .cal-bar-phone { display: none; }
+.cal-bar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
 
 .cal-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 7px 14px;
+  padding: 6px 13px;
   border-radius: 20px;
-  font-size: 14px;
   font-weight: 700;
-  background: rgba(150, 150, 150, 0.08);
-  border: 1px solid rgba(150, 150, 150, 0.25);
+  font-size: 13.5px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(150, 150, 150, 0.3);
   color: inherit;
+  white-space: nowrap;
 }
 
 .cal-badge .dot {
@@ -40,10 +49,25 @@
 }
 
 .cal-badge-live { color: #ff6659; border-color: rgba(224, 0, 0, 0.35); }
-.cal-badge-a { color: #64b5f6; border-color: rgba(25, 118, 210, 0.35); }
-.cal-badge-b { color: #81c784; border-color: rgba(46, 125, 50, 0.35); }
-.cal-badge-c { color: #ce93d8; border-color: rgba(106, 27, 154, 0.35); }
+.cal-badge-attesa { color: #ffb74d; border-color: rgba(255, 160, 0, 0.35); }
 .cal-badge strong { color: inherit; }
+
+.cal-bar-row {
+  display: flex;
+  gap: 8px;
+}
+
+.cal-select {
+  flex: 1;
+  min-width: 0;
+  background: rgba(150, 150, 150, 0.08);
+  border: 1px solid rgba(150, 150, 150, 0.3);
+  color: inherit;
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
 
 .cal-btn {
   display: inline-flex;
@@ -61,66 +85,12 @@
 
 .cal-btn:hover { background: #1565c0; }
 
-/* Il pulsante intelligente (live o prossima partita) puo' avere un testo piu' lungo del
-   solito "Apri calendario": il testo vero e proprio sta in uno span a parte perche' i
-   puntini di sospensione funzionano in modo affidabile solo su un elemento a blocco, non
-   dentro un contenitore flessibile come .cal-btn. */
-.cal-cta { min-width: 0; }
-.cal-cta-text {
-  display: inline-block;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  vertical-align: bottom;
-}
-.cal-bar-desktop .cal-cta { max-width: 320px; }
-.cal-bar-phone .cal-cta { flex: 1; min-width: 0; }
-
-.cal-bar-desktop { align-items: center; gap: 10px; flex-wrap: wrap; }
-.cal-bar-desktop .cal-spacer { flex: 1; }
-
-.cal-bar-tablet { flex-direction: column; gap: 10px; }
-.cal-bar-tablet .cal-tablet-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 14px;
-}
-.cal-select {
-  flex: 1;
-  background: rgba(150, 150, 150, 0.08);
-  border: 1px solid rgba(150, 150, 150, 0.3);
-  color: inherit;
-  border-radius: 8px;
-  padding: 9px 10px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.cal-bar-phone { align-items: center; justify-content: space-between; gap: 10px; }
-
 .cal-loading { font-size: 13px; opacity: 0.6; }
-
-/* Sotto i 780px: solo il totale + menu a tendina */
-@media (max-width: 780px) {
-  .cal-bar-desktop { display: none; }
-  .cal-bar-tablet { display: flex; }
-}
-
-/* Sotto i 480px: solo il badge LIVE + pulsante */
-@media (max-width: 480px) {
-  .cal-bar-tablet { display: none; }
-  .cal-bar-phone { display: flex; }
-}
 </style>
 
-<div id="cal-bar-desktop" class="cal-bar cal-bar-desktop">
+<div id="cal-bar" class="cal-bar">
   <span class="cal-loading">⏳ Caricamento eventi...</span>
 </div>
-<div id="cal-bar-tablet" class="cal-bar cal-bar-tablet"></div>
-<div id="cal-bar-phone" class="cal-bar cal-bar-phone"></div>
 
 <script>
 (function () {
@@ -133,11 +103,8 @@
     return `<span class="cal-badge ${cls}"><span class="dot"></span>${label} <strong>${count}</strong></span>`;
   }
 
-  async function aggiornaBarre() {
-    const desktop = document.getElementById("cal-bar-desktop");
-    const tablet = document.getElementById("cal-bar-tablet");
-    const phone = document.getElementById("cal-bar-phone");
-
+  async function aggiornaBarra() {
+    const bar = document.getElementById("cal-bar");
     try {
       const res = await fetch(EVENTI_URL);
       if (!res.ok) throw new Error("HTTP " + res.status);
@@ -145,12 +112,9 @@
       const adesso = new Date();
 
       let totLive = 0;
-      // Non e' detto che ci sia una sola "prossima partita": Serie A, B e C possono avere
-      // piu' partite allo stesso identico orario, quindi si tiene l'orario piu' vicino e
-      // quante partite lo condividono, non un singolo nome.
+      // "In arrivo" e' un orario, non una singola partita: Serie A, B e C possono avere
+      // piu' partite insieme, quindi si conta quante condividono l'orario piu' vicino.
       let prossimoInizio = null;
-      let prossimoTitolo = "";
-      let prossimoOra = "";
       let prossimoConteggio = 0;
       const conteggi = { "Serie A": 0, "Serie B": 0, "Serie C": 0 };
 
@@ -164,8 +128,6 @@
           if (inizio > adesso) {
             if (!prossimoInizio || inizio < prossimoInizio) {
               prossimoInizio = inizio;
-              prossimoTitolo = ev.titolo;
-              prossimoOra = ev.ora;
               prossimoConteggio = 1;
             } else if (inizio.getTime() === prossimoInizio.getTime()) {
               prossimoConteggio++;
@@ -176,64 +138,34 @@
 
       const totale = totLive + conteggi["Serie A"] + conteggi["Serie B"] + conteggi["Serie C"];
 
-      // Il pulsante principale punta sempre al punto piu' interessante in questo momento:
-      // al live se c'e', altrimenti dritto alla prossima partita (o alle prossime, se piu'
-      // di una comincia insieme) in assoluto, non solo alla sezione del suo campionato.
-      let ctaHref = PAGINA_CALENDARIO;
-      let ctaLabel = "Apri il calendario ›";
-      if (totLive > 0) {
-        ctaHref = `${PAGINA_CALENDARIO}#live`;
-        ctaLabel = "🔴 Vai al live ›";
-      } else if (prossimoInizio) {
-        ctaHref = `${PAGINA_CALENDARIO}#prossimo`;
-        ctaLabel = prossimoConteggio > 1
-          ? `Prossimi (${prossimoConteggio}) · ${prossimoOra} ›`
-          : `Prossima: ${prossimoTitolo} · ${prossimoOra} ›`;
-      }
-      const ctaHtml = `<a href="${ctaHref}" class="cal-btn cal-cta"><span class="cal-cta-text">${ctaLabel}</span></a>`;
-
-      // Desktop: tutti i contatori affiancati
-      desktop.innerHTML = `
-        ${badge("cal-badge-live", "LIVE", totLive)}
-        ${badge("cal-badge-a", "Serie A", conteggi["Serie A"])}
-        ${badge("cal-badge-b", "Serie B", conteggi["Serie B"])}
-        ${badge("cal-badge-c", "Serie C", conteggi["Serie C"])}
-        <span class="cal-spacer"></span>
-        ${ctaHtml}
-      `;
-
-      // Tablet: totale eventi, il pulsante intelligente, poi il menu a tendina per le categorie
-      tablet.innerHTML = `
-        <div class="cal-tablet-top">
+      // Un widget solo, uguale su desktop e telefono: il totale e il live in alto, sotto
+      // il menu a tendina per saltare a una categoria (o a "In arrivo") e, a fianco, il
+      // pulsante che apre comunque la pagina intera del calendario.
+      bar.innerHTML = `
+        <div class="cal-bar-top">
           <span>⚽ <strong>${totale}</strong> partite nel calendario</span>
           ${badge("cal-badge-live", "", totLive)}
         </div>
-        ${ctaHtml}
-        <select class="cal-select" onchange="if(this.value) window.location.href=this.value;">
-          <option value="">Scegli una categoria…</option>
-          <option value="${PAGINA_CALENDARIO}#live">🔴 In corso ora (${totLive})</option>
-          <option value="${PAGINA_CALENDARIO}#serie-a">🇮🇹 Serie A (${conteggi["Serie A"]})</option>
-          <option value="${PAGINA_CALENDARIO}#serie-b">🇮🇹 Serie B (${conteggi["Serie B"]})</option>
-          <option value="${PAGINA_CALENDARIO}#serie-c">🇮🇹 Serie C (${conteggi["Serie C"]})</option>
-        </select>
-      `;
-
-      // Telefono: solo il numero di partite in corso ora, il pulsante fa il resto del lavoro
-      phone.innerHTML = `
-        ${badge("cal-badge-live", "LIVE", totLive)}
-        ${ctaHtml}
+        <div class="cal-bar-row">
+          <select class="cal-select" onchange="if(this.value) window.location.href=this.value;">
+            <option value="">Scegli una categoria…</option>
+            <option value="${PAGINA_CALENDARIO}#live">🔴 In corso ora (${totLive})</option>
+            <option value="${PAGINA_CALENDARIO}#prossimo">🟡 In arrivo (${prossimoConteggio})</option>
+            <option value="${PAGINA_CALENDARIO}#serie-a">🇮🇹 Serie A (${conteggi["Serie A"]})</option>
+            <option value="${PAGINA_CALENDARIO}#serie-b">🇮🇹 Serie B (${conteggi["Serie B"]})</option>
+            <option value="${PAGINA_CALENDARIO}#serie-c">🇮🇹 Serie C (${conteggi["Serie C"]})</option>
+          </select>
+          <a href="${PAGINA_CALENDARIO}" class="cal-btn">Apri calendario ›</a>
+        </div>
       `;
     } catch (e) {
-      const fallback = `<a href="${PAGINA_CALENDARIO}" class="cal-btn">⚽ Apri il calendario</a>`;
-      desktop.innerHTML = fallback;
-      tablet.innerHTML = fallback;
-      phone.innerHTML = fallback;
+      bar.innerHTML = `<a href="${PAGINA_CALENDARIO}" class="cal-btn">⚽ Apri il calendario</a>`;
       console.error("Errore conteggio calendario", e);
     }
   }
 
-  aggiornaBarre();
-  setInterval(aggiornaBarre, 60000);
+  aggiornaBarra();
+  setInterval(aggiornaBarra, 60000);
 })();
 </script>
 
