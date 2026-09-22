@@ -9,7 +9,6 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-
 .cal-btn-badge {
   display: inline-flex;
   align-items: center;
@@ -65,11 +64,12 @@
 
 <script>
 (function() {
-  const BASE_COMMIT = "93770da86eb3d6bdfcd4f4df1828cafef487afb0";
+  const BRANCH = "main";
+  const REPO = "campipaolo/Livesoccer";
   const FILES = [
-    { nome: "Serie A", url: `https://raw.githubusercontent.com/campipaolo/Livesoccer/${BASE_COMMIT}/livesoccertv/output/serie-a.json` },
-    { nome: "Serie B", url: `https://raw.githubusercontent.com/campipaolo/Livesoccer/${BASE_COMMIT}/livesoccertv/output/serie-b.json` },
-    { nome: "Serie C", url: `https://raw.githubusercontent.com/campipaolo/Livesoccer/${BASE_COMMIT}/livesoccertv/output/serie-c.json` }
+    { nome: "Serie A", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-a.json` },
+    { nome: "Serie B", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-b.json` },
+    { nome: "Serie C", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-c.json` }
   ];
 
   const mesi = { gennaio: 0, febbraio: 1, marzo: 2, aprile: 3, maggio: 4, giugno: 5, luglio: 6, agosto: 7, settembre: 8, ottobre: 9, novembre: 10, dicembre: 11 };
@@ -88,12 +88,12 @@
       if (mesi[p] !== undefined) mese = mesi[p];
     }
     if (giorno === null || mese === null) return null;
-    
+
     const oggi = new Date();
     let anno = oggi.getFullYear();
     const data = new Date(anno, mese, giorno);
     if (data.getTime() < oggi.getTime() - (180 * 24 * 60 * 60 * 1000)) anno++;
-    
+
     return { giorno, mese, anno, data };
   }
 
@@ -109,23 +109,23 @@
         if (!res.ok) continue;
         const json = await res.json();
         let dataCorrente = null;
-    
+
         for (const item of json.items || []) {
           const tit = pulisciTesto(item.title);
           const dataEstrapolata = estraiData(tit);
-    
+
           if (dataEstrapolata) {
             dataCorrente = dataEstrapolata;
             continue;
           }
-    
+
           const matchOra = tit.match(/^(\d{1,2}):(\d{2})/);
           if (matchOra && dataCorrente) {
             const ora = parseInt(matchOra[1], 10);
             const min = parseInt(matchOra[2], 10);
             const inizio = new Date(dataCorrente.anno, dataCorrente.mese, dataCorrente.giorno, ora, min);
             const fine = new Date(inizio.getTime() + durataMs);
-    
+
             if (adesso >= inizio && adesso <= fine) {
               totLive++;
             } else {
@@ -137,8 +137,7 @@
         console.error("Errore conteggio per " + f.nome, e);
       }
     }
-    
-    // Se vuoi collegare i pulsanti alla pagina del calendario completo, inserisci il link in 'href' (es: href="calendario.html")
+
     const container = document.getElementById("cal-summary-bar");
     container.innerHTML = `
       <a href="./#live" class="cal-btn-badge cal-btn-live">
@@ -161,7 +160,6 @@
 </script>
 
 <style>
-/* Reset dinamico dei colori basato sul tema corrente */
 #cal-wrapper {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   max-width: 900px;
@@ -176,7 +174,6 @@
   margin-bottom: 20px;
 }
 
-/* Pulsanti Filtro */
 .cal-filters {
   display: flex;
   flex-wrap: wrap;
@@ -212,7 +209,6 @@
   color: #ffffff !important;
 }
 
-/* Sezioni e Intestazioni */
 .cal-sezione {
   margin-top: 25px;
 }
@@ -226,6 +222,11 @@
   background: rgba(150, 150, 150, 0.12);
   border-left: 4px solid var(--md-typeset-a-color, #0066cc);
 }
+
+/* Colore proprio per ogni serie, invece del bianco del testo normale */
+.cal-sezione-titolo.serie-a { color: #64b5f6; background: rgba(25, 118, 210, 0.12); border-left-color: #1976d2; }
+.cal-sezione-titolo.serie-b { color: #66bb6a; background: rgba(46, 125, 50, 0.12); border-left-color: #2e7d32; }
+.cal-sezione-titolo.serie-c { color: #ce93d8; background: rgba(106, 27, 154, 0.12); border-left-color: #6a1b9a; }
 
 .cal-live-titolo {
   background: rgba(224, 0, 0, 0.12);
@@ -244,11 +245,10 @@
   opacity: 0.9;
 }
 
-/* Elemento Evento */
 .cal-evento {
   display: grid;
   grid-template-columns: 65px 85px 1fr;
-  align-items: center;
+  align-items: start;
   gap: 8px;
   padding: 10px;
   border-bottom: 1px solid rgba(150, 150, 150, 0.15);
@@ -257,6 +257,7 @@
 .cal-ora {
   font-weight: bold;
   font-size: 14px;
+  padding-top: 1px;
 }
 
 .cal-categoria {
@@ -264,6 +265,7 @@
   font-weight: bold;
   opacity: 0.7;
   text-transform: uppercase;
+  padding-top: 2px;
 }
 
 .cal-partita a {
@@ -273,6 +275,16 @@
 
 .cal-partita a:hover {
   text-decoration: underline;
+}
+
+.cal-canali {
+  font-size: 12.5px;
+  opacity: 0.75;
+  margin-top: 3px;
+}
+
+.cal-canali.cal-canali-vuoto {
+  font-style: italic;
 }
 
 .cal-evento.is-live {
@@ -314,7 +326,6 @@
 <div id="cal-wrapper">
   <div class="cal-title">⚽ Calendario</div>
 
-  <!-- Barra dei Filtri -->
   <div class="cal-filters" id="cal-filters" style="display:none;">
     <button class="btn-filter active" data-filter="ALL">Tutti</button>
     <button class="btn-filter btn-live-filter" data-filter="LIVE" id="btn-live-tag">🔴 LIVE (0)</button>
@@ -330,12 +341,15 @@
 
 <script>
 (function () {
-  const BASE_COMMIT = "93770da86eb3d6bdfcd4f4df1828cafef487afb0";
+  const BRANCH = "master";
+  const REPO = "campipaolo/Livesoccer";
   const FILES = [
-    { nome: "Serie A", url: `https://raw.githubusercontent.com/campipaolo/Livesoccer/${BASE_COMMIT}/livesoccertv/output/serie-a.json` },
-    { nome: "Serie B", url: `https://raw.githubusercontent.com/campipaolo/Livesoccer/${BASE_COMMIT}/livesoccertv/output/serie-b.json` },
-    { nome: "Serie C", url: `https://raw.githubusercontent.com/campipaolo/Livesoccer/${BASE_COMMIT}/livesoccertv/output/serie-c.json` }
+    { nome: "Serie A", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-a.json` },
+    { nome: "Serie B", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-b.json` },
+    { nome: "Serie C", url: `https://raw.githubusercontent.com/${REPO}/${BRANCH}/livesoccertv/output/serie-c.json` }
   ];
+
+  const CLASSE_SERIE = { "Serie A": "serie-a", "Serie B": "serie-b", "Serie C": "serie-c" };
 
   const mesi = { gennaio: 0, febbraio: 1, marzo: 2, aprile: 3, maggio: 4, giugno: 5, luglio: 6, agosto: 7, settembre: 8, ottobre: 9, novembre: 10, dicembre: 11 };
 
@@ -355,17 +369,17 @@
       if (/^\d+$/.test(parte)) giorno = parseInt(parte, 10);
       if (mesi[parte] !== undefined) mese = mesi[parte];
     }
-    
+
     if (giorno === null || mese === null) return null;
-    
+
     const oggi = new Date();
     let anno = oggi.getFullYear();
     const data = new Date(anno, mese, giorno);
-    
+
     if (data.getTime() < oggi.getTime() - (180 * 24 * 60 * 60 * 1000)) {
       anno++;
     }
-    
+
     return { giorno, mese, anno, data };
   }
 
@@ -374,25 +388,28 @@
     const matchOra = titolo.match(/^(\d{1,2}):(\d{2})\s+(.*)$/);
 
     if (!matchOra || !dataCorrente) return null;
-    
+
     const ora = parseInt(matchOra[1], 10);
     const minuti = parseInt(matchOra[2], 10);
     const partita = matchOra[3].trim();
-    
+
     const dataEvento = new Date(dataCorrente.anno, dataCorrente.mese, dataCorrente.giorno, ora, minuti, 0, 0);
-    
+
     let link = "";
     if (item.info) {
       const trovato = item.info.match(/https?:\/\/[^\s]+/i);
       if (trovato) link = trovato[0];
     }
-    
+
+    const canali = Array.isArray(item.canali) ? item.canali.filter(Boolean) : [];
+
     return {
       categoria,
       partita,
       ora: `${String(ora).padStart(2, "0")}:${String(minuti).padStart(2, "0")}`,
       data: dataEvento,
-      link
+      link,
+      canali
     };
   }
 
@@ -403,20 +420,20 @@
 
     const eventi = [];
     let dataCorrente = null;
-    
+
     for (const item of json.items || []) {
       const titolo = pulisciTesto(item.title);
       const nuovaData = estraiData(titolo);
-    
+
       if (nuovaData) {
         dataCorrente = nuovaData;
         continue;
       }
-    
+
       const evento = estraiEvento(item, dataCorrente, file.nome);
       if (evento) eventi.push(evento);
     }
-    
+
     return eventi;
   }
 
@@ -428,17 +445,24 @@
     const div = document.createElement("div");
     div.className = "cal-evento" + (isLive ? " is-live" : "");
 
-    const contenutoPartita = evento.link 
+    const contenutoPartita = evento.link
       ? `<a href="${evento.link}" target="_blank" rel="noopener">${evento.partita}</a>`
       : evento.partita;
-    
+
+    const canaliHtml = evento.canali.length
+      ? `<div class="cal-canali">📺 ${evento.canali.join(", ")}</div>`
+      : `<div class="cal-canali cal-canali-vuoto">Canale non indicato</div>`;
+
     div.innerHTML = `
       <div class="cal-ora">
         ${isLive ? '<span class="badge-live-tag">LIVE</span>' : ''}
         ${evento.ora}
       </div>
       <div class="cal-categoria">${evento.categoria}</div>
-      <div class="cal-partita">${contenutoPartita}</div>
+      <div class="cal-partita">
+        ${contenutoPartita}
+        ${canaliHtml}
+      </div>
     `;
     return div;
   }
@@ -448,32 +472,32 @@
     sezione.className = "cal-sezione";
 
     const titolo = document.createElement("div");
-    titolo.className = "cal-sezione-titolo";
+    titolo.className = "cal-sezione-titolo " + (CLASSE_SERIE[categoria] || "");
     titolo.textContent = `🇮🇹 ${categoria}`;
     sezione.appendChild(titolo);
-    
+
     const gruppi = {};
     for (const evento of eventi) {
       const chiave = `${evento.data.getFullYear()}-${String(evento.data.getMonth() + 1).padStart(2, "0")}-${String(evento.data.getDate()).padStart(2, "0")}`;
       if (!gruppi[chiave]) gruppi[chiave] = [];
       gruppi[chiave].push(evento);
     }
-    
+
     const dateOrdinate = Object.keys(gruppi).sort();
-    
+
     for (const chiave of dateOrdinate) {
       const eventiGiorno = gruppi[chiave].sort((a, b) => a.data - b.data);
-      
+
       const divData = document.createElement("div");
       divData.className = "cal-data";
       divData.textContent = formatData(eventiGiorno[0].data);
       sezione.appendChild(divData);
-    
+
       for (const ev of eventiGiorno) {
         sezione.appendChild(creaElementoEvento(ev, false));
       }
     }
-    
+
     return sezione;
   }
 
@@ -482,27 +506,25 @@
     contenitore.innerHTML = "";
 
     const { live, futuri } = datiCache;
-    
-    // 1. Render SEZIONE LIVE
+
     if ((filtroAttivo === "ALL" || filtroAttivo === "LIVE") && live.length > 0) {
       const liveSezione = document.createElement("div");
       liveSezione.className = "cal-sezione";
-    
+
       const liveTitolo = document.createElement("div");
       liveTitolo.className = "cal-sezione-titolo cal-live-titolo";
       liveTitolo.textContent = "🔴 In Corso (LIVE)";
       liveSezione.appendChild(liveTitolo);
-    
+
       for (const ev of live) {
         liveSezione.appendChild(creaElementoEvento(ev, true));
       }
       contenitore.appendChild(liveSezione);
     }
-    
-    // 2. Render SEZIONI CATEGORIA
+
     if (filtroAttivo !== "LIVE") {
       const categorie = (filtroAttivo === "ALL") ? ["Serie A", "Serie B", "Serie C"] : [filtroAttivo];
-    
+
       for (const cat of categorie) {
         const eventiCat = futuri.filter(ev => ev.categoria === cat);
         if (eventiCat.length > 0) {
@@ -510,7 +532,7 @@
         }
       }
     }
-    
+
     if (contenitore.children.length === 0) {
       contenitore.innerHTML = `<div class="cal-caricamento">Nessun evento disponibile per il filtro selezionato.</div>`;
     }
@@ -522,31 +544,30 @@
       const tuttiGliEventi = risultati.flat().sort((a, b) => a.data - b.data);
 
       const adesso = new Date();
-      const durataPartitaMs = 2 * 60 * 60 * 1000; // 2 ore
-    
+      const durataPartitaMs = 2 * 60 * 60 * 1000;
+
       const live = [];
       const futuri = [];
-    
+
       for (const ev of tuttiGliEventi) {
         const inizio = ev.data;
         const fine = new Date(inizio.getTime() + durataPartitaMs);
-    
+
         if (adesso >= inizio && adesso <= fine) {
           live.push(ev);
         } else {
           futuri.push(ev);
         }
       }
-    
+
       datiCache = { live, futuri };
-    
-      // Aggiorna Badge e contatore LIVE
+
       const btnLive = document.getElementById("btn-live-tag");
       btnLive.textContent = `🔴 LIVE (${live.length})`;
-    
+
       document.getElementById("cal-filters").style.display = "flex";
       renderizza();
-    
+
     } catch (err) {
       document.getElementById("cal-content").innerHTML = `
         <div class="cal-errore">
@@ -557,21 +578,18 @@
     }
   }
 
-  // Event Listeners per i Pulsanti Filtro
   document.getElementById("cal-filters").addEventListener("click", (e) => {
     if (!e.target.classList.contains("btn-filter")) return;
 
     document.querySelectorAll(".btn-filter").forEach(b => b.classList.remove("active"));
     e.target.classList.add("active");
-    
+
     filtroAttivo = e.target.getAttribute("data-filter");
     renderizza();
   });
 
-  // Avvio iniziale
   eseguiAggiornamento();
 
-  // Polling automatico in background senza ricaricare la pagina
   setInterval(eseguiAggiornamento, 60000);
 
 })();
