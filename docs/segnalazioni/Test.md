@@ -1,197 +1,257 @@
 <style>
   .calendar-container {
-    max-width: 800px;
-    margin: 20px auto;
-    font-family: Arial, sans-serif;
+    font-family: var(--md-text-font-family, sans-serif);
+    margin-top: 20px;
   }
-  .calendar-tabs {
+  .calendar-section {
+    margin-bottom: 30px;
+  }
+  .calendar-section h3 {
     display: flex;
-    gap: 8px;
-    margin-bottom: 15px;
-    flex-wrap: wrap;
-  }
-  .tab-btn {
-    padding: 8px 16px;
-    background: #252526;
-    color: #fff;
-    border: 1px solid #444;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-    transition: background 0.2s;
-  }
-  .tab-btn:hover { background: #333; }
-  .tab-btn.active {
-    background: #107c41;
-    border-color: #107c41;
-  }
-  .tab-btn.live-btn {
-    background: #b71c1c;
-    border-color: #d32f2f;
-  }
-  .tab-btn.live-btn.active {
-    background: #d32f2f;
-  }
-
-  .match-card {
-    background: #1e1e1e;
-    border: 1px solid #333;
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid var(--md-accent-fg-color, #007acc);
+    padding-bottom: 6px;
   }
-  .match-info { flex-grow: 1; }
-  .match-teams { font-weight: bold; font-size: 15px; color: #fff; }
-  .match-details { font-size: 13px; color: #aaa; margin-top: 4px; }
-
-  .badge {
-    padding: 4px 8px;
+  .live-header {
+    border-bottom-color: #e53935 !important;
+    color: #e53935;
+  }
+  .calendar-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+  }
+  .calendar-table th, .calendar-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--md-default-fg-color--lightest, #333);
+  }
+  .calendar-table th {
+    background-color: var(--md-default-bg-color--panel, #1e1e1e);
+    font-weight: bold;
+  }
+  .badge-live {
+    background-color: #e53935;
+    color: #fff;
+    padding: 2px 6px;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 0.8em;
     font-weight: bold;
     text-transform: uppercase;
+    animation: blink 1.5s infinite;
   }
-  .badge-live { background: #d32f2f; color: #fff; animation: pulse 1.5s infinite; }
-  .badge-upcoming { background: #0288d1; color: #fff; }
-  .badge-finished { background: #555; color: #ccc; }
-
-  @keyframes pulse {
-    0% { opacity: 1; }
+  .badge-lega {
+    background-color: var(--md-default-fg-color--lightest, #444);
+    color: var(--md-default-fg-color, #fff);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+  }
+  @keyframes blink {
     50% { opacity: 0.5; }
-    100% { opacity: 1; }
   }
-
-  @media screen and (max-width: 600px) {
-    .match-card {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+  .empty-msg {
+    font-style: italic;
+    opacity: 0.7;
+    padding: 10px 0;
   }
 </style>
 
 <div class="calendar-container">
-  <!-- Pulsanti Filtro/Categoria -->
-  <div class="calendar-tabs">
-    <button class="tab-btn live-btn active" onclick="filtracategoria('Live')">🔴 LIVE (<span id="count-live">0</span>)</button>
-    <button class="tab-btn" onclick="filtracategoria('Serie A')">Serie A</button>
-    <button class="tab-btn" onclick="filtracategoria('Serie B')">Serie B</button>
-    <button class="tab-btn" onclick="filtracategoria('Serie C')">Serie C</button>
-  </div>
+  <div id="calendar-loading">⏳ Caricamento palinsesto in corso...</div>
+  <div id="calendar-content" style="display: none;">
 
-  <!-- Contenitore Lista Eventi -->
-  <div id="lista-eventi">
-    <div style="text-align: center; padding: 20px; color: #aaa;">Caricamento palinsesto in corso...</div>
+    <!-- Sezione Eventi LIVE -->
+    <div class="calendar-section" id="section-live" style="display: none;">
+      <h3 class="live-header">🔴 Eventi In Corso (LIVE)</h3>
+      <div class="calendar-table-wrapper">
+        <table class="calendar-table">
+          <thead>
+            <tr>
+              <th>Lega</th>
+              <th>Data / Ora</th>
+              <th>Partita / Dettagli</th>
+              <th>Stato</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-live"></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Sezione Serie A -->
+    <div class="calendar-section">
+      <h3>⚽ Serie A</h3>
+      <div class="calendar-table-wrapper">
+        <table class="calendar-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Ora</th>
+              <th>Incontro</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-serie-a"></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Sezione Serie B -->
+    <div class="calendar-section">
+      <h3>⚽ Serie B</h3>
+      <div class="calendar-table-wrapper">
+        <table class="calendar-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Ora</th>
+              <th>Incontro</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-serie-b"></tbody>
+        </table>
+      </div>
+    </div>
+    
+    <!-- Sezione Serie C -->
+    <div class="calendar-section">
+      <h3>⚽ Serie C</h3>
+      <div class="calendar-table-wrapper">
+        <table class="calendar-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Ora</th>
+              <th>Incontro</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-serie-c"></tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
 (function() {
-  // URLs grezzi dei tuoi file JSON su GitHub (raw.githubusercontent.com)
+  const BASE_COMMIT = "93770da86eb3d6bdfcd4f4df1828cafef487afb0";
   const SOURCES = [
-    { lega: "Serie A", url: "https://raw.githubusercontent.com/campipaolo/Livesoccer/93770da86eb3d6bdfcd4f4df1828cafef487afb0/livesoccertv/output/serie-a.json" },
-    { lega: "Serie B", url: "https://raw.githubusercontent.com/campipaolo/Livesoccer/93770da86eb3d6bdfcd4f4df1828cafef487afb0/livesoccertv/output/serie-b.json" },
-    { lega: "Serie C", url: "https://raw.githubusercontent.com/campipaolo/Livesoccer/93770da86eb3d6bdfcd4f4df1828cafef487afb0/livesoccertv/output/serie-c.json" }
+    { key: "serie-a", name: "Serie A", url: `https://raw.githubusercontent.com/campipaolo/Livesoccer/${BASE_COMMIT}/livesoccertv/output/serie-a.json` },
+    { key: "serie-b", name: "Serie B", url: `https://raw.githubusercontent.com/campipaolo/Livesoccer/${BASE_COMMIT}/livesoccertv/output/serie-b.json` },
+    { key: "serie-c", name: "Serie C", url: `https://raw.githubusercontent.com/campipaolo/Livesoccer/${BASE_COMMIT}/livesoccertv/output/serie-c.json` }
   ];
 
-  let tuttiEventi = [];
-  let categoriaAttuale = "Live";
-
-  async function caricaDati() {
-    try {
-      const richieste = SOURCES.map(async src => {
-        const res = await fetch(src.url);
-        if (!res.ok) return [];
-        const data = await res.json();
-        // Aggiunge la categoria 'lega' ad ogni oggetto del file JSON
-        return (data.partite || data || []).map(item => ({ ...item, lega: src.lega }));
-      });
-
-      const risultati = await Promise.all(richieste);
-      tuttiEventi = risultati.flat();
-    
-      // Normalizzazione e calcolo timestamp per l'ordinamento cronologico
-      tuttiEventi.forEach(ev => {
-        ev.parsedDate = generaTimestamp(ev.date || ev.data, ev.time || ev.orario);
-        ev.isLive = (ev.status || '').toLowerCase() === 'live' || (ev.stato || '').toLowerCase() === 'live';
-      });
-    
-      // Ordinamento cronologico crescente
-      tuttiEventi.sort((a, b) => a.parsedDate - b.parsedDate);
-    
-      // Aggiorna contatore badge LIVE
-      const liveCount = tuttiEventi.filter(e => e.isLive).length;
-      document.getElementById("count-live").textContent = liveCount;
-    
-      render();
-    } catch (err) {
-      console.error("Errore nel caricamento dei JSON:", err);
-      document.getElementById("lista-eventi").innerHTML = 
-        '<div style="color: #ff5252; text-align: center; padding: 15px;">⚠️ Impossibile caricare il palinsesto.</div>';
-    }
-  }
-
-  function generaTimestamp(dataStr, oraStr) {
-    if (!dataStr) return new Date(0);
-    // Tenta di interpretare la data o assegna un valore predefinito
-    const isoString = oraStr ? `${dataStr}T${oraStr}:00` : dataStr;
-    const d = new Date(isoString);
-    return isNaN(d.getTime()) ? new Date() : d;
-  }
-
-  window.filtracategoria = function(cat) {
-    categoriaAttuale = cat;
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.classList.remove('active');
-      if (btn.textContent.includes(cat)) btn.classList.add('active');
-    });
-    render();
+  const MESI = {
+    "gennaio": 0, "febbraio": 1, "marzo": 2, "aprile": 3, "maggio": 4, "giugno": 5,
+    "luglio": 6, "agosto": 7, "settembre": 8, "ottobre": 9, "novembre": 10, "dicembre": 11
   };
 
-  function render() {
-    const container = document.getElementById("lista-eventi");
-    container.innerHTML = "";
-
-    let filtrati = [];
-    if (categoriaAttuale === "Live") {
-      filtrati = tuttiEventi.filter(e => e.isLive);
-    } else {
-      filtrati = tuttiEventi.filter(e => e.lega === categoriaAttuale);
+  // Helper per convertire stringhe di data/ora in timestamp per l'ordinamento
+  function parseMatchDate(dataStr, orarioStr) {
+    try {
+      if (!dataStr) return new Date(0);
+      const match = dataStr.toLowerCase().match(/(\d{1,2})\s+([a-z]+)(?:\s+(\d{4}))?/);
+      if (match) {
+        const giorno = parseInt(match[1], 10);
+        const mese = MESI[match[2]] !== undefined ? MESI[match[2]] : 0;
+        const anno = match[3] ? parseInt(match[3], 10) : new Date().getFullYear();
+        
+        let ora = 0, minuto = 0;
+        if (orarioStr && orarioStr.includes(":")) {
+          const parts = orarioStr.split(":");
+          ora = parseInt(parts[0], 10);
+          minuto = parseInt(parts[1], 10);
+        }
+        return new Date(anno, mese, giorno, ora, minuto);
+      }
+    } catch (e) {
+      console.error("Errore parsing data:", e);
     }
-    
-    if (filtrati.length === 0) {
-      container.innerHTML = `<div style="text-align: center; padding: 20px; color: #888;">Nessun evento disponibile per la sezione <strong>${categoriaAttuale}</strong>.</div>`;
-      return;
-    }
-    
-    filtrati.forEach(ev => {
-      const isLive = ev.isLive;
-      const statusClass = isLive ? 'badge-live' : (ev.status === 'finished' ? 'badge-finished' : 'badge-upcoming');
-      const statusText = isLive ? 'LIVE' : (ev.time || ev.orario || 'Programmata');
-    
-      const card = document.createElement("div");
-      card.className = "match-card";
-      card.innerHTML = `
-        <div class="match-info">
-          <div class="match-teams">${ev.teams || ev.partita || ev.dettagli || 'Partita non specificata'}</div>
-          <div class="match-details">
-            🏆 <strong>${ev.lega}</strong> | 📅 ${ev.date || ev.data || ''} ${ev.time || ev.orario ? '- ' + (ev.time || ev.orario) : ''}
-            ${ev.channels ? ' | 📺 ' + (Array.isArray(ev.channels) ? ev.channels.join(', ') : ev.channels) : ''}
-          </div>
-        </div>
-        <div>
-          <span class="badge ${statusClass}">${statusText}</span>
-        </div>
-      `;
-      container.appendChild(card);
-    });
+    return new Date(0);
   }
 
-  // Caricamento iniziale
-  caricaDati();
+  async function loadCalendars() {
+    const liveMatches = [];
+    
+    for (const src of SOURCES) {
+      const tbody = document.getElementById(`tbody-${src.key}`);
+      try {
+        const res = await fetch(src.url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        
+        let matches = Array.isArray(data) ? data : (data.partite || data.events || []);
+    
+        // Estrai gli eventuali match in LIVE
+        const regularMatches = [];
+        matches.forEach(m => {
+          const isLive = (m.stato && m.stato.toLowerCase().includes("live")) || 
+                         (m.dettagli && m.dettagli.toLowerCase().includes("live")) ||
+                         (m.orario && m.orario.toLowerCase().includes("live"));
+          
+          const dt = parseMatchDate(m.data || m.date, m.orario || m.time);
+          const item = { ...m, legaNome: src.name, timestamp: dt.getTime() };
+    
+          if (isLive) {
+            liveMatches.push(item);
+          } else {
+            regularMatches.push(item);
+          }
+        });
+    
+        // Ordinamento Cronologico
+        regularMatches.sort((a, b) => a.timestamp - b.timestamp);
+    
+        // Renderizza la tabella di categoria
+        if (regularMatches.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="3" class="empty-msg">Nessun evento in programma.</td></tr>';
+        } else {
+          tbody.innerHTML = regularMatches.map(m => `
+            <tr>
+              <td>${m.data || '-'}</td>
+              <td><strong>${m.orario || '-'}</strong></td>
+              <td>${m.dettagli || m.partita || m.match || '-'}</td>
+            </tr>
+          `).join('');
+        }
+    
+      } catch (err) {
+        console.error(`Errore caricamento ${src.name}:`, err);
+        tbody.innerHTML = '<tr><td colspan="3" class="empty-msg" style="color:#f44336;">Impossibile caricare i dati.</td></tr>';
+      }
+    }
+    
+    // Renderizza la Sezione LIVE se sono presenti match in corso
+    if (liveMatches.length > 0) {
+      liveMatches.sort((a, b) => a.timestamp - b.timestamp);
+      const tbodyLive = document.getElementById("tbody-live");
+      tbodyLive.innerHTML = liveMatches.map(m => `
+        <tr>
+          <td><span class="badge-lega">${m.legaNome}</span></td>
+          <td>${m.data || ''} ${m.orario || ''}</td>
+          <td><strong>${m.dettagli || m.partita || m.match || '-'}</strong></td>
+          <td><span class="badge-live">IN CORSO</span></td>
+        </tr>
+      `).join('');
+      document.getElementById("section-live").style.display = "block";
+    }
+    
+    document.getElementById("calendar-loading").style.display = "none";
+    document.getElementById("calendar-content").style.display = "block";
+  }
+
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    setTimeout(loadCalendars, 1);
+  } else {
+    document.addEventListener("DOMContentLoaded", loadCalendars);
+  }
 })();
 </script>
