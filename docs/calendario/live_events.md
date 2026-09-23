@@ -84,7 +84,6 @@
     border: 1px solid rgba(150, 150, 150, 0.25);
     white-space: nowrap;
   }
-  .cal-canali-altri { font-size: 11.5px; opacity: 0.7; }
   .cal-canali.cal-canali-vuoto { font-size: 12.5px; font-style: italic; opacity: 0.6; }
   .cal-evento.is-live { border-left-color: #e00000; background: rgba(224, 0, 0, 0.06); }
   .cal-evento.is-live .cal-ora { color: #ff6659; }
@@ -162,8 +161,6 @@
     }));
   }
 
-  const MAX_CANALI_VISIBILI = 3;
-
   let idProssimoAssegnato = false;
 
   function creaElementoEvento(evento, isLive) {
@@ -172,9 +169,6 @@
     if (isLive) classi.push("is-live");
     if (evento.prossimo) classi.push("is-prossimo");
     div.className = classi.join(" ");
-    // Piu' schede possono condividere lo stesso orario "prossimo": l'ancora #prossimo deve
-    // esistere una volta sola, sulla prima che viene disegnata; le altre restano evidenziate
-    // allo stesso modo ma senza id duplicato.
     if (evento.prossimo && !idProssimoAssegnato) {
       div.id = "prossimo";
       idProssimoAssegnato = true;
@@ -182,11 +176,8 @@
 
     let canaliHtml;
     if (evento.canali.length) {
-      const visibili = evento.canali.slice(0, MAX_CANALI_VISIBILI)
-        .map(c => `<span class="cal-canale-chip">${c}</span>`).join("");
-      const restanti = evento.canali.length - MAX_CANALI_VISIBILI;
-      const altri = restanti > 0 ? `<span class="cal-canali-altri">+${restanti} altri</span>` : "";
-      canaliHtml = `<div class="cal-canali">${visibili}${altri}</div>`;
+      const chips = evento.canali.map(c => `<span class="cal-canale-chip">${c}</span>`).join("");
+      canaliHtml = `<div class="cal-canali">${chips}</div>`;
     } else {
       canaliHtml = `<div class="cal-canali cal-canali-vuoto">Canale non indicato</div>`;
     }
