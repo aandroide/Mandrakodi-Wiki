@@ -97,7 +97,7 @@
 (function () {
   // Un solo file: eventi.json ha gia' data, ora e competizione pronti, niente da ripulire.
   const EVENTI_URL = "https://raw.githubusercontent.com/campipaolo/Livesoccer/master/livesoccertv/output/eventi.json";
-  const PAGINA_CALENDARIO = "../calendario/live_events/";
+  const PAGINA_CALENDARIO = "/calendario/live_events/";
   const DURATA_PARTITA_MS = 2.5 * 60 * 60 * 1000;
 
 
