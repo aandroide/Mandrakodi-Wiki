@@ -168,7 +168,7 @@
 (function () {
   // Un solo file da leggere: eventi.json ha gia' competizione, titolo, data, ora e canali
   // pronti all'uso, niente piu' tag [COLOR] da ripulire o nomi di mese da riconoscere.
-  const EVENTI_URL = "https://raw.githubusercontent.com/aandroide/Livesoccer/master/livesoccertv/output/eventi.json";
+  const EVENTI_URL = "https://raw.githubusercontent.com/campipaolo/Livesoccer/master/livesoccertv/output/eventi.json";
 
   const CLASSE_SERIE = { "Serie A": "serie-a", "Serie B": "serie-b", "Serie C": "serie-c" };
   const HASH_TO_FILTER = { "live": "LIVE", "serie-a": "Serie A", "serie-b": "Serie B", "serie-c": "Serie C" };
@@ -219,7 +219,7 @@
     } else {
       canaliHtml = `<div class="cal-canali cal-canali-vuoto">Canale non indicato</div>`;
     }
-
+    
     // Pulsante "Altri paesi": mostra dove si vede la stessa partita nel resto del mondo.
     // Ogni scheda ha il suo elenco, nascosto finche' non si preme il pulsante.
     let mondoHtml = "";
@@ -233,11 +233,11 @@
         <div id="${idMondo}" class="cal-mondo-lista">${righe}</div>
       `;
     }
-
+    
     const tagSopraOra = isLive
       ? '<span class="badge-live-tag">LIVE</span>'
       : (evento.prossimo ? '<span class="prossima-tag">PROSSIMA</span>' : '');
-
+    
     div.innerHTML = `
       <div class="cal-ora-blocco">
         ${tagSopraOra}
@@ -262,13 +262,13 @@
     titolo.className = "cal-sezione-titolo " + (CLASSE_SERIE[categoria] || "");
     titolo.textContent = `🇮🇹 ${categoria}`;
     sezione.appendChild(titolo);
-
+    
     const gruppi = {};
     for (const ev of eventi) {
       const chiave = ev.data.toISOString().slice(0, 10);
       (gruppi[chiave] = gruppi[chiave] || []).push(ev);
     }
-
+    
     for (const chiave of Object.keys(gruppi).sort()) {
       const eventiGiorno = gruppi[chiave].sort((a, b) => a.data - b.data);
       const divData = document.createElement("div");
@@ -277,7 +277,7 @@
       sezione.appendChild(divData);
       eventiGiorno.forEach(ev => sezione.appendChild(creaElementoEvento(ev, false)));
     }
-
+    
     return sezione;
   }
 
@@ -288,7 +288,7 @@
     mondoContatore = 0; // ridisegnato da zero: gli id delle liste "Altri paesi" ripartono
 
     const { live, futuri } = datiCache;
-
+    
     if ((filtroAttivo === "ALL" || filtroAttivo === "LIVE") && live.length > 0) {
       const liveSezione = document.createElement("div");
       liveSezione.className = "cal-sezione";
@@ -300,7 +300,7 @@
       live.forEach(ev => liveSezione.appendChild(creaElementoEvento(ev, true)));
       contenitore.appendChild(liveSezione);
     }
-
+    
     if (filtroAttivo !== "LIVE") {
       const categorie = filtroAttivo === "ALL" ? ["Serie A", "Serie B", "Serie C"] : [filtroAttivo];
       for (const cat of categorie) {
@@ -308,7 +308,7 @@
         if (eventiCat.length > 0) contenitore.appendChild(creaSezioneCategoria(cat, eventiCat));
       }
     }
-
+    
     if (contenitore.children.length === 0) {
       contenitore.innerHTML = `<div class="cal-caricamento">Nessun evento disponibile per il filtro selezionato.</div>`;
     }
@@ -324,9 +324,9 @@
         b.classList.toggle("active", b.getAttribute("data-filter") === filtroAttivo);
       });
     }
-
+    
     renderizza();
-
+    
     if (hashIniziale) {
       const target = document.getElementById(hashIniziale);
       if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -345,7 +345,7 @@
       }
       futuri.sort((a, b) => a.data - b.data);
       live.sort((a, b) => a.data - b.data);
-
+    
       // "Prossima" e' un orario, non una singola partita: se piu' campionati iniziano
       // insieme vanno segnalate tutte, altrimenti la scheda dorata ne mostrerebbe una
       // sola lasciando intendere che le altre comincino dopo, quando invece sono insieme.
@@ -353,11 +353,11 @@
         const primoInizio = futuri[0].data.getTime();
         futuri.forEach(ev => { if (ev.data.getTime() === primoInizio) ev.prossimo = true; });
       }
-
+    
       datiCache = { live, futuri };
       document.getElementById("btn-live-tag").textContent = `🔴 LIVE (${live.length})`;
       document.getElementById("cal-filters").style.display = "flex";
-
+    
       hashGestito ? renderizza() : applicaHashIniziale();
     } catch (err) {
       document.getElementById("cal-content").innerHTML =
