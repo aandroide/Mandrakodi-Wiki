@@ -1,8 +1,8 @@
 # **Benvenuti nella Wiki ufficiale di MandraKodi**
 
-![icon](images/icon.gif)
+![icon](../images/icon.gif)
 
-[:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
+
 
 <style>
 .cal-bar {
@@ -299,4 +299,4 @@ if (document.readyState === "complete" || document.readyState === "interactive")
 }
 </script>
 
-[:material-cog-box: Installazione ](installazione/install.md){.md-button .md-button--primary} [:material-book-open-page-variant: Guide ](guide/tutorials.md){.md-button .md-button--primary} [:material-comment-question: FAQ ](faq/faq.md){.md-button .md-button--primary}
+[:material-cog-box: Installazione ](installazione/install.md){.md-button .md-button--primary} [:material-book-open-page-variant: Guide ](guide/tutorials.md){.md-button .md-button--primary} [:material-comment-question: FAQ ](faq/faq.md){.md-button .md-button--primary} [:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
