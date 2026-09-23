@@ -85,6 +85,42 @@
     white-space: nowrap;
   }
   .cal-canali.cal-canali-vuoto { font-size: 12.5px; font-style: italic; opacity: 0.6; }
+
+  /* Pulsante "Altri paesi": stesso stile compatto dei chip dei canali, ma cliccabile */
+  .cal-mondo-btn {
+    display: inline-block;
+    margin-top: 8px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    background: rgba(150, 150, 150, 0.08);
+    border: 1px solid rgba(150, 150, 150, 0.3);
+    border-radius: 14px;
+    padding: 5px 10px;
+    color: inherit;
+    cursor: pointer;
+  }
+  .cal-mondo-btn:hover { background: rgba(150, 150, 150, 0.18); }
+  .cal-mondo-lista {
+    display: none;
+    margin-top: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+    border-top: 1px solid rgba(150, 150, 150, 0.2);
+    padding-top: 6px;
+  }
+  .cal-mondo-lista.aperta { display: block; }
+  .cal-mondo-riga {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 12.5px;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(150, 150, 150, 0.08);
+  }
+  .cal-mondo-paese { opacity: 0.75; flex-shrink: 0; }
+  .cal-mondo-canali { text-align: right; }
   .cal-evento.is-live { border-left-color: #e00000; background: rgba(224, 0, 0, 0.06); }
   .cal-evento.is-live .cal-ora { color: #ff6659; }
   .cal-evento.is-prossimo {
@@ -157,11 +193,13 @@
       partita: ev.titolo,
       ora: ev.ora,
       data: new Date(`${ev.data}T${ev.ora}:00`),
-      canali: Array.isArray(ev.canali) ? ev.canali.filter(Boolean) : []
+      canali: Array.isArray(ev.canali) ? ev.canali.filter(Boolean) : [],
+      canali_mondo: Array.isArray(ev.canali_mondo) ? ev.canali_mondo : []
     }));
   }
 
   let idProssimoAssegnato = false;
+  let mondoContatore = 0;
 
   function creaElementoEvento(evento, isLive) {
     const div = document.createElement("div");
@@ -182,6 +220,20 @@
       canaliHtml = `<div class="cal-canali cal-canali-vuoto">Canale non indicato</div>`;
     }
 
+    // Pulsante "Altri paesi": mostra dove si vede la stessa partita nel resto del mondo.
+    // Ogni scheda ha il suo elenco, nascosto finche' non si preme il pulsante.
+    let mondoHtml = "";
+    if (evento.canali_mondo && evento.canali_mondo.length) {
+      const idMondo = "cal-mondo-" + (mondoContatore++);
+      const righe = evento.canali_mondo.map(p =>
+        `<div class="cal-mondo-riga"><span class="cal-mondo-paese">${p.paese}</span><span class="cal-mondo-canali">${(p.canali || []).join(", ")}</span></div>`
+      ).join("");
+      mondoHtml = `
+        <button type="button" class="cal-mondo-btn" onclick="document.getElementById('${idMondo}').classList.toggle('aperta')">🌍 Altri paesi (${evento.canali_mondo.length})</button>
+        <div id="${idMondo}" class="cal-mondo-lista">${righe}</div>
+      `;
+    }
+
     const tagSopraOra = isLive
       ? '<span class="badge-live-tag">LIVE</span>'
       : (evento.prossimo ? '<span class="prossima-tag">PROSSIMA</span>' : '');
@@ -195,6 +247,7 @@
         <div class="cal-categoria">${evento.categoria}</div>
         <div class="cal-partita-nome">${evento.partita}</div>
         ${canaliHtml}
+        ${mondoHtml}
       </div>
     `;
     return div;
@@ -232,6 +285,7 @@
     const contenitore = document.getElementById("cal-content");
     contenitore.innerHTML = "";
     idProssimoAssegnato = false; // ridisegnato da zero: si puo' riassegnare l'id una volta
+    mondoContatore = 0; // ridisegnato da zero: gli id delle liste "Altri paesi" ripartono
 
     const { live, futuri } = datiCache;
 
