@@ -93,13 +93,13 @@
 <div id="cal-bar" class="cal-bar">
   <span class="cal-loading">⏳ Caricamento eventi...</span>
 </div>
-
 <script>
 (function () {
   // Un solo file: eventi.json ha gia' data, ora e competizione pronti, niente da ripulire.
   const EVENTI_URL = "https://raw.githubusercontent.com/campipaolo/Livesoccer/master/livesoccertv/output/eventi.json";
-  const PAGINA_CALENDARIO = "/Mandrakodi-Wiki/docs/calendario/live_events";
+  const PAGINA_CALENDARIO = "../calendario/live_events/";
   const DURATA_PARTITA_MS = 2.5 * 60 * 60 * 1000;
+
 
   function badge(cls, label, count) {
     return `<span class="cal-badge ${cls}"><span class="dot"></span>${label} <strong>${count}</strong></span>`;
