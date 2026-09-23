@@ -2,7 +2,7 @@
 
 ![icon](images/icon.gif)
 
-[:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
+
 
 <style>
 .cal-bar {
@@ -117,7 +117,7 @@
       let prossimoInizio = null;
       let prossimoConteggio = 0;
       const conteggi = { "Serie A": 0, "Serie B": 0, "Serie C": 0 };
-
+    
       for (const ev of json.eventi || []) {
         const inizio = new Date(`${ev.data}T${ev.ora}:00`);
         const fine = new Date(inizio.getTime() + DURATA_PARTITA_MS);
@@ -135,9 +135,9 @@
           }
         }
       }
-
+    
       const totale = totLive + conteggi["Serie A"] + conteggi["Serie B"] + conteggi["Serie C"];
-
+    
       // Un widget solo, uguale su desktop e telefono: il totale e il live in alto, sotto
       // il menu a tendina per saltare a una categoria (o a "In arrivo") e, a fianco, il
       // pulsante che apre comunque la pagina intera del calendario.
@@ -300,4 +300,4 @@ if (document.readyState === "complete" || document.readyState === "interactive")
 }
 </script>
 
-[:material-cog-box: Installazione ](installazione/install.md){.md-button .md-button--primary} [:material-book-open-page-variant: Guide ](guide/tutorials.md){.md-button .md-button--primary} [:material-comment-question: FAQ ](faq/faq.md){.md-button .md-button--primary}
+[:material-cog-box: Installazione ](installazione/install.md){.md-button .md-button--primary} [:material-book-open-page-variant: Guide ](guide/tutorials.md){.md-button .md-button--primary} [:material-comment-question: FAQ ](faq/faq.md){.md-button .md-button--primary} [:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
