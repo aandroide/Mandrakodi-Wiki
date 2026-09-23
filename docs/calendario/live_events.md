@@ -1,4 +1,6 @@
-# Calendario
+[:material-home: Torna alla Home](../index.md){.md-button .md-button--primary}  [:material-face-agent: Assistenza](../ask_help.md){ .md-button .md-button--primary }
+
+------
 
 <style>
   #cal-wrapper {
@@ -34,22 +36,6 @@
   .btn-filter:hover { background: rgba(150, 150, 150, 0.25); }
   .btn-filter.active { background: var(--link); color: #ffffff; border-color: transparent; }
   .btn-filter.btn-live-filter.active { background: #d00000; color: #ffffff; }
-
-  .cal-home-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(150, 150, 150, 0.15);
-    color: inherit;
-    text-decoration: none;
-    border: 1px solid rgba(150, 150, 150, 0.3);
-    padding: 8px 14px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 16px;
-  }
-  .cal-home-btn:hover { background: rgba(150, 150, 150, 0.25); }
 
   .cal-sezione { margin-top: 25px; scroll-margin-top: 20px; }
   .cal-sezione-titolo {
@@ -165,7 +151,6 @@
 </style>
 
 <div id="cal-wrapper">
-  <a href="../../" class="cal-home-btn">🏠 Home</a>
   <div class="cal-title">⚽ Calendario</div>
 
   <div class="cal-filters" id="cal-filters" style="display:none;">
