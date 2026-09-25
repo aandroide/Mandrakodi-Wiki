@@ -257,6 +257,27 @@
     }).join("") + "</div>";
   }
 
+  // Liste "Altri paesi" aperte: la pagina si ridisegna ogni minuto, cosi' restano aperte
+  const mondoAperti = new Set();
+  window.calToggleMondo = function (chiave, id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle("aperta");
+    if (el.classList.contains("aperta")) mondoAperti.add(chiave); else mondoAperti.delete(chiave);
+  };
+
+  function mondoHtml(ev) {
+    const lista = Array.isArray(ev.canali_mondo) ? ev.canali_mondo : [];
+    if (!lista.length) return "";
+    const chiave = ev.inizio + "|" + (ev.titolo || "");
+    const id = "cal-mondo-" + slug(chiave);
+    const righe = lista.map(p =>
+      `<div class="cal-mondo-riga"><span class="cal-mondo-paese">${esc(p.paese)}</span><span class="cal-mondo-canali">${esc((p.canali || []).join(", "))}</span></div>`).join("");
+    const aperta = mondoAperti.has(chiave) ? " aperta" : "";
+    return `<button type="button" class="cal-mondo-btn" onclick="calToggleMondo('${esc(chiave).replace(/'/g, "\\'")}', '${id}')">🌍 Altri paesi (${lista.length})</button>
+            <div id="${id}" class="cal-mondo-lista${aperta}">${righe}</div>`;
+  }
+
   function cardEvento(ev, adesso) {
     const st = stato(ev, adesso);
     const tag = st === "live" ? '<span class="badge-live-tag">LIVE</span>' : "";
@@ -267,6 +288,7 @@
           <div class="cal-categoria">${esc(ev.competizione || ev.sport || "")}</div>
           <div class="cal-partita-nome">${esc(ev.evento || ev.titolo)}</div>
           ${chipCanali(ev)}
+          ${mondoHtml(ev)}
         </div>
       </div>`;
   }
