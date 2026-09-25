@@ -76,7 +76,7 @@
     border-left: 3px solid var(--link);
     border-radius: 10px;
   }
-  .cal-ora-blocco { width: 52px; flex-shrink: 0; text-align: center; }
+  .cal-ora-blocco { width: 64px; flex-shrink: 0; text-align: center; }
   .cal-ora { font-weight: bold; font-size: 16px; }
   .cal-categoria { font-size: 12px; font-weight: bold; opacity: 0.7; text-transform: uppercase; }
   .cal-partita-nome { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
@@ -180,7 +180,11 @@
   .cal-canale-chip.differita { border-style: dashed; opacity: 0.85; }
   .cal-canale-chip.streaming { opacity: 0.75; }
   .cal-canale-chip .cal-canale-tipo { font-weight: 500; opacity: 0.7; }
-  .cal-giorno-evento { font-size: 11px; opacity: 0.65; margin-top: 2px; }
+  .cal-data-evento { font-weight: bold; font-size: 15px; line-height: 1.2; }
+  .cal-ora-evento { font-weight: normal; font-size: 14px; margin-top: 3px; opacity: 0.85; }
+  .cal-evento.is-live .cal-ora-evento { color: #ff6659; opacity: 1; }
+  .cal-ordina { display: flex; justify-content: center; gap: 8px; margin: -6px 0 16px; font-size: 13px; }
+  .cal-ordina span { opacity: 0.7; align-self: center; }
   .cal-legenda { text-align: center; font-size: 12px; opacity: 0.65; margin: -8px 0 18px; }
   .cal-aggiornato { text-align: center; font-size: 12px; opacity: 0.55; margin-top: 30px; }
 </style>
@@ -190,6 +194,11 @@
 
   <div class="cal-filters" id="cal-filters" style="display:none;"></div>
   <input type="search" id="cal-search" class="cal-search" placeholder="Cerca squadra, pilota, torneo o canale..." style="display:none;">
+  <div class="cal-ordina" id="cal-ordina" style="display:none;">
+    <span>Ordina:</span>
+    <button class="btn-filter active" data-ordine="data">📆 Per data</button>
+    <button class="btn-filter" data-ordine="campionato">🗂️ Per campionato</button>
+  </div>
   <div class="cal-legenda" id="cal-legenda" style="display:none;">Bordo tratteggiato: differita. Canale sbiadito: streaming.</div>
 
   <div id="cal-content">
@@ -211,6 +220,16 @@
   let dati = null;
   let filtro = "ALL";
   let testo = "";
+  let ordine = "data";
+
+  function giornoLungo(d) {
+    const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
+    const g = new Date(d); g.setHours(0, 0, 0, 0);
+    const diff = Math.round((g - oggi) / 86400000);
+    const testo = g.toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long" });
+    const t = testo.charAt(0).toUpperCase() + testo.slice(1);
+    return diff === 0 ? "Oggi, " + t : diff === 1 ? "Domani, " + t : t;
+  }
 
   const slug = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -243,7 +262,7 @@
     const tag = st === "live" ? '<span class="badge-live-tag">LIVE</span>' : "";
     return `
       <div class="cal-evento ${st === "live" ? "is-live" : ""}">
-        <div class="cal-ora-blocco">${tag}<div class="cal-ora">${esc(ev.ora || "--:--")}</div><div class="cal-giorno-evento">${esc(giorno(ev))}</div></div>
+        <div class="cal-ora-blocco">${tag}<div class="cal-data-evento">${esc(giorno(ev))}</div><div class="cal-ora-evento">${esc(ev.ora || "--:--")}</div></div>
         <div>
           <div class="cal-categoria">${esc(ev.competizione || ev.sport || "")}</div>
           <div class="cal-partita-nome">${esc(ev.evento || ev.titolo)}</div>
@@ -302,7 +321,19 @@
         if (filtro !== "ALL" && filtro !== id) continue;
         if (filtro === "ALL" && cart.nome === "Oggi") continue;
         let corpo = "";
-        const gruppi = cart.eventi ? [{ nome: "", eventi: cart.eventi }] : cart.sottocartelle;
+        let gruppi = cart.eventi ? [{ nome: "", eventi: cart.eventi }] : cart.sottocartelle;
+        if (ordine === "data" && !cart.eventi) {
+          // stessi eventi, ma raggruppati per giorno invece che per campionato
+          const tutti = cart.sottocartelle.flatMap(sub => sub.eventi)
+            .sort((a, b) => a.inizio.localeCompare(b.inizio));
+          const perGiorno = new Map();
+          for (const ev of tutti) {
+            const k = ev.inizio.slice(0, 10);
+            if (!perGiorno.has(k)) perGiorno.set(k, []);
+            perGiorno.get(k).push(ev);
+          }
+          gruppi = Array.from(perGiorno.values()).map(evs => ({ nome: giornoLungo(evs[0].inizio), eventi: evs }));
+        }
         for (const sub of gruppi) {
           const evs = sub.eventi.filter(ev => stato(ev, adesso) !== "finito" && corrisponde(ev));
           if (!evs.length) continue;
@@ -327,6 +358,13 @@
       cerca.style.display = "block";
       cerca.oninput = () => { testo = cerca.value.trim().toLowerCase(); disegna(); };
       document.getElementById("cal-legenda").style.display = "block";
+      const boxOrdine = document.getElementById("cal-ordina");
+      boxOrdine.style.display = "flex";
+      boxOrdine.querySelectorAll("button").forEach(b => b.onclick = () => {
+        ordine = b.dataset.ordine;
+        boxOrdine.querySelectorAll("button").forEach(x => x.classList.toggle("active", x === b));
+        disegna();
+      });
       document.getElementById("cal-aggiornato").textContent =
         "Aggiornato: " + new Date(dati.aggiornato).toLocaleString("it-IT", { dateStyle: "short", timeStyle: "short" });
       disegna();
