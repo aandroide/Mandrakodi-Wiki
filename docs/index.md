@@ -95,7 +95,7 @@
 <script>
 (function () {
   // Un solo file con tutti gli sport, gia' diviso in cartelle (Oggi, Motori, Calcio, ...)
-  const CALENDARIO_URL = "https://raw.githubusercontent.com/TUO_UTENTE/TUO_REPO/main/output/calendario_sport.json";
+  const CALENDARIO_URL = "https://raw.githubusercontent.com/aandroide/Livesoccer/refs/heads/master/output/calendario_sport.json";
   const PAGINA = "calendario/sport/";
   const DURATA = { prove: 75, qualifiche: 75, sprint_quali: 60, sprint: 60, gara: 150, evento: 150 };
   const ICONE = { "Oggi": "📅", "Motori": "🏎️", "Calcio": "⚽", "Tennis": "🎾", "Basket": "🏀", "Volley": "🏐", "Altri sport": "🏅" };
