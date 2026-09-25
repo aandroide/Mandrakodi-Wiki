@@ -2,7 +2,7 @@
 
 ![icon](images/icon.gif)
 
-[:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
+
 
 <style>
 .cal-bar {
@@ -94,10 +94,12 @@
 
 <script>
 (function () {
-  // Un solo file: eventi.json ha gia' data, ora e competizione pronti, niente da ripulire.
-  const EVENTI_URL = "https://raw.githubusercontent.com/aandroide/Livesoccer/master/livesoccertv/output/eventi.json";
-  const PAGINA_CALENDARIO = "calendario/live_events/";
-  const DURATA_PARTITA_MS = 2.5 * 60 * 60 * 1000;
+  // Un solo file con tutti gli sport, gia' diviso in cartelle (Oggi, Motori, Calcio, ...)
+  const CALENDARIO_URL = "https://raw.githubusercontent.com/TUO_UTENTE/TUO_REPO/main/output/calendario_sport.json";
+  const PAGINA = "calendario/sport/";
+  const DURATA = { prove: 75, qualifiche: 75, sprint_quali: 60, sprint: 60, gara: 150, evento: 150 };
+  const ICONE = { "Oggi": "📅", "Motori": "🏎️", "Calcio": "⚽", "Tennis": "🎾", "Basket": "🏀", "Volley": "🏐", "Altri sport": "🏅" };
+  const slug = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
   function badge(cls, label, count) {
     return `<span class="cal-badge ${cls}"><span class="dot"></span>${label} <strong>${count}</strong></span>`;
@@ -106,61 +108,39 @@
   async function aggiornaBarra() {
     const bar = document.getElementById("cal-bar");
     try {
-      const res = await fetch(EVENTI_URL);
+      const res = await fetch(CALENDARIO_URL, { cache: "no-store" });
       if (!res.ok) throw new Error("HTTP " + res.status);
       const json = await res.json();
       const adesso = new Date();
-
-      let totLive = 0;
-      // "In arrivo" e' un orario, non una singola partita: Serie A, B e C possono avere
-      // piu' partite insieme, quindi si conta quante condividono l'orario piu' vicino.
-      let prossimoInizio = null;
-      let prossimoConteggio = 0;
-      const conteggi = { "Serie A": 0, "Serie B": 0, "Serie C": 0 };
-
-      for (const ev of json.eventi || []) {
-        const inizio = new Date(`${ev.data}T${ev.ora}:00`);
-        const fine = new Date(inizio.getTime() + DURATA_PARTITA_MS);
-        if (adesso >= inizio && adesso <= fine) {
-          totLive++;
-        } else if (conteggi[ev.competizione] !== undefined) {
-          conteggi[ev.competizione]++;
-          if (inizio > adesso) {
-            if (!prossimoInizio || inizio < prossimoInizio) {
-              prossimoInizio = inizio;
-              prossimoConteggio = 1;
-            } else if (inizio.getTime() === prossimoInizio.getTime()) {
-              prossimoConteggio++;
-            }
-          }
+      let live = 0;
+      for (const cart of json.cartelle || []) {
+        if (cart.nome === "Oggi") continue;
+        for (const sub of cart.sottocartelle || []) for (const ev of sub.eventi) {
+          const inizio = new Date(ev.inizio);
+          const fine = new Date(inizio.getTime() + (DURATA[ev.sessione] || 135) * 60000);
+          if (adesso >= inizio && adesso <= fine) live++;
         }
       }
+      const opzioni = (json.cartelle || []).map(c =>
+        `<option value="${PAGINA}#${slug(c.nome)}">${ICONE[c.nome] || ""} ${c.nome} (${c.totale})</option>`).join("");
 
-      const totale = totLive + conteggi["Serie A"] + conteggi["Serie B"] + conteggi["Serie C"];
-
-      // Un widget solo, uguale su desktop e telefono: il totale e il live in alto, sotto
-      // il menu a tendina per saltare a una categoria (o a "In arrivo") e, a fianco, il
-      // pulsante che apre comunque la pagina intera del calendario.
       bar.innerHTML = `
         <div class="cal-bar-top">
-          <span>⚽ <strong>${totale}</strong> partite nel calendario</span>
-          ${badge("cal-badge-live", "Live", totLive)}
+          <span>🏆 <strong>${json.totale || 0}</strong> eventi nel calendario</span>
+          ${badge("cal-badge-live", "Live", live)}
         </div>
         <div class="cal-bar-row">
           <select class="cal-select" onchange="if(this.value) window.location.href=this.value;">
             <option value="">Scegli una categoria…</option>
-            <option value="${PAGINA_CALENDARIO}#live">🔴 Live (${totLive})</option>
-            <option value="${PAGINA_CALENDARIO}#prossimo">🟡 In arrivo (${prossimoConteggio})</option>
-            <option value="${PAGINA_CALENDARIO}#serie-a">🇮🇹 Serie A (${conteggi["Serie A"]})</option>
-            <option value="${PAGINA_CALENDARIO}#serie-b">🇮🇹 Serie B (${conteggi["Serie B"]})</option>
-            <option value="${PAGINA_CALENDARIO}#serie-c">🇮🇹 Serie C (${conteggi["Serie C"]})</option>
+            <option value="${PAGINA}#live">🔴 Live (${live})</option>
+            ${opzioni}
           </select>
-          <a href="${PAGINA_CALENDARIO}" class="cal-btn">Apri calendario ›</a>
+          <a href="${PAGINA}" class="cal-btn">Apri calendario ›</a>
         </div>
       `;
     } catch (e) {
-      bar.innerHTML = `<a href="${PAGINA_CALENDARIO}" class="cal-btn">⚽ Apri il calendario</a>`;
-      console.error("Errore conteggio calendario", e);
+      bar.innerHTML = `<a href="${PAGINA}" class="cal-btn">🏆 Apri il calendario</a>`;
+      console.error("Errore calendario", e);
     }
   }
 
@@ -300,4 +280,4 @@ if (document.readyState === "complete" || document.readyState === "interactive")
 }
 </script>
 
-[:material-cog-box: Installazione ](installazione/install.md){.md-button .md-button--primary} [:material-book-open-page-variant: Guide ](guide/tutorials.md){.md-button .md-button--primary} [:material-comment-question: FAQ ](faq/faq.md){.md-button .md-button--primary}
+[:material-cog-box: Installazione ](installazione/install.md){.md-button .md-button--primary} [:material-book-open-page-variant: Guide ](guide/tutorials.md){.md-button .md-button--primary} [:material-comment-question: FAQ ](faq/faq.md){.md-button .md-button--primary} [:material-face-agent: Assistenza](ask_help.md){ .md-button .md-button--primary } 
