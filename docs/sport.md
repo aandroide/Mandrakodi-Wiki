@@ -201,7 +201,7 @@
 <script>
 (function () {
   // Un solo file con tutte le categorie gia' divise in cartelle e sottocartelle.
-  const CALENDARIO_URL = "https://raw.githubusercontent.com/aandroide/Livesoccer/refs/heads/master/output/calendario_sport.json"
+  const CALENDARIO_URL = "https://raw.githubusercontent.com/aandroide/Livesoccer/refs/heads/master/output/calendario_sport.json";
   // Durata stimata per capire se un evento e' in corso (in minuti)
   const DURATA = { prove: 75, qualifiche: 75, sprint_quali: 60, sprint: 60, gara: 150, evento: 150 };
   const DURATA_DEFAULT = 135;
