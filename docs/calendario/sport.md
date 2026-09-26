@@ -328,12 +328,19 @@
     return out;
   }
 
+  // conteggi calcolati nella pagina: gli eventi finiti non contano, cosi' "Oggi" e le altre
+  // categorie scendono da sole durante la giornata, senza aspettare un nuovo giro del workflow
+  function contaAttivi(cart, adesso) {
+    const evs = cart.eventi || (cart.sottocartelle || []).flatMap(sub => sub.eventi);
+    return evs.filter(ev => stato(ev, adesso) !== "finito").length;
+  }
+
   function disegnaFiltri(adesso) {
     const live = tuttiGliEventi().filter(ev => stato(ev, adesso) === "live").length;
     const bottoni = [`<button class="btn-filter ${filtro === "ALL" ? "active" : ""}" data-filter="ALL">Tutti</button>`,
       `<button class="btn-filter btn-live-filter ${filtro === "LIVE" ? "active" : ""}" data-filter="LIVE">🔴 LIVE (${live})</button>`];
     for (const cart of dati.cartelle) {
-      bottoni.push(`<button class="btn-filter ${filtro === slug(cart.nome) ? "active" : ""}" data-filter="${slug(cart.nome)}">${ICONE[cart.nome] || ""} ${esc(cart.nome)} (${cart.totale})</button>`);
+      bottoni.push(`<button class="btn-filter ${filtro === slug(cart.nome) ? "active" : ""}" data-filter="${slug(cart.nome)}">${ICONE[cart.nome] || ""} ${esc(cart.nome)} (${contaAttivi(cart, adesso)})</button>`);
     }
     const box = document.getElementById("cal-filters");
     box.innerHTML = bottoni.join("");
