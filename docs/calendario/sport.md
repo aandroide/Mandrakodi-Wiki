@@ -225,6 +225,14 @@
   let filtro = "ALL";
   let testo = "";
   let ordine = "data";
+
+  // icona dello sport nella scheda: per le moto (MotoGP, Moto2/Moto3, Superbike e le gare
+  // moto degli eventi speciali, es. Macau Motorcycle GP) la moto al posto della macchina
+  const MOTO_RX = /moto\s?gp|moto2|moto3|superbike|\bwsbk\b|motorcycle/i;
+  function iconaEvento(ev) {
+    if (ev.categoria === "Motori" && MOTO_RX.test(`${ev.competizione || ""} ${ev.evento || ""}`)) return "🏍️ ";
+    return ICONE[ev.categoria] ? ICONE[ev.categoria] + " " : "";
+  }
   // categorie aperte a mano nella vista "Tutti": restano aperte quando la pagina si ridisegna
   const sezioniAperte = new Set();
   document.addEventListener("toggle", e => {
@@ -296,7 +304,7 @@
       <div class="cal-evento ${st === "live" ? "is-live" : ""}">
         <div class="cal-ora-blocco">${tag}<div class="cal-data-evento">${esc(giorno(ev))}</div><div class="cal-ora-evento">${esc(ev.ora || "--:--")}</div></div>
         <div>
-          <div class="cal-categoria">${ICONE[ev.categoria] ? ICONE[ev.categoria] + " " : ""}${esc(ev.competizione || ev.sport || "")}</div>
+          <div class="cal-categoria">${iconaEvento(ev)}${esc(ev.competizione || ev.sport || "")}</div>
           <div class="cal-partita-nome">${esc(ev.evento || ev.titolo)}</div>
           ${chipCanali(ev)}
           ${mondoHtml(ev)}
