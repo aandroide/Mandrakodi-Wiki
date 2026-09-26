@@ -113,6 +113,12 @@
       const json = await res.json();
       const adesso = new Date();
       let live = 0;
+      // eventi non ancora finiti, calcolati adesso: il totale scende da solo durante il giorno
+      const attivi = cart => (cart.eventi || (cart.sottocartelle || []).flatMap(sub => sub.eventi)).filter(ev => {
+        const fine = new Date(new Date(ev.inizio).getTime() + (DURATA[ev.sessione] || 135) * 60000);
+        return adesso <= fine;
+      }).length;
+      const totaleAttivi = (json.cartelle || []).filter(c => c.nome !== "Oggi").reduce((n, c) => n + attivi(c), 0);
       for (const cart of json.cartelle || []) {
         if (cart.nome === "Oggi") continue;
         for (const sub of cart.sottocartelle || []) for (const ev of sub.eventi) {
@@ -122,11 +128,11 @@
         }
       }
       const opzioni = (json.cartelle || []).map(c =>
-        `<option value="${PAGINA}#${slug(c.nome)}">${ICONE[c.nome] || ""} ${c.nome} (${c.totale})</option>`).join("");
+        `<option value="${PAGINA}#${slug(c.nome)}">${ICONE[c.nome] || ""} ${c.nome} (${attivi(c)})</option>`).join("");
 
       bar.innerHTML = `
         <div class="cal-bar-top">
-          <span>🏆 <strong>${json.totale || 0}</strong> eventi nel calendario</span>
+          <span>🏆 <strong>${totaleAttivi}</strong> eventi nel calendario</span>
           ${badge("cal-badge-live", "Live", live)}
         </div>
         <div class="cal-bar-row">
