@@ -54,6 +54,10 @@
   .cal-sezione-titolo.serie-a { color: #64b5f6; background: rgba(25, 118, 210, 0.12); border-left-color: #1976d2; }
   .cal-sezione-titolo.serie-b { color: #66bb6a; background: rgba(46, 125, 50, 0.12); border-left-color: #2e7d32; }
   .cal-sezione-titolo.serie-c { color: #ce93d8; background: rgba(106, 27, 154, 0.12); border-left-color: #6a1b9a; }
+  details.cal-chiudibile { margin-top: 14px; }
+  details.cal-chiudibile > summary { font-size: 17px; font-weight: bold; cursor: pointer; }
+  details.cal-chiudibile > summary small { opacity: 0.7; font-weight: normal; }
+  details.cal-chiudibile[open] > summary { margin-bottom: 10px; }
   .cal-live-titolo { background: rgba(224, 0, 0, 0.12); color: #e00000; border-left-color: #e00000; }
 
   .cal-data {
@@ -197,7 +201,7 @@
   <div class="cal-ordina" id="cal-ordina" style="display:none;">
     <span>Ordina:</span>
     <button class="btn-filter active" data-ordine="data">📆 Per data</button>
-    <button class="btn-filter" data-ordine="campionato">🗂️ Per campionato</button>
+    <button class="btn-filter" data-ordine="campionato">🗂️ Per categoria</button>
   </div>
   <div class="cal-legenda" id="cal-legenda" style="display:none;">Bordo tratteggiato: differita. Canale sbiadito: streaming.</div>
 
@@ -221,6 +225,13 @@
   let filtro = "ALL";
   let testo = "";
   let ordine = "data";
+  // categorie aperte a mano nella vista "Tutti": restano aperte quando la pagina si ridisegna
+  const sezioniAperte = new Set();
+  document.addEventListener("toggle", e => {
+    const d = e.target;
+    if (!d.matches || !d.matches("details.cal-chiudibile") || testo) return;
+    if (d.open) sezioniAperte.add(d.dataset.sezione); else sezioniAperte.delete(d.dataset.sezione);
+  }, true);
 
   function giornoLungo(d) {
     const oggi = new Date(); oggi.setHours(0, 0, 0, 0);
@@ -285,7 +296,7 @@
       <div class="cal-evento ${st === "live" ? "is-live" : ""}">
         <div class="cal-ora-blocco">${tag}<div class="cal-data-evento">${esc(giorno(ev))}</div><div class="cal-ora-evento">${esc(ev.ora || "--:--")}</div></div>
         <div>
-          <div class="cal-categoria">${esc(ev.competizione || ev.sport || "")}</div>
+          <div class="cal-categoria">${ICONE[ev.categoria] ? ICONE[ev.categoria] + " " : ""}${esc(ev.competizione || ev.sport || "")}</div>
           <div class="cal-partita-nome">${esc(ev.evento || ev.titolo)}</div>
           ${chipCanali(ev)}
           ${mondoHtml(ev)}
@@ -362,7 +373,16 @@
           if (sub.nome) corpo += `<div class="cal-sotto-titolo">${esc(sub.nome)} <small>(${evs.length})</small></div>`;
           corpo += evs.map(ev => cardEvento(ev, adesso)).join("");
         }
-        if (corpo) html += `<div class="cal-sezione" id="${id}"><div class="cal-sezione-titolo">${ICONE[cart.nome] || ""} ${esc(cart.nome)}</div>${corpo}</div>`;
+        if (!corpo) continue;
+        if (filtro === "ALL") {
+          // vista "Tutti": categorie chiuse e apribili con un clic, come nel resto della wiki.
+          // Con una ricerca in corso si aprono da sole, cosi' i risultati restano visibili.
+          const aperta = testo || sezioniAperte.has(id) ? " open" : "";
+          const n = (corpo.match(/class="cal-evento/g) || []).length;
+          html += `<details class="cal-sezione cal-chiudibile" id="${id}" data-sezione="${id}"${aperta}><summary>${ICONE[cart.nome] || ""} ${esc(cart.nome)} <small>(${n})</small></summary>${corpo}</details>`;
+        } else {
+          html += `<div class="cal-sezione" id="${id}"><div class="cal-sezione-titolo">${ICONE[cart.nome] || ""} ${esc(cart.nome)}</div>${corpo}</div>`;
+        }
       }
     }
     box.innerHTML = html || '<div class="cal-caricamento">Nessun evento trovato.</div>';
